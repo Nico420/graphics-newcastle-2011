@@ -46,14 +46,26 @@ public class DisplayExample {
 		GL11.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);     // Clear The Screen And The Depth Buffer
 	    GL11.glLoadIdentity();
 	    glColor3f(0f, 1.0f, 1.0f);
+	    
+		
 		while (!Display.isCloseRequested()) {
 			// render OpenGL here
-			GL11.glBegin(GL_TRIANGLES);
-			GL11.glVertex3f(0,0,0);
-			GL11.glVertex3f(100,0,0);
-			GL11.glVertex3f(100,100,0);
-			GL11.glEnd();
-			Display.update(); //flushes OpenGL pipeline and swaps back and front buffers. perhaps waits for v-sync.
+			 
+			    GL11.glBegin(GL_TRIANGLES);
+				GL11.glVertex3f(0,0,0);
+				GL11.glVertex3f(1,0,0);
+				GL11.glVertex3f(1,1,0);
+				GL11.glEnd();
+				
+				GL11.glBegin(GL_QUADS);
+				GL11.glVertex3f(0,0,0);
+				GL11.glVertex3f(-1,0,0);
+				GL11.glVertex3f(-1,-1,0);
+				GL11.glVertex3f(0,-1,0);
+				GL11.glEnd();
+				
+			Display.update();
+			 //flushes OpenGL pipeline and swaps back and front buffers. perhaps waits for v-sync.
 		}
 
 		Display.destroy();
