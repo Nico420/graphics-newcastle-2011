@@ -23,7 +23,7 @@ public class DisplayExample {
 	
 	public static boolean exit=false;
 	public static boolean displayChange=false;
-    
+	
 	public void start() throws LWJGLException {
 		try {
 			DisplayMode dm = Display.getAvailableDisplayModes()[0];
@@ -46,34 +46,41 @@ public class DisplayExample {
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glLoadIdentity();
 		float rtri = 3f;
+		float ttri = 0f;
         
 
-		while (!Display.isCloseRequested()) {												// Done Drawing The Quad
+		while (!Display.isCloseRequested() && !exit) {												// Done Drawing The Quad
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);          // Clear The Screen And The Depth Buffer
 		     
 			GL11.glLoadIdentity();
 			
-			GL11.glTranslatef(100, 100, 0);
+			GL11.glTranslatef(400, 300, 0);
 			// set the color of the quad (R,G,B,A)
 		        GL11.glColor3f(1f,0f,0f);
 		        
 		        GL11.glPushMatrix();
-		        GL11.glRotatef(rtri, 1, 0, 0);
-		        GL11.glBegin(GL11.GL_TRIANGLES);
-					GL11.glVertex3f(0,0,0);
-					GL11.glVertex3f(100, 0, 0);
-					GL11.glVertex3f(100, 100, 0);
-				GL11.glEnd();
+		        GL11.glRotatef(rtri, 0, 0, 1);
+			        GL11.glRotatef(ttri, 0, 1, 0);
+			        GL11.glBegin(GL11.GL_TRIANGLES);
+						GL11.glVertex3f(100,100,0);
+						GL11.glVertex3f(200, 100, 0);
+						GL11.glVertex3f(200, 200, 0);
+					GL11.glEnd();
 				GL11.glPopMatrix();
 		
-				GL11.glColor3f(0f,0f,1f);
-		        //GL11.glRotatef(rtri, 0, 1, 0);
+				/*GL11.glColor3f(0f,0f,1f);
+				
+				GL11.glPushMatrix();
+		        GL11.glTranslated(0, ttri, 0);
+		        GL11.glRotatef(rtri, 1, 0, 0);
 		        GL11.glBegin(GL11.GL_TRIANGLES);
 					GL11.glVertex3f(100,0,0);
 					GL11.glVertex3f(200, 0, 0);
 					GL11.glVertex3f(200, 100, 0);
 				GL11.glEnd();
+				GL11.glPopMatrix();*/
 				pollInput();
+				
 			if(displayChange){
 				if(Display.isFullscreen())
 					Display.setFullscreen(false);
@@ -84,6 +91,7 @@ public class DisplayExample {
 			Display.update(); // flushes OpenGL pipeline and swaps back and
 								// front buffers. perhaps waits for v-sync.
 			rtri+=0.1f;
+			ttri+= 0.1f;
 		}
 
 		Display.destroy();
