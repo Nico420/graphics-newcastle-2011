@@ -15,8 +15,8 @@ public class Carte {
 	private Serpent[] serpents;
 	
 	public Carte(){
-		width = 10;
-		heigth = 10;
+		width = 100;
+		heigth = 100;
 		
 		Case[] cases = new Case[100];
 		for(int i=0;i<cases.length;i++)
@@ -25,7 +25,7 @@ public class Carte {
 		
 		Serpent[] serpents = new Serpent[1];
 		for(int i=0;i<serpents.length;i++)
-			serpents[i]=new Serpent("Nicolas", 3, 1);
+			serpents[i]=new Serpent("Nicolas", 1,Color.BLUE, new Position(0, 0));
 		
 		setSerpents(serpents);
 	}
@@ -41,7 +41,7 @@ public class Carte {
 		
 		Serpent[] serpents = new Serpent[numPlayer];
 		for(int i=0;i<serpents.length;i++)
-			serpents[i]=new Serpent("Nicolas", 3, 1);
+			serpents[i]=new Serpent("Nicolas", 1,Color.BLUE, new Position(0, 0));
 		
 		setSerpents(serpents);
 	}
