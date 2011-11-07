@@ -24,9 +24,18 @@ public class DisplayExample {
 	public static boolean exit=false;
 	public static boolean displayChange=false;
 	
+	public int chooseBestDisplay() throws LWJGLException{
+		int res=3;
+		for(int i=0; i< Display.getAvailableDisplayModes().length;i++){
+			
+			System.out.println(Display.getAvailableDisplayModes()[i]);
+		}
+		return res;
+	}
 	public void start() throws LWJGLException {
 		try {
-			DisplayMode dm = Display.getAvailableDisplayModes()[0];
+			int bestDisplay = chooseBestDisplay();
+			DisplayMode dm = Display.getAvailableDisplayModes()[bestDisplay];
 			System.out.println(dm);
 			Display.setDisplayMode(dm);
 			Display.setFullscreen(false);

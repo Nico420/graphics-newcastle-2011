@@ -1,25 +1,29 @@
 package snakeMoteur;
 
 import java.awt.Color;
+import java.util.ArrayList;
 
 public class Serpent {
 
 	private String name;
-	private int length;
 	private int speed;
 	private Color color;
-	
-	public Serpent(){
-		name="player 1";
-		length = 3;
-		speed=1;
+
+	private ArrayList<Position> positions;
+
+	public Serpent() {
+		name = "player 1";
+		speed = 1;
 		setColor(Color.GREEN);
+		setPositions(new ArrayList<Position>());
 	}
 
-	public Serpent(String name, int length, int speed) {
+	public Serpent(String name, int speed, Color c, Position depart) {
 		this.name = name;
-		this.length = length;
 		this.speed = speed;
+		this.color = c;
+		setPositions(new ArrayList<Position>());
+		positions.add(depart);
 	}
 
 	public String getName() {
@@ -31,11 +35,7 @@ public class Serpent {
 	}
 
 	public int getLength() {
-		return length;
-	}
-
-	public void setLength(int length) {
-		this.length = length;
+		return positions.size();
 	}
 
 	public int getSpeed() {
@@ -45,7 +45,7 @@ public class Serpent {
 	public void setSpeed(int speed) {
 		this.speed = speed;
 	}
-	
+
 	public Color getColor() {
 		return color;
 	}
@@ -54,26 +54,26 @@ public class Serpent {
 		this.color = color;
 	}
 
-	public void incLength(int inc){
-		this.setLength(this.getLength()+inc);
+	public ArrayList<Position> getPositions() {
+		return positions;
 	}
-	
-	public void incSpeed(int inc){
-		this.setSpeed(this.getSpeed()+inc);
+
+	public void setPositions(ArrayList<Position> positions) {
+		this.positions = positions;
 	}
-	
-	public void decLength(int dec){
-		this.setLength(this.getLength()-dec);
+
+	public void mouvement(int x, int y, boolean growing) {
+		Position last = positions.get(0);
+
+		positions.add(0, new Position(last.getX() + x, last.getY() + y));
+		if (!growing) {
+			positions.remove(positions.size() - 1);
+		}
 	}
-	
-	public void decSpeed(int dec){
-		this.setSpeed(this.getSpeed()-dec);
-	}
-	
 
 	@Override
 	public String toString() {
-		return "Serpent [name=" + name + ", length=" + length + ", speed="
-				+ speed + "]";
+		return "Serpent [name=" + name + ", speed=" + speed + ", color="
+				+ color + ", positions=" + positions + "]";
 	}
 }
