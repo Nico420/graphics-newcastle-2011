@@ -146,6 +146,7 @@ public class DisplayExample {
 	}
 
 	private void renderGL() throws LWJGLException {
+		
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT); // Clear
 																			// The
 																			// Screen
@@ -159,7 +160,7 @@ public class DisplayExample {
 		//GL11.glTranslatef(50, 50, 0);
 		// set the color of the quad (R,G,B,A)
 		GL11.glColor3f(0f, 1f, 0f);
-
+		//GL11.glViewport(0, 0, 50, 50);
 		GL11.glBegin(GL11.GL_POINTS);
 		GL11.glVertex3f(0, 0, 0);
 		GL11.glEnd();
@@ -194,7 +195,8 @@ public class DisplayExample {
 		 */
 		
 		//Designing a 3d object
-		draw3DQuad(20f,20f,20f,10f);
+		GL11.glScalef(0.1f, 0.1f, 0.1f);
+		draw3DQuad(50f,50f,50f,10f);
 
 	}
 
@@ -204,7 +206,7 @@ public class DisplayExample {
 		GL11.glPushMatrix();
 		GL11.glLoadIdentity();
 		GL11.glRotatef(30, 0, 1, 1);
-		GL11.glRotatef(rotation, 1f, 0f, 0f);
+		GL11.glRotatef(rotation/3, 1f, 0f, 0f);
 		
 		GL11.glBegin(GL11.GL_QUADS);
 			GL11.glVertex3f(x-a, y-a, z-a);
