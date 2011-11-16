@@ -62,24 +62,26 @@ public class DisplayExample {
 		     
 			GL11.glLoadIdentity();
 			
-			GL11.glTranslatef(40, 30, 0);
+			GL11.glTranslatef(50, 50, 0);
 			// set the color of the quad (R,G,B,A)
-		        GL11.glColor3f(1f,0f,0f);
+		        GL11.glColor3f(0f,1f,0f);
 		        
-		        GL11.glBegin(GL11.GL_POINTS);
-		        	GL11.glVertex3f(0, 0, 0);
-		        GL11.glEnd();
-		        GL11.glPushMatrix();
-		        GL11.glRotatef(rtri, 1, 0, 0);
-		        GL11.glTranslatef(ttri, 0, 0);
-			        GL11.glBegin(GL11.GL_TRIANGLES);
-						GL11.glVertex3f(-10,10,0);
-						GL11.glVertex3f(20, 10, 0);
-						GL11.glVertex3f(20, -20, 0);
-					GL11.glEnd();
-				GL11.glPopMatrix();
+		    GL11.glBegin(GL11.GL_POINTS);
+		      	GL11.glVertex3f(0, 0, 0);
+	        GL11.glEnd();
+		        
+	        GL11.glPushMatrix();
+	        GL11.glRotatef(rtri, 0, 0, 1);
+	        //GL11.glTranslatef(ttri, 0, 0);
+		        GL11.glBegin(GL11.GL_TRIANGLES);
+		        	GL11.glVertex3f(10,10,0);
+					GL11.glVertex3f(20, 10, 0);
+					GL11.glVertex3f(20, 20, 0);
+				GL11.glEnd();
+			GL11.glPopMatrix();
 
-				GL11.glLoadIdentity();
+				
+				/*GL11.glLoadIdentity();
 				//GL11.glTranslatef(0,0 , 0);
 				GL11.glPushMatrix();
 				GL11.glRotatef(rtri, 0, 45, 0);
@@ -89,7 +91,7 @@ public class DisplayExample {
 					GL11.glVertex3f(20, 60, 0);
 					GL11.glVertex3f(10, 60, 0);
 			GL11.glEnd();
-				GL11.glPopMatrix();
+				GL11.glPopMatrix();*/
 		
 				/*GL11.glColor3f(0f,0f,1f);
 				
@@ -113,7 +115,7 @@ public class DisplayExample {
 			}
 			Display.update(); // flushes OpenGL pipeline and swaps back and
 								// front buffers. perhaps waits for v-sync.
-			rtri+=0.1f;
+			rtri+=0.5f;
 			ttri +=inc;
 			if(ttri>60){
 				inc= -0.01f;
