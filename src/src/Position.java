@@ -1,4 +1,4 @@
-package snakeMoteur;
+package src;
 
 public class Position {
 	public float x;

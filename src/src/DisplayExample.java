@@ -23,26 +23,45 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.PixelFormat;
 
-import snakeMoteur.Position;
 
 @SuppressWarnings("unused")
 public class DisplayExample {
 
+	/** Definition of snake, wall, apple size. */
+	public final static int SNAKE_SIZE = 2;
+	public final static int APPLE_SIZE = 1;
+	public final static int WALL_SIZE = 3;
+
+	/** Movement constant. */
 	public final static int LEFT = 1;
 	public final static int RIGHT = 2;
 	public final static int UP = 3;
 	public final static int DOWN = 4;
 	public static int mouvement = 0;
+
+	/* maze Size */
+	public final static int HEIGHT = 100;
+	public final static int WIDTH = 100;
+
+	/* true if snake alive, else false. */
 	public static boolean continuer = true;
+	/* Boolean that indicate that a game have been launch */
 	public static boolean partieenCours = false;
-	/** position of quad */
-	float x = 11, y = 11;
 
-	float xpomme = 50, ypomme = 50;
+	/** Starting position for the snake. */
+	// Should be random
+	public static float x = 11, y = 11;
 
-	private static int i = 0;
+	/** First apple position */
+	public static float xpomme = 10+(float) ((WIDTH-20) * Math.random());
+	public static float ypomme = 10+(float) ((HEIGHT-20) * Math.random());
+
+	/** Initiale Snake size */
 	int longueurSerpent = 3;
-	ArrayList<snakeMoteur.Position> positions = new ArrayList<Position>();
+
+	/** Snake positions */
+	ArrayList<src.Position> positions = new ArrayList<Position>();
+
 	/** angle of quad rotation */
 	float rotation = 0;
 	/** time at last frame */
@@ -56,9 +75,6 @@ public class DisplayExample {
 
 	public int chooseBestDisplay() throws LWJGLException {
 		int res = 3;
-		// for (int i = 0; i < Display.getAvailableDisplayModes().length; i++) {
-		// System.out.println(Display.getAvailableDisplayModes()[i]);
-		// }
 		return res;
 	}
 
@@ -67,7 +83,7 @@ public class DisplayExample {
 		try {
 			int bestDisplay = chooseBestDisplay();
 			DisplayMode dm = Display.getAvailableDisplayModes()[bestDisplay];
-			// System.out.println(dm);
+			System.out.println(dm);
 			Display.setDisplayMode(dm);
 			Display.setFullscreen(false);
 			Display.setResizable(true);
@@ -137,16 +153,17 @@ public class DisplayExample {
 			y = 90;
 
 		// Check the snake
-		if (mouvement!=0 && continuer){
-			continuer = !positions.subList(3, positions.size()-1).contains(new Position(x, y));
+		if (mouvement != 0 && continuer) {
+			continuer = !positions.subList(3, positions.size() - 1).contains(
+					new Position(x, y));
 		}
 		// Check the wall
 		if (y >= 90 || y <= 10 || x <= 10 || x >= 90)
 			continuer = false;
 
 		// Check the apple
-		if ((xpomme < x + 5 && xpomme > x - 5)
-				&& (ypomme < y + 5 && ypomme > y - 5)) {
+		if ((xpomme < x + SNAKE_SIZE && xpomme > x - SNAKE_SIZE)
+				&& (ypomme < y + SNAKE_SIZE && ypomme > y - SNAKE_SIZE)) {
 			longueurSerpent++;
 			generateNewPomme();
 		}
@@ -154,10 +171,10 @@ public class DisplayExample {
 		Iterator<Position> ite = positions.iterator();
 		while (ite.hasNext()) {
 			Position e = ite.next();
-			GL11.glVertex3f(e.getX() - 2, e.getY() - 2, 0);
-			GL11.glVertex3f(e.getX() + 2, e.getY() - 2, 0);
-			GL11.glVertex3f(e.getX() + 2, e.getY() + 2, 0);
-			GL11.glVertex3f(e.getX() - 2, e.getY() + 2, 0);
+			GL11.glVertex3f(e.getX() - SNAKE_SIZE, e.getY() - SNAKE_SIZE, 0);
+			GL11.glVertex3f(e.getX() + SNAKE_SIZE, e.getY() - SNAKE_SIZE, 0);
+			GL11.glVertex3f(e.getX() + SNAKE_SIZE, e.getY() + SNAKE_SIZE, 0);
+			GL11.glVertex3f(e.getX() - SNAKE_SIZE, e.getY() + SNAKE_SIZE, 0);
 		}
 		updateFPS(); // update FPS Counter
 
@@ -244,10 +261,10 @@ public class DisplayExample {
 		GL11.glPushMatrix();
 		GL11.glColor3f(0.0f, 1.0f, 0.0f);
 		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glVertex3f(xpomme - 2, ypomme - 2, 0);
-		GL11.glVertex3f(xpomme + 2, ypomme - 2, 0);
-		GL11.glVertex3f(xpomme + 2, ypomme + 2, 0);
-		GL11.glVertex3f(xpomme - 2, ypomme + 2, 0);
+		GL11.glVertex3f(xpomme - APPLE_SIZE, ypomme - APPLE_SIZE, 0);
+		GL11.glVertex3f(xpomme + APPLE_SIZE, ypomme - APPLE_SIZE, 0);
+		GL11.glVertex3f(xpomme + APPLE_SIZE, ypomme + APPLE_SIZE, 0);
+		GL11.glVertex3f(xpomme - APPLE_SIZE, ypomme + APPLE_SIZE, 0);
 
 		GL11.glEnd();
 		GL11.glPopMatrix();
@@ -275,16 +292,18 @@ public class DisplayExample {
 		Iterator<Position> ite = positions.iterator();
 		while (ite.hasNext()) {
 			Position e = ite.next();
-			GL11.glVertex3f(e.getX() - 3, e.getY() - 3, 0);
-			GL11.glVertex3f(e.getX() + 3, e.getY() - 3, 0);
-			GL11.glVertex3f(e.getX() + 3, e.getY() + 3, 0);
-			GL11.glVertex3f(e.getX() - 3, e.getY() + 3, 0);
+			// Snake Body
+			GL11.glVertex3f(e.getX() - SNAKE_SIZE, e.getY() - SNAKE_SIZE, 0);
+			GL11.glVertex3f(e.getX() + SNAKE_SIZE, e.getY() - SNAKE_SIZE, 0);
+			GL11.glVertex3f(e.getX() + SNAKE_SIZE, e.getY() + SNAKE_SIZE, 0);
+			GL11.glVertex3f(e.getX() - SNAKE_SIZE, e.getY() + SNAKE_SIZE, 0);
 		}
 		GL11.glColor3f(1.0f, 0.0f, 0.0f);
-		GL11.glVertex3f(x - 3, y - 3, 0);
-		GL11.glVertex3f(x + 3, y - 3, 0);
-		GL11.glVertex3f(x + 3, y + 3, 0);
-		GL11.glVertex3f(x - 3, y + 3, 0);
+		// Draw Snake head !
+		GL11.glVertex3f(x - SNAKE_SIZE, y - SNAKE_SIZE, 0);
+		GL11.glVertex3f(x + SNAKE_SIZE, y - SNAKE_SIZE, 0);
+		GL11.glVertex3f(x + SNAKE_SIZE, y + SNAKE_SIZE, 0);
+		GL11.glVertex3f(x - SNAKE_SIZE, y + SNAKE_SIZE, 0);
 
 		GL11.glEnd();
 		GL11.glPopMatrix();
