@@ -2,7 +2,9 @@ package src;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import java.awt.Font;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.lwjgl.LWJGLException;
@@ -12,15 +14,19 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
+import tools.GLFont;
+
 public class Test {
 
+	GLFont font;
 	private static final int LEFT = 1;
 	private static final int RIGHT = 2;
 	private static final int UP = 3;
 	private static final int DOWN = 4;
 
-	private static final int SNAKE_SIZE = 3;
+	public static final int SNAKE_SIZE = 3;
 	private static final int MAP_SIZE = 90;
+	private static final int APPLE_SIZE = 1;
 
 	public List<Position> positions = new ArrayList<Position>();
 
@@ -46,6 +52,13 @@ public class Test {
 	public static int snakeLenght = 0;
 
 	public boolean perdu = false;
+
+	public boolean apple = false;
+
+	private static float yPomme = (float) (-MAP_SIZE + 2 * MAP_SIZE
+			* Math.random());
+	private static float xPomme = (float) (-MAP_SIZE + 2 * MAP_SIZE
+			* Math.random());
 
 	public int chooseBestDisplay() throws LWJGLException {
 		int res = 3;
@@ -90,13 +103,17 @@ public class Test {
 	private void update(int delta) throws InterruptedException {
 		rotation += 0.15f * delta;
 		if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
-			mouvement = LEFT;
+			if (!(mouvement == RIGHT))
+				mouvement = LEFT;
 		if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
-			mouvement = RIGHT;
+			if (!(mouvement == LEFT))
+				mouvement = RIGHT;
 		if (Keyboard.isKeyDown(Keyboard.KEY_UP))
-			mouvement = UP;
+			if (!(mouvement == DOWN))
+				mouvement = UP;
 		if (Keyboard.isKeyDown(Keyboard.KEY_DOWN))
-			mouvement = DOWN;
+			if (!(mouvement == UP))
+				mouvement = DOWN;
 
 		switch (mouvement) {
 		case LEFT:
@@ -113,14 +130,15 @@ public class Test {
 			break;
 		}
 		// Adding a new position for snake
-		if (Math.sqrt(Math.pow(xTemp - x, 2) + Math.pow(yTemp - y, 2)) > SNAKE_SIZE * 2) {
+		if (Math.sqrt(Math.pow(xTemp - x, 2) + Math.pow(yTemp - y, 2)) > (SNAKE_SIZE * 2)) {
 			draw3DQuad(xTemp, yTemp, 0, SNAKE_SIZE * 2);
 			positions.add(new Position(xTemp, yTemp));
+			System.out.println(x+" "+y+" "+xTemp+" "+yTemp);
 			// Remplaçer par boolean mangage de pomme
-			if (!(Math.random() > 0.9)) {
+			if (!apple) {
 				positions = positions.subList(1, snakeLenght + 1);
 			} else {
-				snakeLenght++;
+				apple = false;
 			}
 			xTemp = x;
 			yTemp = y;
@@ -144,6 +162,19 @@ public class Test {
 			perdu = true;
 		}
 
+		// Check Apple detection
+		if (x - SNAKE_SIZE < xPomme && x + SNAKE_SIZE > xPomme
+				&& y - SNAKE_SIZE < yPomme && y + SNAKE_SIZE > yPomme) {
+			snakeLenght++;
+			yPomme = (float) (-MAP_SIZE + 2 * MAP_SIZE * Math.random());
+			xPomme = (float) (-MAP_SIZE + 2 * MAP_SIZE * Math.random());
+			apple = true;
+		}
+
+		// Check Snake hitting himself
+		Position actual = new Position(x, y);
+		if (!perdu)
+			perdu = actual.checkCollapse(positions);
 		updateFPS(); // update FPS Counter
 
 	}
@@ -181,13 +212,14 @@ public class Test {
 															// Buffer
 		glViewport(100, 100, Display.getWidth() - 100,
 				Display.getHeight() - 100);
+
 		glLoadIdentity();
 		if (switchView) {
 			glRotatef(85, 1, 0, 0);
 			glTranslatef(0, 0, -100);
 		} else {
-			glRotatef(10, 0, 1, 0);
-			glRotatef(10, 1, 0, 0);
+			glRotatef(20, 0, 1, 0);
+			glRotatef(20, 1, 0, 0);
 		}
 
 		if (perdu) {
@@ -201,6 +233,7 @@ public class Test {
 			glEnd();
 			glPopMatrix();
 		} else {
+			// Dessin de la carte
 			glPushMatrix();
 			glBegin(GL_QUADS);
 			glColor3f(1, 0, 0);
@@ -212,12 +245,19 @@ public class Test {
 			glColor3f(1, 0, 1);
 			glVertex3f(0 - MAP_SIZE, 0 + MAP_SIZE, 0);
 			glEnd();
+
 			draw3DQuad(x, y, 0, SNAKE_SIZE * 2);
-			draw3DQuad(xTemp, yTemp, 0, SNAKE_SIZE * 2);
+			// Dessin du serpent
+			// draw3DQuad(xTemp, yTemp, 0, SNAKE_SIZE * 2);
 			for (int i = 0; i < positions.size(); i++) {
 				draw3DQuad(positions.get(i).getX(), positions.get(i).getY(), 0,
 						SNAKE_SIZE * 2);
 			}
+
+
+			// Dessin de la pomme
+			glColor3f(0, 1, 0);
+			draw3DQuad(xPomme, yPomme, 0, APPLE_SIZE * 2);
 			glPopMatrix();
 		}
 
@@ -305,7 +345,6 @@ public class Test {
 		float a = size / 2;
 
 		glPushMatrix();
-
 		glBegin(GL_QUADS);
 		glVertex3f(x - a, y - a, z - a);
 		glVertex3f(x + a, y - a, z - a);
@@ -332,10 +371,19 @@ public class Test {
 	}
 
 	private void initGL() {
+		glShadeModel(GL_SMOOTH); // Enable Smooth Shading
+		glClearColor(0.0f, 0.0f, 0.0f, 0.5f); // Black Background
+		glClearDepth(1.0f); // Depth Buffer Setup
+		glEnable(GL_DEPTH_TEST); // Enables Depth Testing
+		glDepthFunc(GL_LEQUAL); // The Type Of Depth Testing To Do
+		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST); // Really Nice
+															// Perspective
+															// Calculations
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		glOrtho(-100, 100, 100, -100, 100, -100);
 		glMatrixMode(GL_MODELVIEW);
+		// font = new GLFont( new Font("Trebuchet", Font.BOLD, 18) );
 	}
 
 	public static void main(String[] argv) throws LWJGLException,
