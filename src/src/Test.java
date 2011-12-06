@@ -213,6 +213,7 @@ public class Test {
 			glVertex3f(0 - MAP_SIZE, 0 + MAP_SIZE, 0);
 			glEnd();
 			draw3DQuad(x, y, 0, SNAKE_SIZE * 2);
+			draw3DQuad(xTemp, yTemp, 0, SNAKE_SIZE * 2);
 			for (int i = 0; i < positions.size(); i++) {
 				draw3DQuad(positions.get(i).getX(), positions.get(i).getY(), 0,
 						SNAKE_SIZE * 2);
