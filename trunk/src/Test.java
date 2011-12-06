@@ -27,6 +27,8 @@ public class Test {
 	private static final int RIGHT = 2;
 	private static final int UP = 3;
 	private static final int DOWN = 4;
+	
+	private static final int SNAKE_SIZE=3;
 	/** angle of quad rotation */
 	float rotation = 0;
 	/** time at last frame */
@@ -109,14 +111,14 @@ public class Test {
 			break;
 		}
 		// keep quad on the screen
-		if (x < -100)
-			x = -100;
-		if (x > 100)
-			x = 100;
-		if (y < -100)
-			y = -100;
-		if (y > 100)
-			y = 100;
+		if (x < -100 + SNAKE_SIZE)
+			x = -100 + SNAKE_SIZE;
+		if (x > 100 - SNAKE_SIZE)
+			x = 100 - SNAKE_SIZE;
+		if (y < -100 + SNAKE_SIZE)
+			y = -100 + SNAKE_SIZE;
+		if (y > 100 - SNAKE_SIZE)
+			y = 100 - SNAKE_SIZE;
 
 		System.out.println(mouvement +" "+x+" "+y);
 		updateFPS(); // update FPS Counter
@@ -164,7 +166,6 @@ public class Test {
 		glRotatef(10,1,0,0);
 		}
 		glPushMatrix();
-		int a =10;
 		int b = 100;
 		glBegin(GL_QUADS);
 		glColor3f(1, 0, 0);
@@ -176,8 +177,8 @@ public class Test {
 		glColor3f(1, 0, 1);
 		glVertex3f(0 - b, 0 + b, 0);
 		glEnd();
-		draw3DQuad(x, y, 0, a);
-		draw3DQuad(x+10, y, 0, a);
+		draw3DQuad(x, y, 0, SNAKE_SIZE*2);
+		draw3DQuad(x+SNAKE_SIZE*2 +1, y, 0, SNAKE_SIZE*2);
 		glPopMatrix();
 		
 		//draw3DQuad(x, y, 0, 10);
