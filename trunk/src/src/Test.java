@@ -109,14 +109,14 @@ public class Test {
 			break;
 		}
 		// keep quad on the screen
-		if (x < 0)
-			x = 0;
-		if (x > 10)
-			x = 10;
-		if (y < 0)
-			y = 00;
-		if (y > 10)
-			y = 10;
+		if (x < -100)
+			x = -100;
+		if (x > 100)
+			x = 100;
+		if (y < -100)
+			y = -100;
+		if (y > 100)
+			y = 100;
 
 		System.out.println(mouvement +" "+x+" "+y);
 		updateFPS(); // update FPS Counter
@@ -154,12 +154,14 @@ public class Test {
 																			// The
 																			// Depth
 																			// Buffer
+		glViewport(100, 100, Display.getWidth()-100,Display.getHeight()-100);
 		glLoadIdentity();
 		if(switchView){
 		glRotatef(85, 1, 0, 0);
 		glTranslatef(0, 0, -100);
 		}else{
 		glRotatef(10,0,1,0);
+		glRotatef(10,1,0,0);
 		}
 		glPushMatrix();
 		int a =10;
@@ -175,6 +177,7 @@ public class Test {
 		glVertex3f(0 - b, 0 + b, 0);
 		glEnd();
 		draw3DQuad(x, y, 0, a);
+		draw3DQuad(x+10, y, 0, a);
 		glPopMatrix();
 		
 		//draw3DQuad(x, y, 0, 10);
