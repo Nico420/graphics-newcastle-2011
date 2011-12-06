@@ -1,18 +1,9 @@
 package src;
 
-// DisplayExample
-// Just creates a blank (black) window, ready for OpenGL to render to
-//
-// Exercises
-// 
-// 01 - Create display windows of different sizes, are all sizes valid? What other parameters are they about display modes?
-// 02 - Find out what valid display modes you can use (at runtime)? Can you set the display mode to one of them?
-// 03 - Could you write a simple algorithm to choose the "best" available display mode
-// 04 - Create a window of the present desktop resolution. Is there anything wrong with it?
-// 05 - Can you solve the problem above? 
-
 import static org.lwjgl.opengl.GL11.*;
 
+import java.util.ArrayList;
+import java.util.List;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
@@ -27,8 +18,12 @@ public class Test {
 	private static final int RIGHT = 2;
 	private static final int UP = 3;
 	private static final int DOWN = 4;
-	
-	private static final int SNAKE_SIZE=3;
+
+	private static final int SNAKE_SIZE = 3;
+	private static final int MAP_SIZE = 90;
+
+	public List<Position> positions = new ArrayList<Position>();
+
 	/** angle of quad rotation */
 	float rotation = 0;
 	/** time at last frame */
@@ -37,20 +32,27 @@ public class Test {
 	int fps;
 	/** last fps time */
 	long lastFPS;
+
 	public int mouvement = 0;
 	public float x;
 	public float y;
+	public float xTemp = 0;
+	public float yTemp = 0;
 
 	public boolean switchView = false;
 
 	public static boolean exit = false;
+
+	public static int snakeLenght = 0;
+
+	public boolean perdu = false;
 
 	public int chooseBestDisplay() throws LWJGLException {
 		int res = 3;
 		return res;
 	}
 
-	public void start() throws LWJGLException {
+	public void start() throws LWJGLException, InterruptedException {
 
 		try {
 			int bestDisplay = chooseBestDisplay();
@@ -85,7 +87,7 @@ public class Test {
 		Display.destroy();
 	}
 
-	private void update(int delta) {
+	private void update(int delta) throws InterruptedException {
 		rotation += 0.15f * delta;
 		if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
 			mouvement = LEFT;
@@ -110,17 +112,38 @@ public class Test {
 			y += 0.05f * delta;
 			break;
 		}
-		// keep quad on the screen
-		if (x < -100 + SNAKE_SIZE)
-			x = -100 + SNAKE_SIZE;
-		if (x > 100 - SNAKE_SIZE)
-			x = 100 - SNAKE_SIZE;
-		if (y < -100 + SNAKE_SIZE)
-			y = -100 + SNAKE_SIZE;
-		if (y > 100 - SNAKE_SIZE)
-			y = 100 - SNAKE_SIZE;
+		// Adding a new position for snake
+		if (Math.sqrt(Math.pow(xTemp - x, 2) + Math.pow(yTemp - y, 2)) > SNAKE_SIZE * 2) {
+			draw3DQuad(xTemp, yTemp, 0, SNAKE_SIZE * 2);
+			positions.add(new Position(xTemp, yTemp));
+			// Remplaçer par boolean mangage de pomme
+			if (!(Math.random() > 0.9)) {
+				positions = positions.subList(1, snakeLenght + 1);
+			} else {
+				snakeLenght++;
+			}
+			xTemp = x;
+			yTemp = y;
+		}
+		// Check for the wall collision
 
-		System.out.println(mouvement +" "+x+" "+y);
+		if (x < -MAP_SIZE + SNAKE_SIZE) {
+			x = -MAP_SIZE + SNAKE_SIZE;
+			perdu = true;
+		}
+		if (x > MAP_SIZE - SNAKE_SIZE) {
+			x = MAP_SIZE - SNAKE_SIZE;
+			perdu = true;
+		}
+		if (y < -MAP_SIZE + SNAKE_SIZE) {
+			y = -MAP_SIZE + SNAKE_SIZE;
+			perdu = true;
+		}
+		if (y > MAP_SIZE - SNAKE_SIZE) {
+			y = MAP_SIZE - SNAKE_SIZE;
+			perdu = true;
+		}
+
 		updateFPS(); // update FPS Counter
 
 	}
@@ -150,38 +173,54 @@ public class Test {
 	private void renderGL() throws LWJGLException {
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear
-																			// The
-																			// Screen
-																			// And
-																			// The
-																			// Depth
-																			// Buffer
-		glViewport(100, 100, Display.getWidth()-100,Display.getHeight()-100);
+															// The
+															// Screen
+															// And
+															// The
+															// Depth
+															// Buffer
+		glViewport(100, 100, Display.getWidth() - 100,
+				Display.getHeight() - 100);
 		glLoadIdentity();
-		if(switchView){
-		glRotatef(85, 1, 0, 0);
-		glTranslatef(0, 0, -100);
-		}else{
-		glRotatef(10,0,1,0);
-		glRotatef(10,1,0,0);
+		if (switchView) {
+			glRotatef(85, 1, 0, 0);
+			glTranslatef(0, 0, -100);
+		} else {
+			glRotatef(10, 0, 1, 0);
+			glRotatef(10, 1, 0, 0);
 		}
-		glPushMatrix();
-		int b = 100;
-		glBegin(GL_QUADS);
-		glColor3f(1, 0, 0);
-		glVertex3f(0 - b, 0 - b, 0);
-		glColor3f(1, 1, 0);
-		glVertex3f(0 + b, 0 - b, 0);
-		glColor3f(1, 1,1);
-		glVertex3f(0 + b, 0 + b, 0);
-		glColor3f(1, 0, 1);
-		glVertex3f(0 - b, 0 + b, 0);
-		glEnd();
-		draw3DQuad(x, y, 0, SNAKE_SIZE*2);
-		draw3DQuad(x+SNAKE_SIZE*2 +1, y, 0, SNAKE_SIZE*2);
-		glPopMatrix();
-		
-		//draw3DQuad(x, y, 0, 10);
+
+		if (perdu) {
+			glPushMatrix();
+			glBegin(GL_QUADS);
+			glColor3f(1, 0, 0);
+			glVertex3f(0 - MAP_SIZE, 0 - MAP_SIZE, 0);
+			glVertex3f(0 + MAP_SIZE, 0 - MAP_SIZE, 0);
+			glVertex3f(0 + MAP_SIZE, 0 + MAP_SIZE, 0);
+			glVertex3f(0 - MAP_SIZE, 0 + MAP_SIZE, 0);
+			glEnd();
+			glPopMatrix();
+		} else {
+			glPushMatrix();
+			glBegin(GL_QUADS);
+			glColor3f(1, 0, 0);
+			glVertex3f(0 - MAP_SIZE, 0 - MAP_SIZE, 0);
+			glColor3f(1, 1, 0);
+			glVertex3f(0 + MAP_SIZE, 0 - MAP_SIZE, 0);
+			glColor3f(1, 1, 1);
+			glVertex3f(0 + MAP_SIZE, 0 + MAP_SIZE, 0);
+			glColor3f(1, 0, 1);
+			glVertex3f(0 - MAP_SIZE, 0 + MAP_SIZE, 0);
+			glEnd();
+			draw3DQuad(x, y, 0, SNAKE_SIZE * 2);
+			for (int i = 0; i < positions.size(); i++) {
+				draw3DQuad(positions.get(i).getX(), positions.get(i).getY(), 0,
+						SNAKE_SIZE * 2);
+			}
+			glPopMatrix();
+		}
+
+		// draw3DQuad(x, y, 0, 10);
 	}
 
 	private void drawPyramid() {
@@ -298,7 +337,8 @@ public class Test {
 		glMatrixMode(GL_MODELVIEW);
 	}
 
-	public static void main(String[] argv) throws LWJGLException {
+	public static void main(String[] argv) throws LWJGLException,
+			InterruptedException {
 		Test displayExample = new Test();
 		displayExample.start();
 	}
