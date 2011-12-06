@@ -13,8 +13,6 @@ package src;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
@@ -22,9 +20,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.opengl.PixelFormat;
 
-@SuppressWarnings("unused")
 public class Test {
 
 	private static final int LEFT = 1;
@@ -78,7 +74,7 @@ public class Test {
 		while (!Display.isCloseRequested() && !exit) { // Done Drawing The Quad
 			int delta = getDelta();
 			update(delta);
-			renderGL(delta);
+			renderGL();
 			pollInput();
 			Display.update(); // flushes OpenGL pipeline and swaps back and
 								// front buffers. perhaps waits for v-sync.
@@ -89,7 +85,6 @@ public class Test {
 
 	private void update(int delta) {
 		rotation += 0.15f * delta;
-
 		if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
 			mouvement = LEFT;
 		if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
@@ -114,15 +109,16 @@ public class Test {
 			break;
 		}
 		// keep quad on the screen
-		if (x < 10)
+		if (x < 0)
+			x = 0;
+		if (x > 10)
 			x = 10;
-		if (x > 90)
-			x = 90;
-		if (y < 10)
+		if (y < 0)
+			y = 00;
+		if (y > 10)
 			y = 10;
-		if (y > 90)
-			y = 90;
 
+		System.out.println(mouvement +" "+x+" "+y);
 		updateFPS(); // update FPS Counter
 
 	}
@@ -149,7 +145,7 @@ public class Test {
 		return (Sys.getTime() * 1000) / Sys.getTimerResolution();
 	}
 
-	private void renderGL(int delta) throws LWJGLException {
+	private void renderGL() throws LWJGLException {
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear
 																			// The
@@ -161,36 +157,24 @@ public class Test {
 		glLoadIdentity();
 		if(switchView){
 		glRotatef(85, 1, 0, 0);
-
-		glTranslatef(0, 0, -50);
+		glTranslatef(0, 0, -100);
+		}else{
+		glRotatef(10,0,1,0);
 		}
 		glPushMatrix();
 		int a =10;
-		x=0;y=0;
+		int b = 100;
 		glBegin(GL_QUADS);
 		glColor3f(1, 0, 0);
-		glVertex3f(x - a, y - a, 5);
+		glVertex3f(0 - b, 0 - b, 0);
 		glColor3f(1, 1, 0);
-		glVertex3f(x + a, y - a, 5);
-
+		glVertex3f(0 + b, 0 - b, 0);
 		glColor3f(1, 1,1);
-		glVertex3f(x + a, y + a, 0);
-
+		glVertex3f(0 + b, 0 + b, 0);
 		glColor3f(1, 0, 1);
-		glVertex3f(x - a, y + a, 0);
+		glVertex3f(0 - b, 0 + b, 0);
 		glEnd();
-		glBegin(GL_QUADS);
-		glColor3f(1, 0, 0);
-		glVertex3f(x - a, y - a, 5);
-		glColor3f(1, 1, 0);
-		glVertex3f(x + a, y - a, 5);
-
-		glColor3f(1, 1,1);
-		glVertex3f(x + a, y + a, 0);
-
-		glColor3f(1, 0, 1);
-		glVertex3f(x - a, y + a, 0);
-		glEnd();
+		draw3DQuad(x, y, 0, a);
 		glPopMatrix();
 		
 		//draw3DQuad(x, y, 0, 10);
