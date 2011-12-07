@@ -16,8 +16,9 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
 import tools.GLFont;
+import tools.Position;
 
-public class Test {
+public class Snake {
 
 	GLFont font;
 	private static final int LEFT = 1;
@@ -428,7 +429,7 @@ public class Test {
 
 	public static void main(String[] argv) throws LWJGLException,
 			InterruptedException {
-		Test displayExample = new Test();
+		Snake displayExample = new Snake();
 		displayExample.start();
 	}
 
