@@ -3,6 +3,7 @@ package src;
 import static org.lwjgl.opengl.GL11.*;
 
 import java.awt.Font;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -25,10 +26,13 @@ public class Test {
 	private static final int DOWN = 4;
 
 	public static final int SNAKE_SIZE = 3;
-	private static final int MAP_SIZE = 90;
-	private static final int APPLE_SIZE = 1;
+	public static final int MAP_SIZE = 90;
+	public static final int APPLE_SIZE = 2;
+	public static final int WALL_SIZE = 5;
 
 	public List<Position> positions = new ArrayList<Position>();
+
+	public List<Position> wall = new ArrayList<Position>();
 
 	/** angle of quad rotation */
 	float rotation = 0;
@@ -82,8 +86,12 @@ public class Test {
 			System.exit(0);
 		}
 
-		// Initialize Snake position
-
+		// Create some random wall
+		for (int i = 0; i < 5; i++) {
+			wall.add(new Position((float) (-MAP_SIZE + 2 * MAP_SIZE
+					* Math.random()), (float) (-MAP_SIZE + 2 * MAP_SIZE
+					* Math.random())));
+		}
 		initGL();
 		getDelta();
 		lastFPS = getTime();
@@ -133,8 +141,7 @@ public class Test {
 		if (Math.sqrt(Math.pow(xTemp - x, 2) + Math.pow(yTemp - y, 2)) > (SNAKE_SIZE * 2)) {
 			draw3DQuad(xTemp, yTemp, 0, SNAKE_SIZE * 2);
 			positions.add(new Position(xTemp, yTemp));
-			System.out.println(x+" "+y+" "+xTemp+" "+yTemp);
-			// Remplaçer par boolean mangage de pomme
+			// Remplaï¿½er par boolean mangage de pomme
 			if (!apple) {
 				positions = positions.subList(1, snakeLenght + 1);
 			} else {
@@ -143,7 +150,12 @@ public class Test {
 			xTemp = x;
 			yTemp = y;
 		}
+
+		Position actual = new Position(x, y);
 		// Check for the wall collision
+
+		if (!perdu)
+			perdu = actual.checkCollapse(wall, WALL_SIZE);
 
 		if (x < -MAP_SIZE + SNAKE_SIZE) {
 			x = -MAP_SIZE + SNAKE_SIZE;
@@ -172,9 +184,8 @@ public class Test {
 		}
 
 		// Check Snake hitting himself
-		Position actual = new Position(x, y);
 		if (!perdu)
-			perdu = actual.checkCollapse(positions);
+			perdu = actual.checkCollapse(positions, SNAKE_SIZE / 2);
 		updateFPS(); // update FPS Counter
 
 	}
@@ -235,18 +246,9 @@ public class Test {
 		} else {
 			// Dessin de la carte
 			glPushMatrix();
-			glBegin(GL_QUADS);
-			glColor3f(1, 0, 0);
-			glVertex3f(0 - MAP_SIZE, 0 - MAP_SIZE, 0);
-			glColor3f(1, 1, 0);
-			glVertex3f(0 + MAP_SIZE, 0 - MAP_SIZE, 0);
-			glColor3f(1, 1, 1);
-			glVertex3f(0 + MAP_SIZE, 0 + MAP_SIZE, 0);
-			glColor3f(1, 0, 1);
-			glVertex3f(0 - MAP_SIZE, 0 + MAP_SIZE, 0);
-			glEnd();
+			drawMap();
 
-			draw3DQuad(x, y, 0, SNAKE_SIZE * 2);
+			drawSnakeHead(x, y, 0, SNAKE_SIZE * 2);
 			// Dessin du serpent
 			// draw3DQuad(xTemp, yTemp, 0, SNAKE_SIZE * 2);
 			for (int i = 0; i < positions.size(); i++) {
@@ -254,14 +256,55 @@ public class Test {
 						SNAKE_SIZE * 2);
 			}
 
+			// Draw Walls
+			glColor3f(1, 0, 0);
+			for (int i = 0; i < wall.size(); i++) {
+				draw3DQuad(wall.get(i).getX(), wall.get(i).getY(), 0,
+						WALL_SIZE * 2);
+			}
 
 			// Dessin de la pomme
 			glColor3f(0, 1, 0);
-			draw3DQuad(xPomme, yPomme, 0, APPLE_SIZE * 2);
+			drawApple(xPomme, yPomme, 0, APPLE_SIZE * 2);
 			glPopMatrix();
 		}
 
 		// draw3DQuad(x, y, 0, 10);
+	}
+
+	private void drawMap() {
+		// Navigable map
+		glBegin(GL_QUADS);
+		glColor3f(0, 1, 1);
+		glVertex3f(0 - MAP_SIZE, 0 - MAP_SIZE, 0);
+		glColor3f(1, 1, 0);
+		glVertex3f(0 + MAP_SIZE, 0 - MAP_SIZE, 0);
+		glColor3f(1, 1, 1);
+		glVertex3f(0 + MAP_SIZE, 0 + MAP_SIZE, 0);
+		glColor3f(1, 0, 1);
+		glVertex3f(0 - MAP_SIZE, 0 + MAP_SIZE, 0);
+		glEnd();
+		// Walls around it
+		
+		for (int i = -MAP_SIZE; i < MAP_SIZE; i+=WALL_SIZE) {
+			glColor3f(1, 0, 0);
+			draw3DQuad(i, -(MAP_SIZE), 0, WALL_SIZE);
+			glColor3f(1, 1, 0);
+			draw3DQuad(i, (MAP_SIZE), 0, WALL_SIZE);
+			glColor3f(1, 1, 1);
+			draw3DQuad((MAP_SIZE), i, 0, WALL_SIZE);
+			glColor3f(0, 1, 1);
+			draw3DQuad(-(MAP_SIZE), i, 0, WALL_SIZE);
+		}
+
+	}
+
+	private void drawApple(float x, float y, float z, int size) {
+		draw3DQuad(x, y, z, APPLE_SIZE);
+	}
+
+	private void drawSnakeHead(float x, float y, float z, int size) {
+		draw3DQuad(x, y, z, size);
 	}
 
 	private void drawPyramid() {
@@ -350,17 +393,14 @@ public class Test {
 		glVertex3f(x + a, y - a, z - a);
 		glVertex3f(x + a, y + a, z - a);
 		glVertex3f(x - a, y + a, z - a);
-		glColor3f(0f, 1f, 1f);
 		glVertex3f(x - a, y - a, z + a);
 		glVertex3f(x + a, y - a, z + a);
 		glVertex3f(x + a, y + a, z + a);
 		glVertex3f(x - a, y + a, z + a);
-		glColor3f(1f, 0f, 0f);
 		glVertex3f(x - a, y - a, z + a);
 		glVertex3f(x + a, y - a, z + a);
 		glVertex3f(x + a, y - a, z - a);
 		glVertex3f(x - a, y - a, z - a);
-		glColor3f(0f, 0f, 1f);
 		glVertex3f(x + a, y + a, z + a);
 		glVertex3f(x - a, y + a, z + a);
 		glVertex3f(x - a, y + a, z - a);
