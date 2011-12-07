@@ -43,26 +43,14 @@ public class Position {
 		return false;
 	}
 
-	public static boolean checkCollapse(Position e, Position t) {
-		boolean res = false;
-
-		return res;
-
-	}
-
-	public boolean checkCollapse(List<Position> positions) {
+	public boolean checkCollapse(List<Position> positions, int size) {
 		Iterator<Position> ite = positions.iterator();
 		while (ite.hasNext()) {
 			Position t = ite.next();
-			if (this.getX() - Test.SNAKE_SIZE < this.getX()
-					&& this.getX() + Test.SNAKE_SIZE > this.getX()
-					&& this.getY() - Test.SNAKE_SIZE < this.getY()
-					&& this.getY() + Test.SNAKE_SIZE > this.getY()){
-				System.out.println(t+" "+this);
-				return true;
-				
-			}
-				
+			boolean collisionX = Math.abs(t.getX()-this.getX())<Test.SNAKE_SIZE + size;
+			boolean collisionY = Math.abs(t.getY()-this.getY())<Test.SNAKE_SIZE + size;
+			if (collisionX && collisionY)
+				return true;				
 		}
 		return false;
 	}
