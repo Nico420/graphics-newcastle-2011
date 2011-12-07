@@ -3,6 +3,7 @@ package src;
 import static org.lwjgl.opengl.GL11.*;
 
 import java.awt.Font;
+import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -16,6 +17,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
 import tools.GLFont;
+import tools.MazeReader;
 import tools.Position;
 
 public class Snake {
@@ -32,11 +34,9 @@ public class Snake {
 	public static final int WALL_SIZE = 5;
 
 	public List<Position> positions = new ArrayList<Position>();
+	public List<Position> walls = new ArrayList<Position>();
 
-	public List<Position> wall = new ArrayList<Position>();
 
-	/** angle of quad rotation */
-	float rotation = 0;
 	/** time at last frame */
 	long lastFrame;
 	/** frames per second */
@@ -58,19 +58,16 @@ public class Snake {
 
 	public boolean perdu = false;
 
-	public boolean apple = false;
+	public boolean appleEat = false;
 
-	private static float yPomme = (float) (-MAP_SIZE + 2 * MAP_SIZE
-			* Math.random());
-	private static float xPomme = (float) (-MAP_SIZE + 2 * MAP_SIZE
-			* Math.random());
+	Apple apple = new Apple();
 
 	public int chooseBestDisplay() throws LWJGLException {
 		int res = 3;
 		return res;
 	}
 
-	public void start() throws LWJGLException, InterruptedException {
+	public void start() throws LWJGLException, InterruptedException, FileNotFoundException {
 
 		try {
 			int bestDisplay = chooseBestDisplay();
@@ -87,11 +84,13 @@ public class Snake {
 			System.exit(0);
 		}
 
-		// Create some random wall
-		for (int i = 0; i < 5; i++) {
-			wall.add(new Position((float) (-MAP_SIZE + 2 * MAP_SIZE
-					* Math.random()), (float) (-MAP_SIZE + 2 * MAP_SIZE
-					* Math.random())));
+		walls = MazeReader.buildWallList("maze.txt");
+		
+		System.out.println(walls);
+		//Initialize Snake start_position
+		while((new Position(x,y).checkCollapse(walls, WALL_SIZE))){
+			x = (float) (-MAP_SIZE + MAP_SIZE*2*Math.random());
+			y = (float) (-MAP_SIZE + MAP_SIZE*2*Math.random());
 		}
 		initGL();
 		getDelta();
@@ -110,7 +109,6 @@ public class Snake {
 	}
 
 	private void update(int delta) throws InterruptedException {
-		rotation += 0.15f * delta;
 		if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
 			if (!(mouvement == RIGHT))
 				mouvement = LEFT;
@@ -143,10 +141,10 @@ public class Snake {
 			draw3DQuad(xTemp, yTemp, 0, SNAKE_SIZE * 2);
 			positions.add(new Position(xTemp, yTemp));
 			// Rempla�er par boolean mangage de pomme
-			if (!apple) {
+			if (!appleEat) {
 				positions = positions.subList(1, snakeLenght + 1);
 			} else {
-				apple = false;
+				appleEat = false;
 			}
 			xTemp = x;
 			yTemp = y;
@@ -156,7 +154,7 @@ public class Snake {
 		// Check for the wall collision
 
 		if (!perdu)
-			perdu = actual.checkCollapse(wall, WALL_SIZE);
+			perdu = actual.checkCollapse(walls, WALL_SIZE);
 
 		if (x < -MAP_SIZE + SNAKE_SIZE) {
 			x = -MAP_SIZE + SNAKE_SIZE;
@@ -176,12 +174,18 @@ public class Snake {
 		}
 
 		// Check Apple detection
-		if (x - SNAKE_SIZE < xPomme && x + SNAKE_SIZE > xPomme
-				&& y - SNAKE_SIZE < yPomme && y + SNAKE_SIZE > yPomme) {
+		if (x - SNAKE_SIZE < apple.getX() && x + SNAKE_SIZE > apple.getX()
+				&& y - SNAKE_SIZE < apple.getY() && y + SNAKE_SIZE > apple.getY()) {
 			snakeLenght++;
-			yPomme = (float) (-MAP_SIZE + 2 * MAP_SIZE * Math.random());
-			xPomme = (float) (-MAP_SIZE + 2 * MAP_SIZE * Math.random());
-			apple = true;
+			float xPommeTemp = (float) (-MAP_SIZE + 2 * MAP_SIZE * Math.random());
+			float yPommeTemp = (float) (-MAP_SIZE + 2 * MAP_SIZE * Math.random());
+			while(new Position(xPommeTemp,yPommeTemp).checkCollapse(walls, APPLE_SIZE)){
+				xPommeTemp = (float) (-MAP_SIZE + 2 * MAP_SIZE * Math.random());
+				yPommeTemp = (float) (-MAP_SIZE + 2 * MAP_SIZE * Math.random());
+			}
+			apple.setY(yPommeTemp);
+			apple.setX(xPommeTemp);
+			appleEat = true;
 		}
 
 		// Check Snake hitting himself
@@ -231,7 +235,7 @@ public class Snake {
 			glTranslatef(0, 0, -100);
 		} else {
 			glRotatef(20, 0, 1, 0);
-			glRotatef(20, 1, 0, 0);
+			glRotatef(-20, 1, 0, 0);
 		}
 
 		if (perdu) {
@@ -249,6 +253,7 @@ public class Snake {
 			glPushMatrix();
 			drawMap();
 
+			glColor3f(0, 0, 1);
 			drawSnakeHead(x, y, 0, SNAKE_SIZE * 2);
 			// Dessin du serpent
 			// draw3DQuad(xTemp, yTemp, 0, SNAKE_SIZE * 2);
@@ -259,14 +264,15 @@ public class Snake {
 
 			// Draw Walls
 			glColor3f(1, 0, 0);
-			for (int i = 0; i < wall.size(); i++) {
-				draw3DQuad(wall.get(i).getX(), wall.get(i).getY(), 0,
+			for (int i = 0; i < walls.size(); i++) {
+				draw3DQuad(walls.get(i).getX(), walls.get(i).getY(), 0,
 						WALL_SIZE * 2);
 			}
 
 			// Dessin de la pomme
 			glColor3f(0, 1, 0);
-			drawApple(xPomme, yPomme, 0, APPLE_SIZE * 2);
+			apple.draw();
+			//drawApple(xPomme, yPomme, 0, APPLE_SIZE * 2);
 			glPopMatrix();
 		}
 
@@ -308,84 +314,7 @@ public class Snake {
 		draw3DQuad(x, y, z, size);
 	}
 
-	private void drawPyramid() {
-		glPushMatrix();
-
-		glLoadIdentity(); // Reset The View
-		glTranslatef(10f, 10.0f, 0f); // Move Left 1.5 Units And Into
-										// The Screen 6.0
-		glRotatef(rotation, 1.0f, 1.0f, 0.0f); // Rotate The Triangle On
-												// The Y axis ( NEW )
-		glBegin(GL_TRIANGLES); // Start Drawing A Triangle
-		glColor3f(1.0f, 0.0f, 0.0f); // Red
-		glVertex3f(0.0f, 1.0f, 0.0f); // Top Of Triangle (Front)
-		glColor3f(0.0f, 1.0f, 0.0f); // Green
-		glVertex3f(-1.0f, -1.0f, 1.0f); // Left Of Triangle (Front)
-		glColor3f(0.0f, 0.0f, 1.0f); // Blue
-		glVertex3f(1.0f, -1.0f, 1.0f); // Right Of Triangle (Front)
-		glColor3f(1.0f, 0.0f, 0.0f); // Red
-		glVertex3f(0.0f, 1.0f, 0.0f); // Top Of Triangle (Right)
-		glColor3f(0.0f, 0.0f, 1.0f); // Blue
-		glVertex3f(1.0f, -1.0f, 1.0f); // Left Of Triangle (Right)
-		glColor3f(0.0f, 1.0f, 0.0f); // Green
-		glVertex3f(1.0f, -1.0f, -1.0f); // Right Of Triangle (Right)
-		glColor3f(1.0f, 0.0f, 0.0f); // Red
-		glVertex3f(0.0f, 1.0f, 0.0f); // Top Of Triangle (Back)
-		glColor3f(0.0f, 1.0f, 0.0f); // Green
-		glVertex3f(1.0f, -1.0f, -1.0f); // Left Of Triangle (Back)
-		glColor3f(0.0f, 0.0f, 1.0f); // Blue
-		glVertex3f(-1.0f, -1.0f, -1.0f); // Right Of Triangle (Back)
-		glColor3f(1.0f, 0.0f, 0.0f); // Red
-		glVertex3f(0.0f, 1.0f, 0.0f); // Top Of Triangle (Left)
-		glColor3f(0.0f, 0.0f, 1.0f); // Blue
-		glVertex3f(-1.0f, -1.0f, -1.0f); // Left Of Triangle (Left)
-		glColor3f(0.0f, 1.0f, 0.0f); // Green
-		glVertex3f(-1.0f, -1.0f, 1.0f); // Right Of Triangle (Left)
-		glEnd(); // Done Drawing The Pyramid
-
-		glLoadIdentity(); // Reset The Current Modelview Matrix
-		glTranslatef(40f, 10.0f, 0f); // Move Right 1.5 Units And Into
-										// The Screen 7.0
-		glRotatef(rotation, 1.0f, 1.0f, 1.0f); // Rotate The Quad On The X
-												// axis ( NEW )
-		glBegin(GL_QUADS); // Draw A Quad
-		glColor3f(0.0f, 1.0f, 0.0f); // Set The Color To Blue
-		glVertex3f(1.0f, 1.0f, -1.0f); // Top Right Of The Quad (Top)
-		glVertex3f(-1.0f, 1.0f, -1.0f); // Top Left Of The Quad (Top)
-		glVertex3f(-1.0f, 1.0f, 1.0f); // Bottom Left Of The Quad (Top)
-		glVertex3f(1.0f, 1.0f, 1.0f); // Bottom Right Of The Quad (Top)
-		glColor3f(1.0f, 0.5f, 0.0f); // Set The Color To Orange
-		glVertex3f(1.0f, -1.0f, 1.0f); // Top Right Of The Quad (Bottom)
-		glVertex3f(-1.0f, -1.0f, 1.0f); // Top Left Of The Quad (Bottom)
-		glVertex3f(-1.0f, -1.0f, -1.0f); // Bottom Left Of The Quad
-											// (Bottom)
-		glVertex3f(1.0f, -1.0f, -1.0f); // Bottom Right Of The Quad
-										// (Bottom)
-		glColor3f(1.0f, 0.0f, 0.0f); // Set The Color To Red
-		glVertex3f(1.0f, 1.0f, 1.0f); // Top Right Of The Quad (Front)
-		glVertex3f(-1.0f, 1.0f, 1.0f); // Top Left Of The Quad (Front)
-		glVertex3f(-1.0f, -1.0f, 1.0f); // Bottom Left Of The Quad (Front)
-		glVertex3f(1.0f, -1.0f, 1.0f); // Bottom Right Of The Quad (Front)
-		glColor3f(1.0f, 1.0f, 0.0f); // Set The Color To Yellow
-		glVertex3f(1.0f, -1.0f, -1.0f); // Top Right Of The Quad (Back)
-		glVertex3f(-1.0f, -1.0f, -1.0f); // Top Left Of The Quad (Back)
-		glVertex3f(-1.0f, 1.0f, -1.0f); // Bottom Left Of The Quad (Back)
-		glVertex3f(1.0f, 1.0f, -1.0f); // Bottom Right Of The Quad (Back)
-		glColor3f(0.0f, 0.0f, 1.0f); // Set The Color To Blue
-		glVertex3f(-1.0f, 1.0f, 1.0f); // Top Right Of The Quad (Left)
-		glVertex3f(-1.0f, 1.0f, -1.0f); // Top Left Of The Quad (Left)
-		glVertex3f(-1.0f, -1.0f, -1.0f); // Bottom Left Of The Quad (Left)
-		glVertex3f(-1.0f, -1.0f, 1.0f); // Bottom Right Of The Quad (Left)
-		glColor3f(1.0f, 0.0f, 1.0f); // Set The Color To Violet
-		glVertex3f(1.0f, 1.0f, -1.0f); // Top Right Of The Quad (Right)
-		glVertex3f(1.0f, 1.0f, 1.0f); // Top Left Of The Quad (Right)
-		glVertex3f(1.0f, -1.0f, 1.0f); // Bottom Left Of The Quad (Right)
-		glVertex3f(1.0f, -1.0f, -1.0f); // Bottom Right Of The Quad (Right)
-		glEnd();
-		glPopMatrix();
-	}
-
-	private void draw3DQuad(float x, float y, float z, float size) {
+	public static void draw3DQuad(float x, float y, float z, float size) {
 		float a = size / 2;
 
 		glPushMatrix();
@@ -428,7 +357,7 @@ public class Snake {
 	}
 
 	public static void main(String[] argv) throws LWJGLException,
-			InterruptedException {
+			InterruptedException, FileNotFoundException {
 		Snake displayExample = new Snake();
 		displayExample.start();
 	}
