@@ -3,13 +3,17 @@ package src;
 import static org.lwjgl.opengl.GL11.*;
 
 import java.awt.Color;
-import src.Snake;
+import src.SnakeGame;
 
 public class Apple extends Eatable {
 
+	private float rotation;
+	private float bounce;
+	private boolean direction = false;
+
 	public Apple() {
-		super((float) (-Snake.MAP_SIZE + Snake.MAP_SIZE * 2 * Math.random()),
-				(float) (-Snake.MAP_SIZE + Snake.MAP_SIZE * 2 * Math.random()),
+		super((float) (-SnakeGame.MAP_SIZE + SnakeGame.MAP_SIZE * 2 * Math.random()),
+				(float) (-SnakeGame.MAP_SIZE + SnakeGame.MAP_SIZE * 2 * Math.random()),
 				Color.GREEN, Eatable.GROW_UP);
 	}
 
@@ -18,33 +22,123 @@ public class Apple extends Eatable {
 	}
 
 	public void draw() {
-		//Snake.draw3DQuad(x, y, 0, Snake.APPLE_SIZE);
-		int z =0;
-		float a = Snake.APPLE_SIZE/2;
+		float a = SnakeGame.APPLE_SIZE/2;
 		glPushMatrix();
+		glLoadIdentity();
+		glRotatef(20, 0, 1, 0);
+		glRotatef(-20, 1, 0, 0);
+		
+		//Make the apple bounce !
+		glTranslatef(x, y, -bounce);
+		if(!direction)
+			bounce = (float) ((bounce+0.001) % 2);
+		else
+			bounce = (float) ((bounce-0.001) % 2);
+		if(bounce < 0.10){
+			direction = false;
+		}else if(bounce>1.90){
+			direction = true;
+		}
+		
+		//Make the apple turn !
+		glRotatef(rotation, 0, 0, 1);
+		rotation= (float) ((rotation+0.05)%360);
+		System.out.println(rotation);
 		//Draw the apple, la faire tourner ?? (static int)
 		/*glBegin(GL_SPHERE_MAP);
 		
 		glEnd();*/
+		float xTemp = x;
+		float yTemp = y;
+		x=0;
+		y=0;
 		glBegin(GL_QUADS);
-		glVertex3f(x - a, y - a, z - a);
-		glVertex3f(x + a, y - a, z - a);
-		glVertex3f(x + a, y + a, z - a);
-		glVertex3f(x - a, y + a, z - a);
-		glVertex3f(x - a, y - a, z + a);
-		glVertex3f(x + a, y - a, z + a);
-		glVertex3f(x + a, y + a, z + a);
-		glVertex3f(x - a, y + a, z + a);
-		glVertex3f(x - a, y - a, z + a);
-		glVertex3f(x + a, y - a, z + a);
-		glVertex3f(x + a, y - a, z - a);
-		glVertex3f(x - a, y - a, z - a);
-		glVertex3f(x + a, y + a, z + a);
-		glVertex3f(x - a, y + a, z + a);
-		glVertex3f(x - a, y + a, z - a);
-		glVertex3f(x + a, y + a, z - a);
+		//Apple base
+		glColor3f(1, 0, 0);
+		glVertex3f(x - a, y - a, 0);
+		glVertex3f(x + a, y - a, 0);
+		glVertex3f(x + a, y + a, 0);
+		glVertex3f(x - a, y + a, 0);
+		//Apple sides down
+		glColor3f(1, 0, 0);
+		glVertex3f(x - a, y - a, 0);
+		glColor3f(0, 1, 0);
+		glVertex3f(x - SnakeGame.APPLE_SIZE, y - SnakeGame.APPLE_SIZE, -SnakeGame.APPLE_SIZE);
+		glVertex3f(x - SnakeGame.APPLE_SIZE, y + SnakeGame.APPLE_SIZE, -SnakeGame.APPLE_SIZE);
+		glColor3f(1, 0, 0);
+		glVertex3f(x - a, y + a, 0);
+		glVertex3f(x + a, y - a, 0);
+		glColor3f(0, 1, 0);
+		glVertex3f(x + SnakeGame.APPLE_SIZE, y - SnakeGame.APPLE_SIZE, -SnakeGame.APPLE_SIZE);
+		glVertex3f(x + SnakeGame.APPLE_SIZE, y + SnakeGame.APPLE_SIZE, -SnakeGame.APPLE_SIZE);
+		glColor3f(1, 0, 0);
+		glVertex3f(x + a, y + a, 0);
+		
+		glVertex3f(x - a, y - a, 0);
+		glColor3f(0, 1, 0);
+		glVertex3f(x - SnakeGame.APPLE_SIZE, y - SnakeGame.APPLE_SIZE, -SnakeGame.APPLE_SIZE);
+		glVertex3f(x + SnakeGame.APPLE_SIZE, y - SnakeGame.APPLE_SIZE, -SnakeGame.APPLE_SIZE);
+		glColor3f(1, 0, 0);
+		glVertex3f(x + a, y - a, 0);
+		glVertex3f(x - a, y + a, 0);
+		glColor3f(0, 1, 0);
+		glVertex3f(x - SnakeGame.APPLE_SIZE, y + SnakeGame.APPLE_SIZE, -SnakeGame.APPLE_SIZE);
+		glVertex3f(x + SnakeGame.APPLE_SIZE, y + SnakeGame.APPLE_SIZE, -SnakeGame.APPLE_SIZE);
+		glColor3f(1, 0, 0);
+		glVertex3f(x + a, y + a, 0);
+		
+		//Apple sides up
+		
+		glColor3f(0, 1, 0);
+		glVertex3f(x - SnakeGame.APPLE_SIZE, y - SnakeGame.APPLE_SIZE, -SnakeGame.APPLE_SIZE);
+		glColor3f(1, 0, 0);
+		glVertex3f(x - a, y - a, -SnakeGame.APPLE_SIZE*2);
+		glVertex3f(x - a, y + a, -SnakeGame.APPLE_SIZE*2);
+		glColor3f(0, 1, 0);
+		glVertex3f(x - SnakeGame.APPLE_SIZE, y + SnakeGame.APPLE_SIZE, -SnakeGame.APPLE_SIZE);
+		glVertex3f(x + SnakeGame.APPLE_SIZE, y - SnakeGame.APPLE_SIZE, -SnakeGame.APPLE_SIZE);
+		glColor3f(1, 0, 0);
+		glVertex3f(x + a, y - a, -SnakeGame.APPLE_SIZE*2);
+		glVertex3f(x + a, y + a, -SnakeGame.APPLE_SIZE*2);
+		glColor3f(0, 1, 0);
+		glVertex3f(x + SnakeGame.APPLE_SIZE, y + SnakeGame.APPLE_SIZE, -SnakeGame.APPLE_SIZE);
+		
+		glVertex3f(x - SnakeGame.APPLE_SIZE, y - SnakeGame.APPLE_SIZE, -SnakeGame.APPLE_SIZE);
+		glColor3f(1, 0, 0);
+		glVertex3f(x - a, y - a, -SnakeGame.APPLE_SIZE*2);
+		glVertex3f(x + a, y - a, -SnakeGame.APPLE_SIZE*2);
+		glColor3f(0, 1, 0);
+		glVertex3f(x + SnakeGame.APPLE_SIZE, y - SnakeGame.APPLE_SIZE, -SnakeGame.APPLE_SIZE);
+		glVertex3f(x - SnakeGame.APPLE_SIZE, y + SnakeGame.APPLE_SIZE, -SnakeGame.APPLE_SIZE);
+		glColor3f(1, 0, 0);
+		glVertex3f(x - a, y + a, -SnakeGame.APPLE_SIZE*2);
+		glVertex3f(x + a, y + a, -SnakeGame.APPLE_SIZE*2);
+		glColor3f(0, 1, 0);
+		glVertex3f(x + SnakeGame.APPLE_SIZE, y + SnakeGame.APPLE_SIZE, -SnakeGame.APPLE_SIZE);
+		
+		//Apple top
+		glColor3f(1, 0, 0);
+		glVertex3f(x - a, y - a, -SnakeGame.APPLE_SIZE*2);
+		glVertex3f(x + a, y - a, -SnakeGame.APPLE_SIZE*2);
+		glVertex3f(x + a, y + a, -SnakeGame.APPLE_SIZE*2);
+		glVertex3f(x - a, y + a, -SnakeGame.APPLE_SIZE*2);
+		
+		a/=2;
+		//Rajouter du marron ?
+		glColor3f(0.5f, 0.2f, 0f);
+		glVertex3f(x - a, y - a, -SnakeGame.APPLE_SIZE*2);
+		glVertex3f(x + a, y - a, -SnakeGame.APPLE_SIZE*2);
+		glVertex3f(x + a, y + a, -SnakeGame.APPLE_SIZE*2);
+		glVertex3f(x - a, y + a, -SnakeGame.APPLE_SIZE*2);
+		glVertex3f(x - a, y - a, -SnakeGame.APPLE_SIZE*2-1);
+		glVertex3f(x + a, y - a, -SnakeGame.APPLE_SIZE*2-1);
+		glVertex3f(x + a, y + a, -SnakeGame.APPLE_SIZE*2-1);
+		glVertex3f(x - a, y + a, -SnakeGame.APPLE_SIZE*2-1);
 		glEnd();
 		glPopMatrix();
+		
+		x=xTemp;
+		y=yTemp;
 		
 		
 	}
