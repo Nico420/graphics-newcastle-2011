@@ -3,7 +3,7 @@ package tools;
 import java.util.Iterator;
 import java.util.List;
 
-import src.Snake;
+import src.SnakeGame;
 
 public class Position {
 	public float x;
@@ -49,8 +49,8 @@ public class Position {
 		Iterator<Position> ite = positions.iterator();
 		while (ite.hasNext()) {
 			Position t = ite.next();
-			boolean collisionX = Math.abs(t.getX()-this.getX())<Snake.SNAKE_SIZE + size;
-			boolean collisionY = Math.abs(t.getY()-this.getY())<Snake.SNAKE_SIZE + size;
+			boolean collisionX = Math.abs(t.getX()-this.getX())<SnakeGame.SNAKE_SIZE + size;
+			boolean collisionY = Math.abs(t.getY()-this.getY())<SnakeGame.SNAKE_SIZE + size;
 			if (collisionX && collisionY)
 				return true;				
 		}
