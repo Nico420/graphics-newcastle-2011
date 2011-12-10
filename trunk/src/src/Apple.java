@@ -47,8 +47,9 @@ public class Apple extends Eatable {
 
 		// Make the apple turn !
 		glRotatef(rotation, 0, 0, 1);
-		rotation+=0.05;
+		rotation+=0.3;
 		rotation%=360;
+		System.out.println(rotation);
 		/*
 		 * glBegin(GL_SPHERE_MAP);
 		 * 

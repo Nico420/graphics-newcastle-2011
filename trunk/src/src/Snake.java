@@ -158,7 +158,7 @@ public class Snake {
 	public void draw() {
 		drawSnakeHead(x, y, 0, SnakeGame.SNAKE_SIZE * 2);
 		// Dessin du serpent
-		// draw3DQuad(xTemp, yTemp, 0, SNAKE_SIZE * 2);
+		glColor3f(1, 1, 1);
 		for (int i = 0; i < positions.size(); i++) {
 			draw3DQuad(positions.get(i).getX(), positions.get(i).getY(), 0,
 					SnakeGame.SNAKE_SIZE * 2);
@@ -323,22 +323,25 @@ public class Snake {
 
 		glPushMatrix();
 		glBegin(GL_QUADS);
-		glVertex3f(x - a, y - a, z - a);
-		glVertex3f(x + a, y - a, z - a);
-		glVertex3f(x + a, y + a, z - a);
-		glVertex3f(x - a, y + a, z - a);
-		glVertex3f(x - a, y - a, z + a);
-		glVertex3f(x + a, y - a, z + a);
-		glVertex3f(x + a, y + a, z + a);
-		glVertex3f(x - a, y + a, z + a);
-		glVertex3f(x - a, y - a, z + a);
-		glVertex3f(x + a, y - a, z + a);
-		glVertex3f(x + a, y - a, z - a);
-		glVertex3f(x - a, y - a, z - a);
-		glVertex3f(x + a, y + a, z + a);
-		glVertex3f(x - a, y + a, z + a);
-		glVertex3f(x - a, y + a, z - a);
-		glVertex3f(x + a, y + a, z - a);
+		glTexCoord2d(0,1);glVertex3f(x - a, y - a, z - a);
+		glTexCoord2d(1,1);glVertex3f(x + a, y - a, z - a);
+		glTexCoord2d(1,0);glVertex3f(x + a, y + a, z - a);
+		glTexCoord2d(0,0);glVertex3f(x - a, y + a, z - a);
+		
+		glTexCoord2d(0,1);glVertex3f(x - a, y - a, z + a);
+		glTexCoord2d(1,1);glVertex3f(x + a, y - a, z + a);
+		glTexCoord2d(1,0);glVertex3f(x + a, y + a, z + a);
+		glTexCoord2d(0,0);glVertex3f(x - a, y + a, z + a);
+		
+		glTexCoord2d(0,1);glVertex3f(x - a, y - a, z + a);
+		glTexCoord2d(1,1);glVertex3f(x + a, y - a, z + a);
+		glTexCoord2d(1,0);glVertex3f(x + a, y - a, z - a);
+		glTexCoord2d(0,0);glVertex3f(x - a, y - a, z - a);
+		
+		glTexCoord2d(0,1);glVertex3f(x + a, y + a, z + a);
+		glTexCoord2d(1,1);glVertex3f(x - a, y + a, z + a);
+		glTexCoord2d(1,0);glVertex3f(x - a, y + a, z - a);
+		glTexCoord2d(0,0);glVertex3f(x + a, y + a, z - a);
 		glEnd();
 		glPopMatrix();
 
