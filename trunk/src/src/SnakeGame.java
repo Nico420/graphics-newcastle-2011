@@ -20,10 +20,10 @@ import tools.*;
 public class SnakeGame {
 
 	GLFont font;
-	private static final int LEFT = 1;
-	private static final int RIGHT = 2;
-	private static final int UP = 3;
-	private static final int DOWN = 4;
+	public static final int LEFT = 1;
+	public static final int RIGHT = 2;
+	public static final int UP = 3;
+	public static final int DOWN = 4;
 
 	public static final int SNAKE_SIZE = 3;
 	public static final int MAP_SIZE = 90;
@@ -31,7 +31,7 @@ public class SnakeGame {
 	public static final int WALL_SIZE = 5;
 
 	//public List<Position> positions = new ArrayList<Position>();
-	public List<Position> walls = new ArrayList<Position>();
+	public static List<Position> walls = new ArrayList<Position>();
 
 	float lightPosition1[]= { -MAP_SIZE, -MAP_SIZE, 1f, 1f };
     
@@ -51,7 +51,7 @@ public class SnakeGame {
 
 	public boolean appleEat = false;
 
-	Apple apple = new Apple();
+	Apple apple;
 	Snake snake = new Snake();
 
 	public int chooseBestDisplay() throws LWJGLException {
@@ -78,7 +78,7 @@ public class SnakeGame {
 		}
 
 		walls = MazeReader.buildWallList("maze.txt");
-		
+		apple = new Apple();
 		System.out.println(walls);
 		// Initialize Snake start_position
 		snake.intialize(walls, WALL_SIZE);
@@ -268,7 +268,7 @@ public class SnakeGame {
 	private void drawMap() {
 		// Navigable map
 		glBegin(GL_QUADS);
-		glColor3f(0.1f, 1, 0.3f);
+		glColor3f(0.1f, 0.3f, 0.3f);
 		glVertex3f(0 - MAP_SIZE, 0 - MAP_SIZE, 0);
 		glVertex3f(0 + MAP_SIZE, 0 - MAP_SIZE, 0);
 		glVertex3f(0 + MAP_SIZE, 0 + MAP_SIZE, 0);
@@ -338,13 +338,12 @@ public class SnakeGame {
 		GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glEnable(GL11.GL_TEXTURE_2D);*/
         
+
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		glOrtho(-100, 100, 100, -100, 100, -100);
 		glMatrixMode(GL_MODELVIEW);
 		font = new GLFont( new Font("Trebuchet", Font.BOLD, 18) );
-		
-		
 	}
 
 	public static void main(String[] argv) throws LWJGLException,
@@ -386,6 +385,13 @@ public class SnakeGame {
 				if (Keyboard.getEventKey() == Keyboard.KEY_V) {
 					System.out.println("V Key Pressed");
 					switchView = switchView ? false : true;
+				}
+				if (Keyboard.getEventKey() == Keyboard.KEY_R) {
+					System.out.println("R Key Pressed - Game restart");
+					snake = new Snake();
+					apple = new Apple();
+					perdu = false;
+					snake.intialize(walls, WALL_SIZE);
 				}
 			} else {
 				if (Keyboard.getEventKey() == Keyboard.KEY_A) {
