@@ -30,18 +30,20 @@ public class SnakeGame {
 	public static final int APPLE_SIZE = 2;
 	public static final int WALL_SIZE = 5;
 
-	//public List<Position> positions = new ArrayList<Position>();
+	static int textureMur = 0;
+	static int textureSerpent = 0;
+	static int textureSol = 0;
+	// public List<Position> positions = new ArrayList<Position>();
 	public static List<Position> walls = new ArrayList<Position>();
 
-	float lightPosition1[]= { -MAP_SIZE, -MAP_SIZE, 1f, 1f };
-    
+	float lightPosition1[] = { -MAP_SIZE, -MAP_SIZE, 1f, 1f };
+
 	/** time at last frame */
 	long lastFrame;
 	/** frames per second */
 	int fps;
 	/** last fps time */
 	long lastFPS;
-
 
 	public boolean switchView = false;
 
@@ -52,7 +54,18 @@ public class SnakeGame {
 	public boolean appleEat = false;
 
 	Apple apple;
-	Snake snake = new Snake();
+	Snake snake;
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "SnakeGame [perdu=" + perdu + ", appleEat=" + appleEat
+				+ ", apple=" + apple + ", snake=" + snake + "]";
+	}
 
 	public int chooseBestDisplay() throws LWJGLException {
 		int res = 3;
@@ -77,17 +90,17 @@ public class SnakeGame {
 			System.exit(0);
 		}
 
-		walls = MazeReader.buildWallList("maze.txt");
-		apple = new Apple();
-		System.out.println(walls);
-		// Initialize Snake start_position
-		snake.intialize(walls, WALL_SIZE);
-		System.out.println(snake);
+		initializeGame();
 		initGL();
 		getDelta();
 		lastFPS = getTime();
-		
+
 		while (!Display.isCloseRequested() && !exit) { // Done Drawing The Quad
+			if (perdu)
+				System.out.println(this
+						+ " "
+						+ (new Position(snake.getX(), snake.getY())
+								.checkCollapse(walls, WALL_SIZE)));
 			int delta = getDelta();
 			update(delta);
 			renderGL();
@@ -97,6 +110,15 @@ public class SnakeGame {
 		}
 
 		Display.destroy();
+	}
+
+	private void initializeGame() throws FileNotFoundException {
+		snake = new Snake();
+		walls = MazeReader.buildWallList("maze.txt");
+		apple = new Apple();
+		// Initialize Snake start_position
+		snake.intialize(walls, WALL_SIZE);
+
 	}
 
 	private void update(int delta) throws InterruptedException {
@@ -128,7 +150,7 @@ public class SnakeGame {
 			break;
 		}
 		// Adding a new position for snake
-		appleEat=snake.addPosition(appleEat);
+		appleEat = snake.addPosition(appleEat);
 
 		Position actual = new Position(snake.getX(), snake.getY());
 		// Check for the wall collision
@@ -154,22 +176,13 @@ public class SnakeGame {
 		}
 
 		// Check Apple detection
-		if (snake.getX() - SNAKE_SIZE < apple.getX() && snake.getX() + SNAKE_SIZE > apple.getX()
+		if (snake.getX() - SNAKE_SIZE < apple.getX()
+				&& snake.getX() + SNAKE_SIZE > apple.getX()
 				&& snake.getY() - SNAKE_SIZE < apple.getY()
 				&& snake.getY() + SNAKE_SIZE > apple.getY()) {
-			snake.setLenght(snake.lenght+1);
-			float xPommeTemp = (float) (-MAP_SIZE + 2 * MAP_SIZE
-					* Math.random());
-			float yPommeTemp = (float) (-MAP_SIZE + 2 * MAP_SIZE
-					* Math.random());
-			while (new Position(xPommeTemp, yPommeTemp).checkCollapse(walls,
-					APPLE_SIZE)) {
-				xPommeTemp = (float) (-MAP_SIZE + 2 * MAP_SIZE * Math.random());
-				yPommeTemp = (float) (-MAP_SIZE + 2 * MAP_SIZE * Math.random());
-			}
-			apple.setY(yPommeTemp);
-			apple.setX(xPommeTemp);
+			snake.setLenght(snake.lenght + 1);
 			appleEat = true;
+			apple = new Apple();
 		}
 
 		// Check Snake hitting himself
@@ -213,16 +226,17 @@ public class SnakeGame {
 		glViewport(100, 100, Display.getWidth() - 100,
 				Display.getHeight() - 100);
 		GLU.gluLookAt(0f, -3f, 33f, // where is the eye
-    			0f, -3f, 0f,    // what point are we looking at
-    			0f, 1f, 0f);   // which way is up
-		//font.print(1, 1, "test");
-		//GLApp.print( 40, 210, "Text rendered with the default GLApp.print() function uses");
-		 glLoadIdentity();
-		 GLU.gluPerspective(40f,         // zoom in or out of view
-	                0, // shape of viewport rectangle
-	                .1f,         // Min Z: how far from eye position does view start
-	                500f);       // max Z: how far from eye position does view extend
-	     
+				0f, -3f, 0f, // what point are we looking at
+				0f, 1f, 0f); // which way is up
+		// font.print(1, 1, "test");
+		// GLApp.print( 40, 210,
+		// "Text rendered with the default GLApp.print() function uses");
+		glLoadIdentity();
+		GLU.gluPerspective(40f, // zoom in or out of view
+				0, // shape of viewport rectangle
+				.1f, // Min Z: how far from eye position does view start
+				500f); // max Z: how far from eye position does view extend
+
 		if (switchView) {
 			glRotatef(-85, 1, 0, 0);
 		} else {
@@ -243,20 +257,19 @@ public class SnakeGame {
 		} else {
 			// Dessin de la carte
 			glPushMatrix();
+			glBindTexture(GL_TEXTURE_2D, textureSol);
 			drawMap();
-
-			glColor3f(0, 0, 1);
+			glBindTexture(GL_TEXTURE_2D, textureSerpent);
 			snake.draw();
-
 			// Draw Walls
-			glColor3f(1, 0, 0);
+			glBindTexture(GL_TEXTURE_2D, textureMur);
+			glColor3f(1, 1, 1);
 			for (int i = 0; i < walls.size(); i++) {
 				draw3DQuad(walls.get(i).getX(), walls.get(i).getY(), 0,
 						WALL_SIZE * 2);
 			}
 
 			// Dessin de la pomme
-			glColor3f(0, 1, 0);
 			apple.draw();
 			// drawApple(xPomme, yPomme, 0, APPLE_SIZE * 2);
 			glPopMatrix();
@@ -268,51 +281,75 @@ public class SnakeGame {
 	private void drawMap() {
 		// Navigable map
 		glBegin(GL_QUADS);
-		glColor3f(0.1f, 0.3f, 0.3f);
-		glVertex3f(0 - MAP_SIZE, 0 - MAP_SIZE, 0);
-		glVertex3f(0 + MAP_SIZE, 0 - MAP_SIZE, 0);
-		glVertex3f(0 + MAP_SIZE, 0 + MAP_SIZE, 0);
-		glVertex3f(0 - MAP_SIZE, 0 + MAP_SIZE, 0);
-		glEnd();
-		// Walls around it
+		glColor3f(1f, 0.5f, 0.5f);
+		glVertex3f(0 - (MAP_SIZE + WALL_SIZE), 0 - (MAP_SIZE + WALL_SIZE), 0.1f);
+		glVertex3f(0 + MAP_SIZE + WALL_SIZE, 0 - (MAP_SIZE + WALL_SIZE), 0.1f);
+		glVertex3f(0 + MAP_SIZE + WALL_SIZE, 0 + MAP_SIZE + WALL_SIZE, 0.1f);
+		glVertex3f(0 - (MAP_SIZE + WALL_SIZE), 0 + MAP_SIZE + WALL_SIZE, 0.1f);
 
-		for (int i = -MAP_SIZE; i <= MAP_SIZE; i += WALL_SIZE) {
-			glColor3f(1, 0, 0);
-			draw3DQuad(i, -(MAP_SIZE+WALL_SIZE/2), -WALL_SIZE, WALL_SIZE);
-			draw3DQuad(i, (MAP_SIZE+WALL_SIZE/2), -WALL_SIZE, WALL_SIZE);
-			draw3DQuad((MAP_SIZE+WALL_SIZE/2), i, -WALL_SIZE, WALL_SIZE);
-			draw3DQuad(-(MAP_SIZE+WALL_SIZE/2), i, -WALL_SIZE, WALL_SIZE);
-		}
+		glColor3f(1, 1, 1);
+		glTexCoord2d(0, 5);
+		glVertex3f(0 - MAP_SIZE, 0 - MAP_SIZE, 0);
+		glTexCoord2d(5, 5);
+		glVertex3f(0 + MAP_SIZE, 0 - MAP_SIZE, 0);
+		glTexCoord2d(5, 0);
+		glVertex3f(0 + MAP_SIZE, 0 + MAP_SIZE, 0);
+		glTexCoord2d(0, 0);
+		glVertex3f(0 - MAP_SIZE, 0 + MAP_SIZE, 0);
+
+		glEnd();
+
+		// Walls around it
+		/*
+		 * for (int i = -MAP_SIZE; i <= MAP_SIZE; i += WALL_SIZE) { glColor3f(1,
+		 * 0, 0); draw3DQuad(i, -(MAP_SIZE+WALL_SIZE/2), -WALL_SIZE, WALL_SIZE);
+		 * draw3DQuad(i, (MAP_SIZE+WALL_SIZE/2), -WALL_SIZE, WALL_SIZE);
+		 * draw3DQuad((MAP_SIZE+WALL_SIZE/2), i, -WALL_SIZE, WALL_SIZE);
+		 * draw3DQuad(-(MAP_SIZE+WALL_SIZE/2), i, -WALL_SIZE, WALL_SIZE); }
+		 */
 
 	}
-
-
-
 
 	public static void draw3DQuad(float x, float y, float z, float size) {
 		float a = size / 2;
 
 		glPushMatrix();
 		glBegin(GL_QUADS);
-		glColor3f(1, 0, 0);
+		// glColor3f(1, 0, 0);
+		glTexCoord2d(0, 1);
 		glVertex3f(x - a, y - a, z - a);
+		glTexCoord2d(1, 1);
 		glVertex3f(x + a, y - a, z - a);
+		glTexCoord2d(1, 0);
 		glVertex3f(x + a, y + a, z - a);
+		glTexCoord2d(0, 0);
 		glVertex3f(x - a, y + a, z - a);
-		glColor3f(1, 1, 0);
+		// glColor3f(1, 1, 0);
+		glTexCoord2d(0, 1);
 		glVertex3f(x - a, y - a, z + a);
+		glTexCoord2d(0, 1);
 		glVertex3f(x + a, y - a, z + a);
+		glTexCoord2d(0, 1);
 		glVertex3f(x + a, y + a, z + a);
+		glTexCoord2d(0, 1);
 		glVertex3f(x - a, y + a, z + a);
-		glColor3f(1, 0, 1);
+		// glColor3f(1, 0, 1);
+		glTexCoord2d(0, 1);
 		glVertex3f(x - a, y - a, z + a);
+		glTexCoord2d(0, 1);
 		glVertex3f(x + a, y - a, z + a);
+		glTexCoord2d(0, 1);
 		glVertex3f(x + a, y - a, z - a);
+		glTexCoord2d(0, 1);
 		glVertex3f(x - a, y - a, z - a);
-		glColor3f(1, 1, 1);
+		// glColor3f(1, 1, 1);
+		glTexCoord2d(0, 1);
 		glVertex3f(x + a, y + a, z + a);
+		glTexCoord2d(0, 1);
 		glVertex3f(x - a, y + a, z + a);
+		glTexCoord2d(0, 1);
 		glVertex3f(x - a, y + a, z - a);
+		glTexCoord2d(0, 1);
 		glVertex3f(x + a, y + a, z - a);
 		glEnd();
 		glPopMatrix();
@@ -328,22 +365,17 @@ public class SnakeGame {
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST); // Really Nice
 															// Perspective
 															// Calculations
-		/*GLApp.setLight( GL11.GL_LIGHT1,
-        		new float[] { 1.0f, 1.0f, 1.0f, 1.0f },   // diffuse color
-        		new float[] { 0.2f, 0.2f, 0.2f, 1.0f },   // ambient
-        		new float[] { 1.0f, 1.0f, 1.0f, 1.0f },   // specular
-        		lightPosition1 );   // position
-
-		GLApp.setAmbientLight(new float[] { 0.0f, 0.0f, 0.0f, 0.0f });
-		GL11.glEnable(GL11.GL_LIGHTING);
-        GL11.glEnable(GL11.GL_TEXTURE_2D);*/
-        
+		glEnable(GL_TEXTURE_2D);
+		textureMur = GLApp.makeTexture("texture/metal091.jpg");
+		textureSerpent = GLApp.makeTexture("texture/serpent.jpg");
+		textureSol = GLApp.makeTexture("texture/herbe.jpg");
+		 
 
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		glOrtho(-100, 100, 100, -100, 100, -100);
 		glMatrixMode(GL_MODELVIEW);
-		font = new GLFont( new Font("Trebuchet", Font.BOLD, 18) );
+		font = new GLFont(new Font("Trebuchet", Font.BOLD, 18));
 	}
 
 	public static void main(String[] argv) throws LWJGLException,
@@ -352,7 +384,7 @@ public class SnakeGame {
 		displayExample.start();
 	}
 
-	public void pollInput() throws LWJGLException {
+	public void pollInput() throws LWJGLException, FileNotFoundException {
 
 		if (Mouse.isButtonDown(0)) {
 			int x = Mouse.getX();
@@ -388,10 +420,7 @@ public class SnakeGame {
 				}
 				if (Keyboard.getEventKey() == Keyboard.KEY_R) {
 					System.out.println("R Key Pressed - Game restart");
-					snake = new Snake();
-					apple = new Apple();
-					perdu = false;
-					snake.intialize(walls, WALL_SIZE);
+					initializeGame();
 				}
 			} else {
 				if (Keyboard.getEventKey() == Keyboard.KEY_A) {
