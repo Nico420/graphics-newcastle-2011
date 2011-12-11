@@ -20,6 +20,7 @@ public class Apple extends Eatable {
 		y = (float) (-(SnakeGame.MAP_SIZE-SnakeGame.APPLE_SIZE) + (SnakeGame.MAP_SIZE * 2 - SnakeGame.APPLE_SIZE)
 				* Math.random());	
 		}
+		
 	}
 
 	public Apple(float x, float y) {
@@ -30,8 +31,7 @@ public class Apple extends Eatable {
 		float a = SnakeGame.APPLE_SIZE / 2;
 		glPushMatrix();
 		glLoadIdentity();
-		glRotatef(20, 0, 1, 0);
-		glRotatef(-20, 1, 0, 0);
+		SnakeGame.setCamera();
 
 		// Make the apple bounce !
 		glTranslatef(x, y, -bounce);
@@ -49,7 +49,6 @@ public class Apple extends Eatable {
 		glRotatef(rotation, 0, 0, 1);
 		rotation+=0.3;
 		rotation%=360;
-		System.out.println(rotation);
 		/*
 		 * glBegin(GL_SPHERE_MAP);
 		 * 
