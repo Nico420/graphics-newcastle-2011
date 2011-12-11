@@ -2,7 +2,6 @@ package src;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import java.awt.Font;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,10 +13,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.test.applet.OpenGL;
 import org.lwjgl.util.glu.GLU;
-
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.TextLoader;
 
 import tools.*;
 
@@ -119,8 +115,8 @@ public class SnakeGame {
 
 	private void gameHome() {
 
-		float itemWidth = 80;
-		float itemHeight = 10;
+		/*float itemWidth = 80;
+		float itemHeight = 10;*/
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glLoadIdentity();
@@ -244,7 +240,6 @@ public class SnakeGame {
 			// Dessin de la carte
 			glPushMatrix();
 			setCamera();
-			textureMur.bind();
 			//glBindTexture(GL_TEXTURE_2D, textureSol);
 			drawMap();
 			textureSerpent.bind();
@@ -325,6 +320,7 @@ public class SnakeGame {
 
 	private void drawMap() {
 		// Navigable map
+		textureSol.bind();
 		glBegin(GL_QUADS);
 		glColor3f(1f, 0.5f, 0.5f);
 		glVertex3f(0 - (MAP_SIZE + WALL_SIZE), 0 - (MAP_SIZE + WALL_SIZE), 0.1f);
@@ -332,12 +328,14 @@ public class SnakeGame {
 		glVertex3f(0 + MAP_SIZE + WALL_SIZE, 0 + MAP_SIZE + WALL_SIZE, 0.1f);
 		glVertex3f(0 - (MAP_SIZE + WALL_SIZE), 0 + MAP_SIZE + WALL_SIZE, 0.1f);
 
+
+		
 		glColor3f(1, 1, 1);
-		glTexCoord2d(0, 5);
+		glTexCoord2d(0, 0.5);
 		glVertex3f(0 - MAP_SIZE, 0 - MAP_SIZE, 0);
-		glTexCoord2d(5, 5);
+		glTexCoord2d(0.5, 0.5);
 		glVertex3f(0 + MAP_SIZE, 0 - MAP_SIZE, 0);
-		glTexCoord2d(5, 0);
+		glTexCoord2d(0.5, 0);
 		glVertex3f(0 + MAP_SIZE, 0 + MAP_SIZE, 0);
 		glTexCoord2d(0, 0);
 		glVertex3f(0 - MAP_SIZE, 0 + MAP_SIZE, 0);

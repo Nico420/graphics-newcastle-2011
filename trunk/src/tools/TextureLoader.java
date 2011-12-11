@@ -278,8 +278,9 @@ public class TextureLoader {
 	 *             Indicates a failure to find a resource
 	 */
 	private BufferedImage loadImage(String ref) throws IOException {
+		
 		URL url = TextureLoader.class.getClassLoader().getResource(ref);
-
+		System.out.println(ref+" "+ url);
 		if (url == null) {
 			throw new IOException("Cannot find: " + ref);
 		}

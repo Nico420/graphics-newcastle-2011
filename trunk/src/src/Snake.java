@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.Display;
 
 import tools.Position;
 
@@ -330,38 +329,38 @@ public class Snake {
 		glLoadIdentity();
 		SnakeGame.setCamera();
 		glBegin(GL_QUADS);
-		glTexCoord2d(0, 1);
+		glTexCoord2d(0, 0.5);
 		glVertex3f(x - a, y - a, z - a);
-		glTexCoord2d(1, 1);
+		glTexCoord2d(0.5, 0.5);
 		glVertex3f(x + a, y - a, z - a);
-		glTexCoord2d(1, 0);
+		glTexCoord2d(0.5, 0);
 		glVertex3f(x + a, y + a, z - a);
 		glTexCoord2d(0, 0);
 		glVertex3f(x - a, y + a, z - a);
 
-		glTexCoord2d(0, 1);
+		glTexCoord2d(0, 0.5);
 		glVertex3f(x - a, y - a, z + a);
-		glTexCoord2d(1, 1);
+		glTexCoord2d(0.5, 0.5);
 		glVertex3f(x + a, y - a, z + a);
-		glTexCoord2d(1, 0);
+		glTexCoord2d(0.5, 0);
 		glVertex3f(x + a, y + a, z + a);
 		glTexCoord2d(0, 0);
 		glVertex3f(x - a, y + a, z + a);
 
-		glTexCoord2d(0, 1);
+		glTexCoord2d(0, 0.5);
 		glVertex3f(x - a, y - a, z + a);
-		glTexCoord2d(1, 1);
+		glTexCoord2d(0.5, 0.5);
 		glVertex3f(x + a, y - a, z + a);
-		glTexCoord2d(1, 0);
+		glTexCoord2d(0.5, 0);
 		glVertex3f(x + a, y - a, z - a);
 		glTexCoord2d(0, 0);
 		glVertex3f(x - a, y - a, z - a);
 
-		glTexCoord2d(0, 1);
+		glTexCoord2d(0, 0.5);
 		glVertex3f(x + a, y + a, z + a);
-		glTexCoord2d(1, 1);
+		glTexCoord2d(0.5, 0.5);
 		glVertex3f(x - a, y + a, z + a);
-		glTexCoord2d(1, 0);
+		glTexCoord2d(0.5, 0);
 		glVertex3f(x - a, y + a, z - a);
 		glTexCoord2d(0, 0);
 		glVertex3f(x + a, y + a, z - a);
