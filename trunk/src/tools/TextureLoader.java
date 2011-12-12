@@ -214,6 +214,7 @@ public class TextureLoader {
 	 *            The texture to store the data into
 	 * @return A buffer containing the data
 	 */
+	@SuppressWarnings("rawtypes")
 	private ByteBuffer convertImageData(BufferedImage bufferedImage,
 			Texture texture) {
 		ByteBuffer imageBuffer;

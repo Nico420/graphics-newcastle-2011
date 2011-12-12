@@ -29,9 +29,8 @@ public class SnakeGame {
 	public static final int APPLE_SIZE = 2;
 	public static final int WALL_SIZE = 5;
 
-
 	TextureLoader tl = new TextureLoader();
-	
+
 	static Texture textureMur;
 	static Texture textureSerpent;
 	static Texture textureSol;
@@ -58,6 +57,7 @@ public class SnakeGame {
 
 	public boolean appleEat = false;
 
+	public float countDown = 3;
 	Apple apple;
 	public static float rotation;
 	static Snake snake;
@@ -113,52 +113,89 @@ public class SnakeGame {
 		Display.destroy();
 	}
 
-	private void gameHome() {
+	private void gameHome() throws IOException {
 
-		/*float itemWidth = 80;
-		float itemHeight = 10;*/
+		/*
+		 * float itemWidth = 80; float itemHeight = 10;
+		 */
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glLoadIdentity();
-		glColor3f(0, 0, 1);
 
 		// Title
 
-		//Creating and using texture
+		// Creating and using texture
+		Texture start = tl.getTexture("texture/start.png");
+		Texture icone = tl.getTexture("texture/snake_icone.png");
+		Texture pomme = tl.getTexture("texture/pomme_ml.png");
 		// Selector
+		icone.bind();
+		glColor3f(1, 1, 1);
+		glBegin(GL_QUADS);
+		glTexCoord2d(1, 0);
+		glVertex3f(-90, -90, 0);
+		glTexCoord2d(1, 1);
+		glVertex3f(-90, -70, 0);
+		glTexCoord2d(0, 1);
+		glVertex3f(-70, -70, 0);
+		glTexCoord2d(0, 0);
+		glVertex3f(-70, -90, 0);
+		glEnd();
+		
+		
+		pomme.bind();
+		glColor3f(1, 1, 1);
+		glBegin(GL_QUADS);
+		glTexCoord2d(1, 0);
+		glVertex3f(-50, -15 + 30 * menuChoiceTemp, 0);
+		glTexCoord2d(1, 1);
+		glVertex3f(-50, -5 + 30 * menuChoiceTemp, 0);
+		glTexCoord2d(0, 1);
+		glVertex3f(-60, -5 + 30 * menuChoiceTemp, 0);
+		glTexCoord2d(0, 0);
+		glVertex3f(-60, -15 + 30 * menuChoiceTemp, 0);
+		glEnd();
 
 		glBegin(GL_QUADS);
-
-		glVertex3f(-50, -15 + 30 * menuChoiceTemp, 0);
-		glVertex3f(-50, -5 + 30 * menuChoiceTemp, 0);
-		glVertex3f(-60, -5 + 30 * menuChoiceTemp, 0);
-		glVertex3f(-60, -15 + 30 * menuChoiceTemp, 0);
-
 		glVertex3f(-50, -80, 0);
 		glVertex3f(-50, -50, 0);
 		glVertex3f(50, -50, 0);
 		glVertex3f(50, -80, 0);
+		glEnd();
 
+		
+		start.bind();
+		glBegin(GL_QUADS);
 		// Start New game
+		glTexCoord2d(0, 0);
 		glVertex3f(-40, -20, 0);
+		glTexCoord2d(0, 1);
 		glVertex3f(-40, 0, 0);
+		glTexCoord2d(1, 1);
 		glVertex3f(40, 0, 0);
+		glTexCoord2d(1, 0);
 		glVertex3f(40, -20, 0);
+		glEnd();
+
+		glBegin(GL_QUADS);
 		// Get HIgh Score
 		glVertex3f(-40, 30, 0);
 		glVertex3f(-40, 10, 0);
 		glVertex3f(40, 10, 0);
 		glVertex3f(40, 30, 0);
+		glEnd();
+
+		glBegin(GL_QUADS);
 		// Exit
 		glVertex3f(-40, 60, 0);
 		glVertex3f(-40, 40, 0);
 		glVertex3f(40, 40, 0);
 		glVertex3f(40, 60, 0);
+		glEnd();
 		/*
 		 * glVertex3f(-50, -80, 0); glVertex3f(-50, -60, 0); glVertex3f(50, -60,
 		 * 0); glVertex3f(50, -80, 0);
 		 */
-		glEnd();
 
 	}
 
@@ -177,35 +214,58 @@ public class SnakeGame {
 				if (Keyboard.getEventKeyState()) {
 					if (Keyboard.getEventKey() == Keyboard.KEY_UP) {
 						menuChoiceTemp = (menuChoiceTemp - 1) % 3;
+						if (menuChoiceTemp < 0)
+							menuChoiceTemp = 2;
 					}
 					if (Keyboard.getEventKey() == Keyboard.KEY_DOWN) {
 						menuChoiceTemp = (menuChoiceTemp + 1) % 3;
+						if (menuChoiceTemp < 0)
+							menuChoiceTemp = 2;
 					}
 					if (Keyboard.getEventKey() == Keyboard.KEY_RETURN) {
-						menuChoice = menuChoiceTemp+1;
+						menuChoice = menuChoiceTemp + 1;
 					}
 				}
 			}
 		} else {
-			if (!perdu) {
-				// Update snakeHead position and rotation
-				snake.update(delta, switchView);
-				// Adding a new position for snake, and notify snake lenght if
-				// needed.
-				appleEat = snake.addPosition(appleEat);
-				perdu = snake.checkWallCollision(walls);
-				// Check Apple detection
-				if (snake.getX() - SNAKE_SIZE < apple.getX()
-						&& snake.getX() + SNAKE_SIZE > apple.getX()
-						&& snake.getY() - SNAKE_SIZE < apple.getY()
-						&& snake.getY() + SNAKE_SIZE > apple.getY()) {
-					snake.setLenght(snake.lenght + 1);
-					appleEat = true;
-					apple = new Apple();
+			if (countDown > 0) {
+				countDown -= 0.001f;
+			} else {
+				if (!perdu) {
+
+					System.out.println(countDown);
+					// Update snakeHead position and rotation
+					snake.update(delta, switchView);
+					// Adding a new position for snake, and notify snake lenght
+					// if
+					// needed.
+					appleEat = snake.addPosition(appleEat);
+					perdu = snake.checkWallCollision(walls);
+					// Check Apple detection
+					if (snake.getX() - SNAKE_SIZE < apple.getX()
+							&& snake.getX() + SNAKE_SIZE > apple.getX()
+							&& snake.getY() - SNAKE_SIZE < apple.getY()
+							&& snake.getY() + SNAKE_SIZE > apple.getY()) {
+						snake.setLenght(snake.lenght + 1);
+						appleEat = true;
+						apple = new Apple();
+					}
 				}
 			}
 		}
 		updateFPS(); // update FPS Counter
+
+	}
+
+	private void drawCountDown(float number) {
+		glColor3f(0, 0, 1);
+		glBegin(GL_QUADS);
+		// Start New game
+		glVertex3f(-40, -20, 0);
+		glVertex3f(-40, 0, 0);
+		glVertex3f(40, 0, 0);
+		glVertex3f(40, -20, 0);
+		glEnd();
 
 	}
 
@@ -219,7 +279,7 @@ public class SnakeGame {
 
 	}
 
-	private void renderGL() throws LWJGLException {
+	private void renderGL() throws LWJGLException, IOException {
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear
 															// The
@@ -232,33 +292,36 @@ public class SnakeGame {
 		if (menuChoice == 0) {
 			gameHome();
 		} else if (menuChoice == 1) {
-			//Starting count down! (3-2-1 - GO!)
-			
-			glViewport(100, 100, Display.getWidth() - 100,
-					Display.getHeight() - 100);
-			glLoadIdentity();
-			// Dessin de la carte
-			glPushMatrix();
-			setCamera();
-			//glBindTexture(GL_TEXTURE_2D, textureSol);
-			drawMap();
-			textureSerpent.bind();
-			//glBindTexture(GL_TEXTURE_2D, textureSerpent);
-			snake.draw();
-			// Draw Walls
-			textureMur.bind();
-			//glBindTexture(GL_TEXTURE_2D, textureMur);
-			glColor3f(1, 1, 1);
-			for (int i = 0; i < walls.size(); i++) {
-				draw3DQuad(walls.get(i).getX(), walls.get(i).getY(),
-						-WALL_SIZE, WALL_SIZE * 2);
+			if (countDown > 0) {
+				drawCountDown(countDown);
+			} else {
+
+				glViewport(100, 100, Display.getWidth() - 100,
+						Display.getHeight() - 100);
+				glLoadIdentity();
+				// Dessin de la carte
+				glPushMatrix();
+				setCamera();
+				// glBindTexture(GL_TEXTURE_2D, textureSol);
+				drawMap();
+				textureSerpent.bind();
+				// glBindTexture(GL_TEXTURE_2D, textureSerpent);
+				snake.draw();
+				// Draw Walls
+				textureMur.bind();
+				// glBindTexture(GL_TEXTURE_2D, textureMur);
+				glColor3f(1, 1, 1);
+				for (int i = 0; i < walls.size(); i++) {
+					draw3DQuad(walls.get(i).getX(), walls.get(i).getY(),
+							-WALL_SIZE, WALL_SIZE * 2);
+				}
+				apple.draw();
+				glPopMatrix();
 			}
-			apple.draw();
-			glPopMatrix();
-		}else if(menuChoice == 2){
-			//affichage HIGHSCORE
-		}else if(menuChoice == 3){
-			exit=true;
+		} else if (menuChoice == 2) {
+			// affichage HIGHSCORE
+		} else if (menuChoice == 3) {
+			exit = true;
 		}
 	}
 
@@ -328,8 +391,6 @@ public class SnakeGame {
 		glVertex3f(0 + MAP_SIZE + WALL_SIZE, 0 + MAP_SIZE + WALL_SIZE, 0.1f);
 		glVertex3f(0 - (MAP_SIZE + WALL_SIZE), 0 + MAP_SIZE + WALL_SIZE, 0.1f);
 
-
-		
 		glColor3f(1, 1, 1);
 		glTexCoord2d(0, 0.5);
 		glVertex3f(0 - MAP_SIZE, 0 - MAP_SIZE, 0);
