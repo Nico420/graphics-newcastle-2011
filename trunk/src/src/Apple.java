@@ -14,7 +14,7 @@ public class Apple extends Eatable {
 
 	public Apple() {
 		super(0,0, Color.GREEN, Eatable.GROW_UP);
-		while((new Position(x,y)).checkCollapse(Game.walls, Game.WALL_SIZE)){
+		while((new Position(x,y)).checkCollapse(Game.walls, Game.WALL_SIZE, Game.APPLE_SIZE)){
 		x = (float) (-(Game.MAP_SIZE-Game.APPLE_SIZE) + (Game.MAP_SIZE * 2 - Game.APPLE_SIZE)
 				* Math.random());
 		y = (float) (-(Game.MAP_SIZE-Game.APPLE_SIZE) + (Game.MAP_SIZE * 2 - Game.APPLE_SIZE)
@@ -32,7 +32,6 @@ public class Apple extends Eatable {
 		glPushMatrix();
 		glLoadIdentity();
 		Game.setCamera();
-
 		// Make the apple bounce !
 		glTranslatef(x, y, -bounce);
 		if (!direction)
@@ -49,11 +48,8 @@ public class Apple extends Eatable {
 		glRotatef(rotation, 0, 0, 1);
 		rotation+=0.3;
 		rotation%=360;
-		/*
-		 * glBegin(GL_SPHERE_MAP);
-		 * 
-		 * glEnd();
-		 */
+
+		
 		float xTemp = x;
 		float yTemp = y;
 		x = 0;

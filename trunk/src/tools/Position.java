@@ -3,8 +3,6 @@ package tools;
 import java.util.Iterator;
 import java.util.List;
 
-import src.Game;
-
 public class Position {
 	public float x;
 	public float y;
@@ -45,12 +43,12 @@ public class Position {
 		return false;
 	}
 
-	public boolean checkCollapse(List<Position> positions, int size) {
+	public boolean checkCollapse(List<Position> positions, int firstSize, int secondSize) {
 		Iterator<Position> ite = positions.iterator();
 		while (ite.hasNext()) {
 			Position t = ite.next();
-			boolean collisionX = Math.abs(t.getX()-this.getX())<Game.SNAKE_SIZE + size;
-			boolean collisionY = Math.abs(t.getY()-this.getY())<Game.SNAKE_SIZE + size;
+			boolean collisionX = Math.abs(t.getX()-this.getX())<secondSize + firstSize;
+			boolean collisionY = Math.abs(t.getY()-this.getY())<secondSize + firstSize;
 			if (collisionX && collisionY)
 				return true;				
 		}

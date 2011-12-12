@@ -27,7 +27,7 @@ import tools.Position;
 import tools.Texture;
 
 public class Game extends Etat {
-	
+
 	public static final int LEFT = 3;
 	public static final int RIGHT = 1;
 	public static final int UP = 2;
@@ -37,32 +37,29 @@ public class Game extends Etat {
 	public static final int MAP_SIZE = 90;
 	public static final int APPLE_SIZE = 2;
 	public static final int WALL_SIZE = 5;
-	
 
 	Texture textureSerpent;
 	Texture textureSol;
 	Texture textureMur;
-	
-	public boolean perdu = false;
-	
-	public boolean appleEat = false;
 
-	Apple apple;
+	public boolean perdu = false;
+
+	public int appleEat = 0;
+
+	ArrayList<Eatable> object = new ArrayList<Eatable>();
 	public static float rotation;
 	static Snake snake;
 
 	public static List<Position> walls = new ArrayList<Position>();
-	
 
-	
-	public Game() throws IOException{
+	public Game() throws IOException {
 		initializeGame();
 	}
-	
+
 	@Override
 	public int update(int delta) {
 		if (!perdu) {
-			
+
 			snake.update(delta, SnakeGame.switchView);
 			// Adding a new position for snake, and notify snake lenght
 			// if
@@ -70,13 +67,16 @@ public class Game extends Etat {
 			appleEat = snake.addPosition(appleEat);
 			perdu = snake.checkWallCollision(walls);
 			// Check Apple detection
-			if (snake.getX() - SNAKE_SIZE < apple.getX()
-					&& snake.getX() + SNAKE_SIZE > apple.getX()
-					&& snake.getY() - SNAKE_SIZE < apple.getY()
-					&& snake.getY() + SNAKE_SIZE > apple.getY()) {
-				snake.setLenght(snake.lenght + 1);
-				appleEat = true;
-				apple = new Apple();
+			for (int i = 0; i < object.size(); i++) {
+				Eatable item = object.get(i);
+				if (snake.getX() - SNAKE_SIZE < item.getX()
+						&& snake.getX() + SNAKE_SIZE > item.getX()
+						&& snake.getY() - SNAKE_SIZE < item.getY()
+						&& snake.getY() + SNAKE_SIZE > item.getY()) {
+					snake.setLenght(snake.lenght + 1);
+					appleEat = item.getAction();
+					object.set(i, new Apple());
+				}
 			}
 		}
 		updateFPS();
@@ -85,32 +85,33 @@ public class Game extends Etat {
 
 	@Override
 	public void renderGL() throws IOException {
-		
+
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			glViewport(100, 100, Display.getWidth() - 100,
-					Display.getHeight() - 100);
-			glLoadIdentity();
-			// Dessin de la carte
-			glPushMatrix();
-			setCamera();
-			// glBindTexture(GL_TEXTURE_2D, textureSol);
-			drawMap();
-			textureSerpent.bind();
-			// glBindTexture(GL_TEXTURE_2D, textureSerpent);
-			snake.draw();
-			// Draw Walls
-			textureMur.bind();
-			// glBindTexture(GL_TEXTURE_2D, textureMur);
-			glColor3f(1, 1, 1);
-			for (int i = 0; i < walls.size(); i++) {
-				draw3DQuad(walls.get(i).getX(), walls.get(i).getY(),
-						-WALL_SIZE, WALL_SIZE * 2);
-			}
-			apple.draw();
-			glPopMatrix();
+		glViewport(100, 100, Display.getWidth() - 100,
+				Display.getHeight() - 100);
+		glLoadIdentity();
+		// Dessin de la carte
+		glPushMatrix();
+		setCamera();
+		// glBindTexture(GL_TEXTURE_2D, textureSol);
+		drawMap();
+		textureSerpent.bind();
+		// glBindTexture(GL_TEXTURE_2D, textureSerpent);
+		snake.draw();
+		// Draw Walls
+		textureMur.bind();
+		// glBindTexture(GL_TEXTURE_2D, textureMur);
+		glColor3f(1, 1, 1);
+		for (int i = 0; i < walls.size(); i++) {
+			draw3DQuad(walls.get(i).getX(), walls.get(i).getY(), -WALL_SIZE,
+					WALL_SIZE * 2);
+		}
+		for (int i = 0; i < object.size(); i++)
+			object.get(i).draw();
+		glPopMatrix();
 	}
-	
+
 	public static void setCamera() {
 		if (SnakeGame.switchView) {
 			float distance = 0.5f;
@@ -256,14 +257,17 @@ public class Game extends Etat {
 		glPopMatrix();
 
 	}
-	
+
 	private void initializeGame() throws IOException {
 		snake = new Snake();
 		walls = MazeReader.buildWallList("maze.txt");
-		apple = new Apple();
+		for (int i = 0; i < SnakeGame.APPLENUMBER; i++) {
+			//Randow other object
+			object.add(new Apple());
+		}
 		// Initialize Snake start_position
 		snake.intialize(walls, WALL_SIZE);
-		
+
 		textureSerpent = tl.getTexture("texture/serpent.jpg");
 		textureSol = tl.getTexture("texture/herbe.jpg");
 		textureMur = tl.getTexture("texture/metal.jpg");
