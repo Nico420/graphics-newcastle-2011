@@ -1,1 +1,1 @@
-build %1 && run %1
+build %1 %2 && run SnakeGame
