@@ -494,7 +494,7 @@ public class Snake {
 				break;
 			}
 			this.setMouvement(0);
-			System.out.println(direction+" "+mouvement);
+			//System.out.println(direction+" "+mouvement);
 		}
 
 	}

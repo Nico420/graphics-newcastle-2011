@@ -19,7 +19,7 @@ public class Countdown extends Etat {
 	public int update(int delta) {
 		countDown-=0.001f;
 		updateFPS();
-		if(countDown>0)
+		if(countDown>1)
 			return SnakeGame.COUNTDOWN;
 		else{
 			return SnakeGame.GAME;

@@ -75,7 +75,13 @@ public class Game extends Etat {
 						&& snake.getY() + SNAKE_SIZE > item.getY()) {
 					snake.setLenght(snake.lenght + 1);
 					appleEat = item.getAction();
-					object.set(i, new Apple());
+					// Generate new item
+					if (Math.random() > 0.9)
+						object.set(i, new Apple());
+					else if (Math.random() < 0.1)
+						object.set(i, new Apple());
+					else
+						object.set(i, new Apple());
 				}
 			}
 		}
@@ -262,7 +268,7 @@ public class Game extends Etat {
 		snake = new Snake();
 		walls = MazeReader.buildWallList("maze.txt");
 		for (int i = 0; i < SnakeGame.APPLENUMBER; i++) {
-			//Randow other object
+			// Randow other object
 			object.add(new Apple());
 		}
 		// Initialize Snake start_position
