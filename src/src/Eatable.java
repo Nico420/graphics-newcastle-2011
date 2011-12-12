@@ -4,21 +4,21 @@ import java.awt.Color;
 
 public class Eatable {
 
-	public static final int GROW_UP = 0;
-	public static final int REDUCE = 0;
+	public static final int GROW_UP = 1;
+	public static final int REDUCE = 2;
 	
 	public float x;
 	public float y;
 	
 	public Color color;
-	public float action;
+	public int action;
 	/**
 	 * @param x
 	 * @param y
 	 * @param color
 	 * @param action
 	 */
-	public Eatable(float x, float y, Color color, float action) {
+	public Eatable(float x, float y, Color color, int action) {
 		super();
 		this.x = x;
 		this.y = y;
@@ -64,13 +64,13 @@ public class Eatable {
 	/**
 	 * @return the action
 	 */
-	public float getAction() {
+	public int getAction() {
 		return action;
 	}
 	/**
 	 * @param action the action to set
 	 */
-	public void setAction(float action) {
+	public void setAction(int action) {
 		this.action = action;
 	}
 	/* (non-Javadoc)
@@ -80,6 +80,10 @@ public class Eatable {
 	public String toString() {
 		return "Eatable [x=" + x + ", y=" + y + ", color=" + color
 				+ ", action=" + action + "]";
+	}
+	public void draw() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

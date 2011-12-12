@@ -24,6 +24,11 @@ public class SnakeGame {
 	public static final int COUNTDOWN = 1;
 	
 
+	public static final int APPLENUMBER = 5;
+	
+	
+	
+
 	// float lightPosition1[] = { -MAP_SIZE, -MAP_SIZE, 1f, 1f };
 
 	/** time at last frame */

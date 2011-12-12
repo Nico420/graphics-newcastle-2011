@@ -172,7 +172,7 @@ public class Snake {
 
 	public void intialize(List<Position> walls, int wallSize) {
 
-		while ((new Position(x, y).checkCollapse(walls, Game.WALL_SIZE))) {
+		while ((new Position(x, y).checkCollapse(walls, Game.WALL_SIZE, Game.SNAKE_SIZE))) {
 			x = (float) (-(Game.MAP_SIZE - Game.SNAKE_SIZE) + (Game.MAP_SIZE * 2 - Game.SNAKE_SIZE)
 					* Math.random());
 			y = (float) (-(Game.MAP_SIZE - Game.SNAKE_SIZE) + (Game.MAP_SIZE * 2 - Game.SNAKE_SIZE)
@@ -380,15 +380,15 @@ public class Snake {
 				+ ", y=" + y + ", c=" + c + ", lenght=" + lenght + "]";
 	}
 
-	public boolean addPosition(boolean appleEat) {
+	public int addPosition(int appleEat) {
 		if (Math.sqrt(Math.pow(xTemp - this.getX(), 2)
 				+ Math.pow(yTemp - this.getY(), 2)) > (Game.SNAKE_SIZE * 2)) {
 			draw3DQuad(xTemp, yTemp, 0, Game.SNAKE_SIZE * 2);
 			this.positions.add(new Position(xTemp, yTemp));
-			if (!appleEat) {
+			if (appleEat==0) {
 				this.positions = this.positions.subList(1, lenght + 1);
 			} else {
-				appleEat = false;
+				appleEat = 0;
 			}
 			xTemp = this.getX();
 			yTemp = this.getY();
@@ -502,7 +502,7 @@ public class Snake {
 	public boolean checkWallCollision(List<Position> walls) {
 		Position actual = new Position(this.getX(), this.getY());
 
-		if (actual.checkCollapse(walls, Game.WALL_SIZE))
+		if (actual.checkCollapse(walls, Game.WALL_SIZE, Game.SNAKE_SIZE))
 			return true;
 
 		if (this.getX() < -Game.MAP_SIZE + Game.SNAKE_SIZE) {
@@ -522,7 +522,7 @@ public class Snake {
 			return true;
 		}
 
-		if (actual.checkCollapse(this.positions, Game.SNAKE_SIZE / 2))
+		if (actual.checkCollapse(this.positions, Game.SNAKE_SIZE / 2, Game.SNAKE_SIZE))
 			return true;
 		return false;
 	}

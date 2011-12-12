@@ -56,7 +56,7 @@ public class MazeReader {
 
 
 	private static void log(Object aObject) {
-		System.err.println(String.valueOf(aObject));
+		System.out.println(String.valueOf(aObject));
 	}
 	
 	public static void main(String[] aArgs) throws FileNotFoundException {
