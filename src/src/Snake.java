@@ -160,22 +160,22 @@ public class Snake {
 
 	public void draw() {
 
-		drawSnakeHead(x, y, 0, SnakeGame.SNAKE_SIZE * 2);
+		drawSnakeHead(x, y, 0, Game.SNAKE_SIZE * 2);
 		// Dessin du serpent
 		glColor3f(1, 1, 1);
 		for (int i = 0; i < positions.size(); i++) {
 			draw3DQuad(positions.get(i).getX(), positions.get(i).getY(), 0,
-					SnakeGame.SNAKE_SIZE * 2);
+					Game.SNAKE_SIZE * 2);
 		}
 
 	}
 
 	public void intialize(List<Position> walls, int wallSize) {
 
-		while ((new Position(x, y).checkCollapse(walls, SnakeGame.WALL_SIZE))) {
-			x = (float) (-(SnakeGame.MAP_SIZE - SnakeGame.SNAKE_SIZE) + (SnakeGame.MAP_SIZE * 2 - SnakeGame.SNAKE_SIZE)
+		while ((new Position(x, y).checkCollapse(walls, Game.WALL_SIZE))) {
+			x = (float) (-(Game.MAP_SIZE - Game.SNAKE_SIZE) + (Game.MAP_SIZE * 2 - Game.SNAKE_SIZE)
 					* Math.random());
-			y = (float) (-(SnakeGame.MAP_SIZE - SnakeGame.SNAKE_SIZE) + (SnakeGame.MAP_SIZE * 2 - SnakeGame.SNAKE_SIZE)
+			y = (float) (-(Game.MAP_SIZE - Game.SNAKE_SIZE) + (Game.MAP_SIZE * 2 - Game.SNAKE_SIZE)
 					* Math.random());
 		}
 
@@ -185,20 +185,20 @@ public class Snake {
 
 		glPushMatrix(); // Reset The View
 		glLoadIdentity();
-		SnakeGame.setCamera();
+		Game.setCamera();
 		glTranslatef(x, y, 0);
 		float rotation = 0;
 		switch (this.getDirection()) {
-		case SnakeGame.LEFT:
+		case Game.LEFT:
 			rotation = 90;
 			break;
-		case SnakeGame.RIGHT:
+		case Game.RIGHT:
 			rotation = 270;
 			break;
-		case SnakeGame.UP:
+		case Game.UP:
 			rotation = 180;
 			break;
-		case SnakeGame.DOWN:
+		case Game.DOWN:
 			rotation = 0;
 			break;
 		}
@@ -206,117 +206,117 @@ public class Snake {
 		glRotatef(rotation, 0, 0, 1.0f);
 		glBegin(GL_QUADS);
 		// bottom RIGHT
-		glVertex3f(0, SnakeGame.SNAKE_SIZE, 0);
-		glVertex3f(0, SnakeGame.SNAKE_SIZE, -1);
-		glVertex3f(SnakeGame.SNAKE_SIZE, 0, -1);
-		glVertex3f(SnakeGame.SNAKE_SIZE, 0, 0);
+		glVertex3f(0, Game.SNAKE_SIZE, 0);
+		glVertex3f(0, Game.SNAKE_SIZE, -1);
+		glVertex3f(Game.SNAKE_SIZE, 0, -1);
+		glVertex3f(Game.SNAKE_SIZE, 0, 0);
 
-		glVertex3f(SnakeGame.SNAKE_SIZE, 0, -1);
-		glVertex3f(SnakeGame.SNAKE_SIZE, 0, 0);
-		glVertex3f(SnakeGame.SNAKE_SIZE, -SnakeGame.SNAKE_SIZE, 0);
-		glVertex3f(SnakeGame.SNAKE_SIZE, -SnakeGame.SNAKE_SIZE, -1);
+		glVertex3f(Game.SNAKE_SIZE, 0, -1);
+		glVertex3f(Game.SNAKE_SIZE, 0, 0);
+		glVertex3f(Game.SNAKE_SIZE, -Game.SNAKE_SIZE, 0);
+		glVertex3f(Game.SNAKE_SIZE, -Game.SNAKE_SIZE, -1);
 
-		glVertex3f(SnakeGame.SNAKE_SIZE, -SnakeGame.SNAKE_SIZE, -1);
-		glVertex3f(SnakeGame.SNAKE_SIZE, -SnakeGame.SNAKE_SIZE, 0);
-		glVertex3f(0.5f * SnakeGame.SNAKE_SIZE, -1.5f * SnakeGame.SNAKE_SIZE, 0);
-		glVertex3f(0.5f * SnakeGame.SNAKE_SIZE, -1.5f * SnakeGame.SNAKE_SIZE,
+		glVertex3f(Game.SNAKE_SIZE, -Game.SNAKE_SIZE, -1);
+		glVertex3f(Game.SNAKE_SIZE, -Game.SNAKE_SIZE, 0);
+		glVertex3f(0.5f * Game.SNAKE_SIZE, -1.5f * Game.SNAKE_SIZE, 0);
+		glVertex3f(0.5f * Game.SNAKE_SIZE, -1.5f * Game.SNAKE_SIZE,
 				-1);
 
 		// bottom Left
-		glVertex3f(0, SnakeGame.SNAKE_SIZE, 0);
-		glVertex3f(0, SnakeGame.SNAKE_SIZE, -1);
-		glVertex3f(-SnakeGame.SNAKE_SIZE, 0, -1);
-		glVertex3f(-SnakeGame.SNAKE_SIZE, 0, 0);
+		glVertex3f(0, Game.SNAKE_SIZE, 0);
+		glVertex3f(0, Game.SNAKE_SIZE, -1);
+		glVertex3f(-Game.SNAKE_SIZE, 0, -1);
+		glVertex3f(-Game.SNAKE_SIZE, 0, 0);
 
-		glVertex3f(-SnakeGame.SNAKE_SIZE, 0, -1);
-		glVertex3f(-SnakeGame.SNAKE_SIZE, 0, 0);
-		glVertex3f(-SnakeGame.SNAKE_SIZE, -SnakeGame.SNAKE_SIZE, 0);
-		glVertex3f(-SnakeGame.SNAKE_SIZE, -SnakeGame.SNAKE_SIZE, -1);
+		glVertex3f(-Game.SNAKE_SIZE, 0, -1);
+		glVertex3f(-Game.SNAKE_SIZE, 0, 0);
+		glVertex3f(-Game.SNAKE_SIZE, -Game.SNAKE_SIZE, 0);
+		glVertex3f(-Game.SNAKE_SIZE, -Game.SNAKE_SIZE, -1);
 
-		glVertex3f(-SnakeGame.SNAKE_SIZE, -SnakeGame.SNAKE_SIZE, -1);
-		glVertex3f(-SnakeGame.SNAKE_SIZE, -SnakeGame.SNAKE_SIZE, 0);
-		glVertex3f(-0.5f * SnakeGame.SNAKE_SIZE, -1.5f * SnakeGame.SNAKE_SIZE,
+		glVertex3f(-Game.SNAKE_SIZE, -Game.SNAKE_SIZE, -1);
+		glVertex3f(-Game.SNAKE_SIZE, -Game.SNAKE_SIZE, 0);
+		glVertex3f(-0.5f * Game.SNAKE_SIZE, -1.5f * Game.SNAKE_SIZE,
 				0);
-		glVertex3f(-0.5f * SnakeGame.SNAKE_SIZE, -1.5f * SnakeGame.SNAKE_SIZE,
+		glVertex3f(-0.5f * Game.SNAKE_SIZE, -1.5f * Game.SNAKE_SIZE,
 				-1);
 
 		// top RIGHT
-		glVertex3f(0, SnakeGame.SNAKE_SIZE, -SnakeGame.SNAKE_SIZE);
-		glVertex3f(0, SnakeGame.SNAKE_SIZE, -2);
-		glVertex3f(SnakeGame.SNAKE_SIZE, 0, -2);
-		glVertex3f(SnakeGame.SNAKE_SIZE, 0, -SnakeGame.SNAKE_SIZE);
+		glVertex3f(0, Game.SNAKE_SIZE, -Game.SNAKE_SIZE);
+		glVertex3f(0, Game.SNAKE_SIZE, -2);
+		glVertex3f(Game.SNAKE_SIZE, 0, -2);
+		glVertex3f(Game.SNAKE_SIZE, 0, -Game.SNAKE_SIZE);
 
-		glVertex3f(SnakeGame.SNAKE_SIZE, 0, -1);
-		glVertex3f(SnakeGame.SNAKE_SIZE, 0, -SnakeGame.SNAKE_SIZE);
-		glVertex3f(SnakeGame.SNAKE_SIZE, -SnakeGame.SNAKE_SIZE,
-				-SnakeGame.SNAKE_SIZE);
-		glVertex3f(SnakeGame.SNAKE_SIZE, -SnakeGame.SNAKE_SIZE, -1);
+		glVertex3f(Game.SNAKE_SIZE, 0, -1);
+		glVertex3f(Game.SNAKE_SIZE, 0, -Game.SNAKE_SIZE);
+		glVertex3f(Game.SNAKE_SIZE, -Game.SNAKE_SIZE,
+				-Game.SNAKE_SIZE);
+		glVertex3f(Game.SNAKE_SIZE, -Game.SNAKE_SIZE, -1);
 
-		glVertex3f(SnakeGame.SNAKE_SIZE, -SnakeGame.SNAKE_SIZE, -1);
-		glVertex3f(SnakeGame.SNAKE_SIZE, -SnakeGame.SNAKE_SIZE,
-				-SnakeGame.SNAKE_SIZE);
-		glVertex3f(0.5f * SnakeGame.SNAKE_SIZE, -1.5f * SnakeGame.SNAKE_SIZE,
-				-SnakeGame.SNAKE_SIZE);
-		glVertex3f(0.5f * SnakeGame.SNAKE_SIZE, -1.5f * SnakeGame.SNAKE_SIZE,
+		glVertex3f(Game.SNAKE_SIZE, -Game.SNAKE_SIZE, -1);
+		glVertex3f(Game.SNAKE_SIZE, -Game.SNAKE_SIZE,
+				-Game.SNAKE_SIZE);
+		glVertex3f(0.5f * Game.SNAKE_SIZE, -1.5f * Game.SNAKE_SIZE,
+				-Game.SNAKE_SIZE);
+		glVertex3f(0.5f * Game.SNAKE_SIZE, -1.5f * Game.SNAKE_SIZE,
 				-1);
 
 		// top Left
-		glVertex3f(0, SnakeGame.SNAKE_SIZE, -SnakeGame.SNAKE_SIZE);
-		glVertex3f(0, SnakeGame.SNAKE_SIZE, -2);
-		glVertex3f(-SnakeGame.SNAKE_SIZE, 0, -2);
-		glVertex3f(-SnakeGame.SNAKE_SIZE, 0, -SnakeGame.SNAKE_SIZE);
+		glVertex3f(0, Game.SNAKE_SIZE, -Game.SNAKE_SIZE);
+		glVertex3f(0, Game.SNAKE_SIZE, -2);
+		glVertex3f(-Game.SNAKE_SIZE, 0, -2);
+		glVertex3f(-Game.SNAKE_SIZE, 0, -Game.SNAKE_SIZE);
 
-		glVertex3f(-SnakeGame.SNAKE_SIZE, 0, -1);
-		glVertex3f(-SnakeGame.SNAKE_SIZE, 0, -SnakeGame.SNAKE_SIZE);
-		glVertex3f(-SnakeGame.SNAKE_SIZE, -SnakeGame.SNAKE_SIZE,
-				-SnakeGame.SNAKE_SIZE);
-		glVertex3f(-SnakeGame.SNAKE_SIZE, -SnakeGame.SNAKE_SIZE, -1);
+		glVertex3f(-Game.SNAKE_SIZE, 0, -1);
+		glVertex3f(-Game.SNAKE_SIZE, 0, -Game.SNAKE_SIZE);
+		glVertex3f(-Game.SNAKE_SIZE, -Game.SNAKE_SIZE,
+				-Game.SNAKE_SIZE);
+		glVertex3f(-Game.SNAKE_SIZE, -Game.SNAKE_SIZE, -1);
 
-		glVertex3f(-SnakeGame.SNAKE_SIZE, -SnakeGame.SNAKE_SIZE, -1);
-		glVertex3f(-SnakeGame.SNAKE_SIZE, -SnakeGame.SNAKE_SIZE,
-				-SnakeGame.SNAKE_SIZE);
-		glVertex3f(-0.5f * SnakeGame.SNAKE_SIZE, -1.5f * SnakeGame.SNAKE_SIZE,
-				-SnakeGame.SNAKE_SIZE);
-		glVertex3f(-0.5f * SnakeGame.SNAKE_SIZE, -1.5f * SnakeGame.SNAKE_SIZE,
+		glVertex3f(-Game.SNAKE_SIZE, -Game.SNAKE_SIZE, -1);
+		glVertex3f(-Game.SNAKE_SIZE, -Game.SNAKE_SIZE,
+				-Game.SNAKE_SIZE);
+		glVertex3f(-0.5f * Game.SNAKE_SIZE, -1.5f * Game.SNAKE_SIZE,
+				-Game.SNAKE_SIZE);
+		glVertex3f(-0.5f * Game.SNAKE_SIZE, -1.5f * Game.SNAKE_SIZE,
 				-1);
 
 		glEnd();
 
 		glBegin(GL_POLYGON);
 		glColor3f(1, 0, 0);
-		glVertex3f(0, SnakeGame.SNAKE_SIZE, -1);
-		glVertex3f(SnakeGame.SNAKE_SIZE, 0, -1);
-		glVertex3f(SnakeGame.SNAKE_SIZE, -SnakeGame.SNAKE_SIZE, -1);
-		glVertex3f(0.5f * SnakeGame.SNAKE_SIZE, -1.5f * SnakeGame.SNAKE_SIZE,
+		glVertex3f(0, Game.SNAKE_SIZE, -1);
+		glVertex3f(Game.SNAKE_SIZE, 0, -1);
+		glVertex3f(Game.SNAKE_SIZE, -Game.SNAKE_SIZE, -1);
+		glVertex3f(0.5f * Game.SNAKE_SIZE, -1.5f * Game.SNAKE_SIZE,
 				-1);
-		glVertex3f(-0.5f * SnakeGame.SNAKE_SIZE, -1.5f * SnakeGame.SNAKE_SIZE,
+		glVertex3f(-0.5f * Game.SNAKE_SIZE, -1.5f * Game.SNAKE_SIZE,
 				-1);
-		glVertex3f(-SnakeGame.SNAKE_SIZE, -SnakeGame.SNAKE_SIZE, -1);
-		glVertex3f(-SnakeGame.SNAKE_SIZE, 0, -1);
-		glVertex3f(0, SnakeGame.SNAKE_SIZE, -1);
+		glVertex3f(-Game.SNAKE_SIZE, -Game.SNAKE_SIZE, -1);
+		glVertex3f(-Game.SNAKE_SIZE, 0, -1);
+		glVertex3f(0, Game.SNAKE_SIZE, -1);
 
 		glEnd();
 		glBegin(GL_POLYGON);
 		glColor3f(0, 1, 0);
-		glVertex3f(0, SnakeGame.SNAKE_SIZE, -SnakeGame.SNAKE_SIZE);
-		glVertex3f(SnakeGame.SNAKE_SIZE, 0, -SnakeGame.SNAKE_SIZE);
-		glVertex3f(SnakeGame.SNAKE_SIZE, -SnakeGame.SNAKE_SIZE,
-				-SnakeGame.SNAKE_SIZE);
-		glVertex3f(0.5f * SnakeGame.SNAKE_SIZE, -1.5f * SnakeGame.SNAKE_SIZE,
-				-SnakeGame.SNAKE_SIZE);
-		glVertex3f(-0.5f * SnakeGame.SNAKE_SIZE, -1.5f * SnakeGame.SNAKE_SIZE,
-				-SnakeGame.SNAKE_SIZE);
-		glVertex3f(-SnakeGame.SNAKE_SIZE, -SnakeGame.SNAKE_SIZE,
-				-SnakeGame.SNAKE_SIZE);
-		glVertex3f(-SnakeGame.SNAKE_SIZE, 0, -SnakeGame.SNAKE_SIZE);
-		glVertex3f(0, SnakeGame.SNAKE_SIZE, -SnakeGame.SNAKE_SIZE);
+		glVertex3f(0, Game.SNAKE_SIZE, -Game.SNAKE_SIZE);
+		glVertex3f(Game.SNAKE_SIZE, 0, -Game.SNAKE_SIZE);
+		glVertex3f(Game.SNAKE_SIZE, -Game.SNAKE_SIZE,
+				-Game.SNAKE_SIZE);
+		glVertex3f(0.5f * Game.SNAKE_SIZE, -1.5f * Game.SNAKE_SIZE,
+				-Game.SNAKE_SIZE);
+		glVertex3f(-0.5f * Game.SNAKE_SIZE, -1.5f * Game.SNAKE_SIZE,
+				-Game.SNAKE_SIZE);
+		glVertex3f(-Game.SNAKE_SIZE, -Game.SNAKE_SIZE,
+				-Game.SNAKE_SIZE);
+		glVertex3f(-Game.SNAKE_SIZE, 0, -Game.SNAKE_SIZE);
+		glVertex3f(0, Game.SNAKE_SIZE, -Game.SNAKE_SIZE);
 
 		glEnd();
 		glBegin(GL_POLYGON);
 		glColor3f(1, 0, 0);
-		glVertex3f(0, SnakeGame.SNAKE_SIZE, -SnakeGame.SNAKE_SIZE);
-		glVertex3f(-SnakeGame.SNAKE_SIZE, 0, -1);
-		glVertex3f(SnakeGame.SNAKE_SIZE, 0, -1);
+		glVertex3f(0, Game.SNAKE_SIZE, -Game.SNAKE_SIZE);
+		glVertex3f(-Game.SNAKE_SIZE, 0, -1);
+		glVertex3f(Game.SNAKE_SIZE, 0, -1);
 
 		glEnd();
 		glPopMatrix();
@@ -327,7 +327,7 @@ public class Snake {
 
 		glPushMatrix();
 		glLoadIdentity();
-		SnakeGame.setCamera();
+		Game.setCamera();
 		glBegin(GL_QUADS);
 		glTexCoord2d(0, 0.5);
 		glVertex3f(x - a, y - a, z - a);
@@ -382,8 +382,8 @@ public class Snake {
 
 	public boolean addPosition(boolean appleEat) {
 		if (Math.sqrt(Math.pow(xTemp - this.getX(), 2)
-				+ Math.pow(yTemp - this.getY(), 2)) > (SnakeGame.SNAKE_SIZE * 2)) {
-			draw3DQuad(xTemp, yTemp, 0, SnakeGame.SNAKE_SIZE * 2);
+				+ Math.pow(yTemp - this.getY(), 2)) > (Game.SNAKE_SIZE * 2)) {
+			draw3DQuad(xTemp, yTemp, 0, Game.SNAKE_SIZE * 2);
 			this.positions.add(new Position(xTemp, yTemp));
 			if (!appleEat) {
 				this.positions = this.positions.subList(1, lenght + 1);
@@ -407,29 +407,29 @@ public class Snake {
 	public void update(int delta, boolean b) {
 		if (!b) {
 			if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
-				if (!(this.getMouvement() == SnakeGame.RIGHT))
-					this.setMouvement(SnakeGame.LEFT);
+				if (!(this.getMouvement() == Game.RIGHT))
+					this.setMouvement(Game.LEFT);
 			if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
-				if (!(this.getMouvement() == SnakeGame.LEFT))
-					this.setMouvement(SnakeGame.RIGHT);
+				if (!(this.getMouvement() == Game.LEFT))
+					this.setMouvement(Game.RIGHT);
 			if (Keyboard.isKeyDown(Keyboard.KEY_UP))
-				if (!(this.getMouvement() == SnakeGame.DOWN))
-					this.setMouvement(SnakeGame.UP);
+				if (!(this.getMouvement() == Game.DOWN))
+					this.setMouvement(Game.UP);
 			if (Keyboard.isKeyDown(Keyboard.KEY_DOWN))
-				if (!(this.getMouvement() == SnakeGame.UP))
-					this.setMouvement(SnakeGame.DOWN);
+				if (!(this.getMouvement() == Game.UP))
+					this.setMouvement(Game.DOWN);
 
 			switch (this.getMouvement()) {
-			case SnakeGame.LEFT:
+			case Game.LEFT:
 				this.setX(this.getX() - 0.05f * delta);
 				break;
-			case SnakeGame.RIGHT:
+			case Game.RIGHT:
 				this.setX(this.getX() + 0.05f * delta);
 				break;
-			case SnakeGame.UP:
+			case Game.UP:
 				this.setY(this.getY() - 0.05f * delta);
 				break;
-			case SnakeGame.DOWN:
+			case Game.DOWN:
 				this.setY(this.getY() + 0.05f * delta);
 				break;
 			}
@@ -439,57 +439,57 @@ public class Snake {
 				if (Keyboard.getEventKeyState()) {
 					if (Keyboard.getEventKey() == Keyboard.KEY_LEFT) {
 						System.out.println("GAUCHE");
-						this.setMouvement(SnakeGame.LEFT);
+						this.setMouvement(Game.LEFT);
 						if (this.getDirection() == 0)
-							this.setDirection(SnakeGame.RIGHT);
+							this.setDirection(Game.RIGHT);
 					}
 					if (Keyboard.getEventKey() == Keyboard.KEY_RIGHT) {
 						System.out.println("DROITE");
-						this.setMouvement(SnakeGame.RIGHT);
+						this.setMouvement(Game.RIGHT);
 						if (this.getDirection() == 0)
-							this.setDirection(SnakeGame.LEFT);
+							this.setDirection(Game.LEFT);
 					}
 				}
 			}
 		
 			switch (this.getDirection()) {
-			case SnakeGame.LEFT:
-				if (this.getMouvement() == SnakeGame.RIGHT)
-					this.setDirection(SnakeGame.DOWN);
-				if (this.getMouvement() == SnakeGame.LEFT)
-					this.setDirection(SnakeGame.UP);
+			case Game.LEFT:
+				if (this.getMouvement() == Game.RIGHT)
+					this.setDirection(Game.DOWN);
+				if (this.getMouvement() == Game.LEFT)
+					this.setDirection(Game.UP);
 				break;
-			case SnakeGame.RIGHT:
-				if (this.getMouvement() == SnakeGame.LEFT)
-					this.setDirection(SnakeGame.DOWN);
-				if (this.getMouvement() == SnakeGame.RIGHT)
-					this.setDirection(SnakeGame.UP);
+			case Game.RIGHT:
+				if (this.getMouvement() == Game.LEFT)
+					this.setDirection(Game.DOWN);
+				if (this.getMouvement() == Game.RIGHT)
+					this.setDirection(Game.UP);
 				break;
-			case SnakeGame.UP:
-				if (this.getMouvement() == SnakeGame.RIGHT)
-					this.setDirection(SnakeGame.RIGHT);
-				if (this.getMouvement() == SnakeGame.LEFT)
-					this.setDirection(SnakeGame.LEFT);
+			case Game.UP:
+				if (this.getMouvement() == Game.RIGHT)
+					this.setDirection(Game.RIGHT);
+				if (this.getMouvement() == Game.LEFT)
+					this.setDirection(Game.LEFT);
 				break;
-			case SnakeGame.DOWN:
-				if (this.getMouvement() == SnakeGame.LEFT)
-					this.setDirection(SnakeGame.LEFT);
-				if (this.getMouvement() == SnakeGame.RIGHT)
-					this.setDirection(SnakeGame.RIGHT);
+			case Game.DOWN:
+				if (this.getMouvement() == Game.LEFT)
+					this.setDirection(Game.LEFT);
+				if (this.getMouvement() == Game.RIGHT)
+					this.setDirection(Game.RIGHT);
 				break;
 			}
 
 			switch (this.getDirection()) {
-			case SnakeGame.LEFT:
+			case Game.LEFT:
 				this.setX(this.getX() - 0.05f * delta);
 				break;
-			case SnakeGame.RIGHT:
+			case Game.RIGHT:
 				this.setX(this.getX() + 0.05f * delta);
 				break;
-			case SnakeGame.UP:
+			case Game.UP:
 				this.setY(this.getY() - 0.05f * delta);
 				break;
-			case SnakeGame.DOWN:
+			case Game.DOWN:
 				this.setY(this.getY() + 0.05f * delta);
 				break;
 			}
@@ -502,27 +502,27 @@ public class Snake {
 	public boolean checkWallCollision(List<Position> walls) {
 		Position actual = new Position(this.getX(), this.getY());
 
-		if (actual.checkCollapse(walls, SnakeGame.WALL_SIZE))
+		if (actual.checkCollapse(walls, Game.WALL_SIZE))
 			return true;
 
-		if (this.getX() < -SnakeGame.MAP_SIZE + SnakeGame.SNAKE_SIZE) {
-			this.setY(-SnakeGame.MAP_SIZE + SnakeGame.SNAKE_SIZE);
+		if (this.getX() < -Game.MAP_SIZE + Game.SNAKE_SIZE) {
+			this.setY(-Game.MAP_SIZE + Game.SNAKE_SIZE);
 			return true;
 		}
-		if (this.getX() > SnakeGame.MAP_SIZE - SnakeGame.SNAKE_SIZE) {
-			this.setY(SnakeGame.MAP_SIZE - SnakeGame.SNAKE_SIZE);
+		if (this.getX() > Game.MAP_SIZE - Game.SNAKE_SIZE) {
+			this.setY(Game.MAP_SIZE - Game.SNAKE_SIZE);
 			return true;
 		}
-		if (this.getY() < -SnakeGame.MAP_SIZE + SnakeGame.SNAKE_SIZE) {
-			this.setY(-SnakeGame.MAP_SIZE + SnakeGame.SNAKE_SIZE);
+		if (this.getY() < -Game.MAP_SIZE + Game.SNAKE_SIZE) {
+			this.setY(-Game.MAP_SIZE + Game.SNAKE_SIZE);
 			return true;
 		}
-		if (this.getY() > SnakeGame.MAP_SIZE - SnakeGame.SNAKE_SIZE) {
-			this.setY(SnakeGame.MAP_SIZE - SnakeGame.SNAKE_SIZE);
+		if (this.getY() > Game.MAP_SIZE - Game.SNAKE_SIZE) {
+			this.setY(Game.MAP_SIZE - Game.SNAKE_SIZE);
 			return true;
 		}
 
-		if (actual.checkCollapse(this.positions, SnakeGame.SNAKE_SIZE / 2))
+		if (actual.checkCollapse(this.positions, Game.SNAKE_SIZE / 2))
 			return true;
 		return false;
 	}

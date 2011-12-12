@@ -3,7 +3,7 @@ package src;
 import static org.lwjgl.opengl.GL11.*;
 
 import java.awt.Color;
-import src.SnakeGame;
+import src.Game;
 import tools.Position;
 
 public class Apple extends Eatable {
@@ -14,10 +14,10 @@ public class Apple extends Eatable {
 
 	public Apple() {
 		super(0,0, Color.GREEN, Eatable.GROW_UP);
-		while((new Position(x,y)).checkCollapse(SnakeGame.walls, SnakeGame.WALL_SIZE)){
-		x = (float) (-(SnakeGame.MAP_SIZE-SnakeGame.APPLE_SIZE) + (SnakeGame.MAP_SIZE * 2 - SnakeGame.APPLE_SIZE)
+		while((new Position(x,y)).checkCollapse(Game.walls, Game.WALL_SIZE)){
+		x = (float) (-(Game.MAP_SIZE-Game.APPLE_SIZE) + (Game.MAP_SIZE * 2 - Game.APPLE_SIZE)
 				* Math.random());
-		y = (float) (-(SnakeGame.MAP_SIZE-SnakeGame.APPLE_SIZE) + (SnakeGame.MAP_SIZE * 2 - SnakeGame.APPLE_SIZE)
+		y = (float) (-(Game.MAP_SIZE-Game.APPLE_SIZE) + (Game.MAP_SIZE * 2 - Game.APPLE_SIZE)
 				* Math.random());	
 		}
 		
@@ -28,10 +28,10 @@ public class Apple extends Eatable {
 	}
 
 	public void draw() {
-		float a = SnakeGame.APPLE_SIZE / 2;
+		float a = Game.APPLE_SIZE / 2;
 		glPushMatrix();
 		glLoadIdentity();
-		SnakeGame.setCamera();
+		Game.setCamera();
 
 		// Make the apple bounce !
 		glTranslatef(x, y, -bounce);
@@ -69,116 +69,116 @@ public class Apple extends Eatable {
 		glColor3f(1, 0, 0);
 		glVertex3f(x - a, y - a, 0);
 		glColor3f(0, 1, 0);
-		glVertex3f(x - SnakeGame.APPLE_SIZE, y - SnakeGame.APPLE_SIZE,
-				-SnakeGame.APPLE_SIZE);
-		glVertex3f(x - SnakeGame.APPLE_SIZE, y + SnakeGame.APPLE_SIZE,
-				-SnakeGame.APPLE_SIZE);
+		glVertex3f(x - Game.APPLE_SIZE, y - Game.APPLE_SIZE,
+				-Game.APPLE_SIZE);
+		glVertex3f(x - Game.APPLE_SIZE, y + Game.APPLE_SIZE,
+				-Game.APPLE_SIZE);
 		glColor3f(1, 0, 0);
 		glVertex3f(x - a, y + a, 0);
 		glVertex3f(x + a, y - a, 0);
 		glColor3f(0, 1, 0);
-		glVertex3f(x + SnakeGame.APPLE_SIZE, y - SnakeGame.APPLE_SIZE,
-				-SnakeGame.APPLE_SIZE);
-		glVertex3f(x + SnakeGame.APPLE_SIZE, y + SnakeGame.APPLE_SIZE,
-				-SnakeGame.APPLE_SIZE);
+		glVertex3f(x + Game.APPLE_SIZE, y - Game.APPLE_SIZE,
+				-Game.APPLE_SIZE);
+		glVertex3f(x + Game.APPLE_SIZE, y + Game.APPLE_SIZE,
+				-Game.APPLE_SIZE);
 		glColor3f(1, 0, 0);
 		glVertex3f(x + a, y + a, 0);
 
 		glVertex3f(x - a, y - a, 0);
 		glColor3f(0, 1, 0);
-		glVertex3f(x - SnakeGame.APPLE_SIZE, y - SnakeGame.APPLE_SIZE,
-				-SnakeGame.APPLE_SIZE);
-		glVertex3f(x + SnakeGame.APPLE_SIZE, y - SnakeGame.APPLE_SIZE,
-				-SnakeGame.APPLE_SIZE);
+		glVertex3f(x - Game.APPLE_SIZE, y - Game.APPLE_SIZE,
+				-Game.APPLE_SIZE);
+		glVertex3f(x + Game.APPLE_SIZE, y - Game.APPLE_SIZE,
+				-Game.APPLE_SIZE);
 		glColor3f(1, 0, 0);
 		glVertex3f(x + a, y - a, 0);
 		glVertex3f(x - a, y + a, 0);
 		glColor3f(0, 1, 0);
-		glVertex3f(x - SnakeGame.APPLE_SIZE, y + SnakeGame.APPLE_SIZE,
-				-SnakeGame.APPLE_SIZE);
-		glVertex3f(x + SnakeGame.APPLE_SIZE, y + SnakeGame.APPLE_SIZE,
-				-SnakeGame.APPLE_SIZE);
+		glVertex3f(x - Game.APPLE_SIZE, y + Game.APPLE_SIZE,
+				-Game.APPLE_SIZE);
+		glVertex3f(x + Game.APPLE_SIZE, y + Game.APPLE_SIZE,
+				-Game.APPLE_SIZE);
 		glColor3f(1, 0, 0);
 		glVertex3f(x + a, y + a, 0);
 
 		// Apple sides up
 
 		glColor3f(0, 1, 0);
-		glVertex3f(x - SnakeGame.APPLE_SIZE, y - SnakeGame.APPLE_SIZE,
-				-SnakeGame.APPLE_SIZE);
+		glVertex3f(x - Game.APPLE_SIZE, y - Game.APPLE_SIZE,
+				-Game.APPLE_SIZE);
 		glColor3f(1, 0, 0);
-		glVertex3f(x - a, y - a, -SnakeGame.APPLE_SIZE * 2);
-		glVertex3f(x - a, y + a, -SnakeGame.APPLE_SIZE * 2);
+		glVertex3f(x - a, y - a, -Game.APPLE_SIZE * 2);
+		glVertex3f(x - a, y + a, -Game.APPLE_SIZE * 2);
 		glColor3f(0, 1, 0);
-		glVertex3f(x - SnakeGame.APPLE_SIZE, y + SnakeGame.APPLE_SIZE,
-				-SnakeGame.APPLE_SIZE);
-		glVertex3f(x + SnakeGame.APPLE_SIZE, y - SnakeGame.APPLE_SIZE,
-				-SnakeGame.APPLE_SIZE);
+		glVertex3f(x - Game.APPLE_SIZE, y + Game.APPLE_SIZE,
+				-Game.APPLE_SIZE);
+		glVertex3f(x + Game.APPLE_SIZE, y - Game.APPLE_SIZE,
+				-Game.APPLE_SIZE);
 		glColor3f(1, 0, 0);
-		glVertex3f(x + a, y - a, -SnakeGame.APPLE_SIZE * 2);
-		glVertex3f(x + a, y + a, -SnakeGame.APPLE_SIZE * 2);
+		glVertex3f(x + a, y - a, -Game.APPLE_SIZE * 2);
+		glVertex3f(x + a, y + a, -Game.APPLE_SIZE * 2);
 		glColor3f(0, 1, 0);
-		glVertex3f(x + SnakeGame.APPLE_SIZE, y + SnakeGame.APPLE_SIZE,
-				-SnakeGame.APPLE_SIZE);
+		glVertex3f(x + Game.APPLE_SIZE, y + Game.APPLE_SIZE,
+				-Game.APPLE_SIZE);
 
-		glVertex3f(x - SnakeGame.APPLE_SIZE, y - SnakeGame.APPLE_SIZE,
-				-SnakeGame.APPLE_SIZE);
+		glVertex3f(x - Game.APPLE_SIZE, y - Game.APPLE_SIZE,
+				-Game.APPLE_SIZE);
 		glColor3f(1, 0, 0);
-		glVertex3f(x - a, y - a, -SnakeGame.APPLE_SIZE * 2);
-		glVertex3f(x + a, y - a, -SnakeGame.APPLE_SIZE * 2);
+		glVertex3f(x - a, y - a, -Game.APPLE_SIZE * 2);
+		glVertex3f(x + a, y - a, -Game.APPLE_SIZE * 2);
 		glColor3f(0, 1, 0);
-		glVertex3f(x + SnakeGame.APPLE_SIZE, y - SnakeGame.APPLE_SIZE,
-				-SnakeGame.APPLE_SIZE);
-		glVertex3f(x - SnakeGame.APPLE_SIZE, y + SnakeGame.APPLE_SIZE,
-				-SnakeGame.APPLE_SIZE);
+		glVertex3f(x + Game.APPLE_SIZE, y - Game.APPLE_SIZE,
+				-Game.APPLE_SIZE);
+		glVertex3f(x - Game.APPLE_SIZE, y + Game.APPLE_SIZE,
+				-Game.APPLE_SIZE);
 		glColor3f(1, 0, 0);
-		glVertex3f(x - a, y + a, -SnakeGame.APPLE_SIZE * 2);
-		glVertex3f(x + a, y + a, -SnakeGame.APPLE_SIZE * 2);
+		glVertex3f(x - a, y + a, -Game.APPLE_SIZE * 2);
+		glVertex3f(x + a, y + a, -Game.APPLE_SIZE * 2);
 		glColor3f(0, 1, 0);
-		glVertex3f(x + SnakeGame.APPLE_SIZE, y + SnakeGame.APPLE_SIZE,
-				-SnakeGame.APPLE_SIZE);
+		glVertex3f(x + Game.APPLE_SIZE, y + Game.APPLE_SIZE,
+				-Game.APPLE_SIZE);
 
 		// Apple top
 		glColor3f(1, 0, 0);
-		glVertex3f(x - a, y - a, -SnakeGame.APPLE_SIZE * 2);
-		glVertex3f(x + a, y - a, -SnakeGame.APPLE_SIZE * 2);
-		glVertex3f(x + a, y + a, -SnakeGame.APPLE_SIZE * 2);
-		glVertex3f(x - a, y + a, -SnakeGame.APPLE_SIZE * 2);
+		glVertex3f(x - a, y - a, -Game.APPLE_SIZE * 2);
+		glVertex3f(x + a, y - a, -Game.APPLE_SIZE * 2);
+		glVertex3f(x + a, y + a, -Game.APPLE_SIZE * 2);
+		glVertex3f(x - a, y + a, -Game.APPLE_SIZE * 2);
 
 		a /= 2;
 		// Apple "snail"
 		glColor3f(0.5f, 0.2f, 0f);
 		// Bottom
-		glVertex3f(x - a, y - a, -SnakeGame.APPLE_SIZE * 2);
-		glVertex3f(x + a, y - a, -SnakeGame.APPLE_SIZE * 2);
-		glVertex3f(x + a, y + a, -SnakeGame.APPLE_SIZE * 2);
-		glVertex3f(x - a, y + a, -SnakeGame.APPLE_SIZE * 2);
+		glVertex3f(x - a, y - a, -Game.APPLE_SIZE * 2);
+		glVertex3f(x + a, y - a, -Game.APPLE_SIZE * 2);
+		glVertex3f(x + a, y + a, -Game.APPLE_SIZE * 2);
+		glVertex3f(x - a, y + a, -Game.APPLE_SIZE * 2);
 		// Sides
-		glVertex3f(x - a, y - a, -SnakeGame.APPLE_SIZE * 2);
-		glVertex3f(x + a, y - a, -SnakeGame.APPLE_SIZE * 2);
-		glVertex3f(x - a, y - a, -SnakeGame.APPLE_SIZE * 2 - 1);
-		glVertex3f(x + a, y - a, -SnakeGame.APPLE_SIZE * 2 - 1);
+		glVertex3f(x - a, y - a, -Game.APPLE_SIZE * 2);
+		glVertex3f(x + a, y - a, -Game.APPLE_SIZE * 2);
+		glVertex3f(x - a, y - a, -Game.APPLE_SIZE * 2 - 1);
+		glVertex3f(x + a, y - a, -Game.APPLE_SIZE * 2 - 1);
 
-		glVertex3f(x - a, y + a, -SnakeGame.APPLE_SIZE * 2);
-		glVertex3f(x + a, y + a, -SnakeGame.APPLE_SIZE * 2);
-		glVertex3f(x - a, y + a, -SnakeGame.APPLE_SIZE * 2 - 1);
-		glVertex3f(x + a, y + a, -SnakeGame.APPLE_SIZE * 2 - 1);
+		glVertex3f(x - a, y + a, -Game.APPLE_SIZE * 2);
+		glVertex3f(x + a, y + a, -Game.APPLE_SIZE * 2);
+		glVertex3f(x - a, y + a, -Game.APPLE_SIZE * 2 - 1);
+		glVertex3f(x + a, y + a, -Game.APPLE_SIZE * 2 - 1);
 
-		glVertex3f(x + a, y - a, -SnakeGame.APPLE_SIZE * 2);
-		glVertex3f(x + a, y + a, -SnakeGame.APPLE_SIZE * 2);
-		glVertex3f(x + a, y - a, -SnakeGame.APPLE_SIZE * 2 - 1);
-		glVertex3f(x + a, y + a, -SnakeGame.APPLE_SIZE * 2 - 1);
+		glVertex3f(x + a, y - a, -Game.APPLE_SIZE * 2);
+		glVertex3f(x + a, y + a, -Game.APPLE_SIZE * 2);
+		glVertex3f(x + a, y - a, -Game.APPLE_SIZE * 2 - 1);
+		glVertex3f(x + a, y + a, -Game.APPLE_SIZE * 2 - 1);
 
-		glVertex3f(x - a, y - a, -SnakeGame.APPLE_SIZE * 2);
-		glVertex3f(x - a, y + a, -SnakeGame.APPLE_SIZE * 2);
-		glVertex3f(x - a, y - a, -SnakeGame.APPLE_SIZE * 2 - 1);
-		glVertex3f(x - a, y + a, -SnakeGame.APPLE_SIZE * 2 - 1);
+		glVertex3f(x - a, y - a, -Game.APPLE_SIZE * 2);
+		glVertex3f(x - a, y + a, -Game.APPLE_SIZE * 2);
+		glVertex3f(x - a, y - a, -Game.APPLE_SIZE * 2 - 1);
+		glVertex3f(x - a, y + a, -Game.APPLE_SIZE * 2 - 1);
 
 		// Top
-		glVertex3f(x - a, y - a, -SnakeGame.APPLE_SIZE * 2 - 1);
-		glVertex3f(x + a, y - a, -SnakeGame.APPLE_SIZE * 2 - 1);
-		glVertex3f(x + a, y + a, -SnakeGame.APPLE_SIZE * 2 - 1);
-		glVertex3f(x - a, y + a, -SnakeGame.APPLE_SIZE * 2 - 1);
+		glVertex3f(x - a, y - a, -Game.APPLE_SIZE * 2 - 1);
+		glVertex3f(x + a, y - a, -Game.APPLE_SIZE * 2 - 1);
+		glVertex3f(x + a, y + a, -Game.APPLE_SIZE * 2 - 1);
+		glVertex3f(x - a, y + a, -Game.APPLE_SIZE * 2 - 1);
 		glEnd();
 		glPopMatrix();
 
