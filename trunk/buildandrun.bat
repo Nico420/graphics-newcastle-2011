@@ -1,1 +1,1 @@
-build %1 %2 && run SnakeGame
+build %1 %2 && run res\src\SnakeGame
