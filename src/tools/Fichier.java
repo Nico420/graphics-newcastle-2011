@@ -4,7 +4,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,6 +13,7 @@ public class Fichier {
 	public static final int MAX_SCORE = 10;
 	static LinkedList<Integer> highScore = new LinkedList<Integer>();
 
+	@SuppressWarnings("unchecked")
 	public static void ecrire(String nomFic, int i) {
 
 		try {

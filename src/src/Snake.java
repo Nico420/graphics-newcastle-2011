@@ -394,8 +394,8 @@ public class Snake {
 			case Apple.GROW_UP:
 				appleEat = 0;
 				this.score+=100;
-				if(Game.doublePoint>0){
-					this.score+=100;
+				if(Game.PointMulti>0){
+					this.score+=500;
 				}
 				break;
 			case Apple.REDUCE:
