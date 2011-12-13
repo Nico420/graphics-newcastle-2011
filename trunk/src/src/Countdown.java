@@ -8,6 +8,11 @@ import org.newdawn.slick.Color;
 
 public class Countdown extends Etat {
 
+	public Countdown() throws IOException {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
 	public float countDown = 3;
 
 	@Override

@@ -36,7 +36,7 @@ public class Game extends Etat {
 	public boolean perdu = false;
 
 	public static int tailReduce = 0;
-	public static int doublePoint = 0;
+	public static int PointMulti = 0;
 	public int appleEat = 0;
 
 	static ArrayList<Eatable> object = new ArrayList<Eatable>();
@@ -71,7 +71,7 @@ public class Game extends Etat {
 					if(appleEat == Eatable.REDUCE){
 						tailReduce=600;
 					}else if(appleEat == Eatable.DOUBLE){
-						doublePoint=2000;
+						PointMulti=2000;
 					}
 					// Generate new item
 					if (Math.random() > 0.9)
@@ -126,9 +126,9 @@ public class Game extends Etat {
 		}else{
 			font.drawString(20, 300, "TAIL REDUCTION",Color.red);
 		}
-		if(doublePoint>0){
+		if(PointMulti>0){
 			font.drawString(20, 340, "Points X5",Color.green);
-			doublePoint--;
+			PointMulti--;
 		}else{
 			font.drawString(20, 340, "Points X5",Color.red);
 		}

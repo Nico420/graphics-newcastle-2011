@@ -2,25 +2,13 @@ package src;
 
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.glBegin;
 import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glTexCoord2d;
-import static org.lwjgl.opengl.GL11.glVertex3f;
-
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.LinkedList;
 
 import org.lwjgl.input.Keyboard;
 import org.newdawn.slick.Color;
-import org.newdawn.slick.opengl.Texture;
-import org.newdawn.slick.opengl.TextureLoader;
-import org.newdawn.slick.util.ResourceLoader;
-
 import tools.Fichier;
 
 
@@ -30,7 +18,7 @@ public class HighScore extends Etat {
 	
 	LinkedList<Integer> score;
 	
-	public HighScore(){
+	public HighScore() throws IOException{
 		super();
 		score = Fichier.getScore("highScore.txt");
 	}

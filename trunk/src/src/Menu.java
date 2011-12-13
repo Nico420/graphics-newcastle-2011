@@ -27,10 +27,11 @@ public class Menu extends Etat {
 	int menuChoiceTemp = 0;
 
 	
-	/** Boolean flag on whether AntiAliasing is enabled or not */
+	/** Boolean flag on whether AntiAliasing is enabled or not 
+	 * @throws IOException */
 
 	
-	public Menu(){
+	public Menu() throws IOException{
 		super();
 	}
 	@Override
