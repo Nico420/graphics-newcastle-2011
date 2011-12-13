@@ -1,7 +1,10 @@
 package tools;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import src.Eatable;
 
 public class Position {
 	public float x;
@@ -47,6 +50,19 @@ public class Position {
 		Iterator<Position> ite = positions.iterator();
 		while (ite.hasNext()) {
 			Position t = ite.next();
+			boolean collisionX = Math.abs(t.getX()-this.getX())<secondSize + firstSize;
+			boolean collisionY = Math.abs(t.getY()-this.getY())<secondSize + firstSize;
+			if (collisionX && collisionY)
+				return true;				
+		}
+		return false;
+	}
+
+	public boolean checkCollapse(ArrayList<Eatable> object, int firstSize, int secondSize) {
+		Iterator<Eatable> ite = object.iterator();
+		while (ite.hasNext()) {
+			Eatable item = ite.next();
+			Position t = new Position(item.getX(), item.getY());
 			boolean collisionX = Math.abs(t.getX()-this.getX())<secondSize + firstSize;
 			boolean collisionY = Math.abs(t.getY()-this.getY())<secondSize + firstSize;
 			if (collisionX && collisionY)

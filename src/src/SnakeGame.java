@@ -10,10 +10,11 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.opengl.GL11;
 
 public class SnakeGame {
 
-	Etat etat = new Menu();
+	Etat etat;
 	int etatActual = MENU;
 	int etatTemp = MENU;
 	// Constant for States
@@ -22,11 +23,12 @@ public class SnakeGame {
 	public static final int HIGHSCORE = 2;
 	public static final int QUIT = 3;
 	public static final int COUNTDOWN = 1;
-	
+	public static final int PERDU = 5;
 
 	public static final int APPLENUMBER = 5;
 	
-	
+	public static final int HEIGHT=600;
+	public static final int WIDTH=800;
 	
 
 	// float lightPosition1[] = { -MAP_SIZE, -MAP_SIZE, 1f, 1f };
@@ -65,6 +67,7 @@ public class SnakeGame {
 		}
 
 		initGL();
+		etat = new Menu();
 		getDelta();
 		lastFPS = getTime();
 		while (!Display.isCloseRequested() && !exit) { // Done Drawing The Quad
@@ -80,6 +83,9 @@ public class SnakeGame {
 					break;
 				case COUNTDOWN:
 					etat = new Countdown();
+					break;
+				case PERDU:
+					etat = new Menu();
 					break;
 				}
 				etatActual = etatTemp;
@@ -106,9 +112,13 @@ public class SnakeGame {
 															// Perspective
 															// Calculations
 		glEnable(GL_TEXTURE_2D);
+		GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		GL11.glClearDepth(1);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glOrtho(-100, 100, 100, -100, 100, -100);
+		glOrtho(0, WIDTH, HEIGHT, 0, 100, -100);
 		glMatrixMode(GL_MODELVIEW);
 	}
 
@@ -125,7 +135,7 @@ public class SnakeGame {
 			int y = Mouse.getY();
 			System.out.println("MOUSE DOWN @ X: " + x + " Y: " + y);
 		}
-		
+
 		while (Keyboard.next()) {
 			if (Keyboard.getEventKeyState()) {
 				if (Keyboard.getEventKey() == Keyboard.KEY_A) {
@@ -137,7 +147,7 @@ public class SnakeGame {
 				}
 				if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
 					System.out.println("Escape Key Pressed");
-					exit=true;
+					exit = true;
 				}
 				if (Keyboard.getEventKey() == Keyboard.KEY_V) {
 					System.out.println("V Key Pressed");

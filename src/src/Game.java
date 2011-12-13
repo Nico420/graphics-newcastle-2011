@@ -10,22 +10,24 @@ import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glTexCoord2d;
 import static org.lwjgl.opengl.GL11.glVertex3f;
-import static org.lwjgl.opengl.GL11.glViewport;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.opengl.Display;
 import org.lwjgl.util.glu.GLU;
-
+import org.newdawn.slick.Color;
 import tools.MazeReader;
 import tools.Position;
-import tools.Texture;
 
+import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.TextureLoader;
+import org.newdawn.slick.util.ResourceLoader;
+
+import tools.Fichier;
+
+@SuppressWarnings("deprecation")
 public class Game extends Etat {
 
 	public static final int LEFT = 3;
@@ -34,7 +36,7 @@ public class Game extends Etat {
 	public static final int DOWN = 4;
 
 	public static final int SNAKE_SIZE = 3;
-	public static final int MAP_SIZE = 90;
+	public static final int MAP_SIZE = 250;
 	public static final int APPLE_SIZE = 2;
 	public static final int WALL_SIZE = 5;
 
@@ -46,7 +48,7 @@ public class Game extends Etat {
 
 	public int appleEat = 0;
 
-	ArrayList<Eatable> object = new ArrayList<Eatable>();
+	static ArrayList<Eatable> object = new ArrayList<Eatable>();
 	public static float rotation;
 	static Snake snake;
 
@@ -77,13 +79,17 @@ public class Game extends Etat {
 					appleEat = item.getAction();
 					// Generate new item
 					if (Math.random() > 0.9)
-						object.set(i, new Apple());
+						object.set(i, new BlueApple());
 					else if (Math.random() < 0.1)
 						object.set(i, new Apple());
 					else
 						object.set(i, new Apple());
 				}
 			}
+		} else {
+			Fichier.ecrire("highScore.txt",
+					snake.getName() + " - " + snake.getScore());
+			return SnakeGame.PERDU;
 		}
 		updateFPS();
 		return SnakeGame.GAME;
@@ -94,8 +100,10 @@ public class Game extends Etat {
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		glViewport(100, 100, Display.getWidth() - 100,
-				Display.getHeight() - 100);
+		// Score Display
+		afficheScore(snake);
+		//glViewport(100, 100, Display.getWidth() - 100,
+		//		Display.getHeight() - 100);
 		glLoadIdentity();
 		// Dessin de la carte
 		glPushMatrix();
@@ -118,12 +126,18 @@ public class Game extends Etat {
 		glPopMatrix();
 	}
 
+	private void afficheScore(Snake s) throws IOException {
+
+
+		font.drawString(100, 100, "Score : \n"+s.getScore(), Color.red);
+	}
+
 	public static void setCamera() {
 		if (SnakeGame.switchView) {
-			float distance = 0.5f;
+			float distance = 0.01f;
 			switch (snake.getDirection()) {
 			case LEFT:
-				GLU.gluLookAt(snake.getX() - distance, snake.getY(), 1f, // where
+				GLU.gluLookAt(snake.getX() - distance, snake.getY(), 0.5f, // where
 						// is
 						// the
 						// eye
@@ -166,10 +180,10 @@ public class Game extends Etat {
 			}
 
 		} else {
-			glRotatef(-90, 0, 0, 1);
-			GLU.gluLookAt(-10, -10, 20, // where is the eye
+			//glRotatef(-90, 0, 0, 1);
+			/*GLU.gluLookAt(0, 0, 5, // where is the eye
 					0, 0, 0f, // what point are we looking at
-					1f, 0f, 0f); // which way is up
+					0f, 0f, 1f); // which way is up*/
 		}
 
 	}
@@ -179,20 +193,20 @@ public class Game extends Etat {
 		textureSol.bind();
 		glBegin(GL_QUADS);
 		glColor3f(1f, 0.5f, 0.5f);
-		glVertex3f(0 - (MAP_SIZE + WALL_SIZE), 0 - (MAP_SIZE + WALL_SIZE), 0.1f);
-		glVertex3f(0 + MAP_SIZE + WALL_SIZE, 0 - (MAP_SIZE + WALL_SIZE), 0.1f);
-		glVertex3f(0 + MAP_SIZE + WALL_SIZE, 0 + MAP_SIZE + WALL_SIZE, 0.1f);
-		glVertex3f(0 - (MAP_SIZE + WALL_SIZE), 0 + MAP_SIZE + WALL_SIZE, 0.1f);
+		glVertex3f(SnakeGame.HEIGHT/2 - (MAP_SIZE + WALL_SIZE), SnakeGame.WIDTH/2 - (MAP_SIZE + WALL_SIZE), 0.1f);
+		glVertex3f(SnakeGame.HEIGHT/2 + MAP_SIZE + WALL_SIZE, SnakeGame.WIDTH/2 - (MAP_SIZE + WALL_SIZE), 0.1f);
+		glVertex3f(SnakeGame.HEIGHT/2 + MAP_SIZE + WALL_SIZE, SnakeGame.WIDTH/2 + MAP_SIZE + WALL_SIZE, 0.1f);
+		glVertex3f(SnakeGame.HEIGHT/2 - (MAP_SIZE + WALL_SIZE), SnakeGame.WIDTH/2 + MAP_SIZE + WALL_SIZE, 0.1f);
 
 		glColor3f(1, 1, 1);
 		glTexCoord2d(0, 0.5);
-		glVertex3f(0 - MAP_SIZE, 0 - MAP_SIZE, 0);
+		glVertex3f(SnakeGame.HEIGHT/2 - MAP_SIZE, SnakeGame.WIDTH/2 - MAP_SIZE, 0);
 		glTexCoord2d(0.5, 0.5);
-		glVertex3f(0 + MAP_SIZE, 0 - MAP_SIZE, 0);
+		glVertex3f(SnakeGame.HEIGHT/2 + MAP_SIZE, SnakeGame.WIDTH/2 - MAP_SIZE, 0);
 		glTexCoord2d(0.5, 0);
-		glVertex3f(0 + MAP_SIZE, 0 + MAP_SIZE, 0);
+		glVertex3f(SnakeGame.HEIGHT/2 + MAP_SIZE, SnakeGame.WIDTH/2 + MAP_SIZE, 0);
 		glTexCoord2d(0, 0);
-		glVertex3f(0 - MAP_SIZE, 0 + MAP_SIZE, 0);
+		glVertex3f(SnakeGame.HEIGHT/2 - MAP_SIZE, SnakeGame.WIDTH/2 + MAP_SIZE, 0);
 
 		glEnd();
 		// Walls around it
@@ -267,16 +281,17 @@ public class Game extends Etat {
 	private void initializeGame() throws IOException {
 		snake = new Snake();
 		walls = MazeReader.buildWallList("maze.txt");
+		object= new ArrayList<Eatable>();
 		for (int i = 0; i < SnakeGame.APPLENUMBER; i++) {
 			// Randow other object
 			object.add(new Apple());
 		}
 		// Initialize Snake start_position
 		snake.intialize(walls, WALL_SIZE);
-
-		textureSerpent = tl.getTexture("texture/serpent.jpg");
-		textureSol = tl.getTexture("texture/herbe.jpg");
-		textureMur = tl.getTexture("texture/metal.jpg");
+		SnakeGame.switchView = false;
+		textureSerpent = TextureLoader.getTexture("JPG",ResourceLoader.getResourceAsStream("texture/serpent.jpg"));
+		textureSol = TextureLoader.getTexture("JPG",ResourceLoader.getResourceAsStream("texture/herbe.jpg"));
+		textureMur = TextureLoader.getTexture("JPG",ResourceLoader.getResourceAsStream("texture/metal.jpg"));
 	}
 
 }
