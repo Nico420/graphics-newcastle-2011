@@ -11,17 +11,30 @@ import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glTexCoord2d;
 import static org.lwjgl.opengl.GL11.glVertex3f;
 
+import java.awt.Font;
 import java.io.IOException;
 
 import org.lwjgl.input.Keyboard;
+import org.newdawn.slick.Color;
+import org.newdawn.slick.TrueTypeFont;
+import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.TextureLoader;
+import org.newdawn.slick.util.ResourceLoader;
 
-import tools.Texture;
 
+@SuppressWarnings("deprecation")
 public class Menu extends Etat {
-	
-	public static int menuChoice = 0;
-	public static int menuChoiceTemp = 0;
 
+	int menuChoice = 0;
+	int menuChoiceTemp = 0;
+
+	
+	/** Boolean flag on whether AntiAliasing is enabled or not */
+
+	
+	public Menu(){
+		super();
+	}
 	@Override
 	public int update(int delta) {
 		while (Keyboard.next()) {
@@ -47,87 +60,56 @@ public class Menu extends Etat {
 
 	@Override
 	public void renderGL() throws IOException {
-		/*
-		 * float itemWidth = 80; float itemHeight = 10;
-		 */
-
+		
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glLoadIdentity();
 
+		Color.white.bind();
+
+		
+		//font2.drawString(10, 10, "NICE LOOKING FONTS!", Color.green);
 		// Title
 
 		// Creating and using texture
-		Texture start = tl.getTexture("texture/start.png");
-		Texture icone = tl.getTexture("texture/snake_icone.png");
-		Texture pomme = tl.getTexture("texture/pomme_ml.png");
+		Texture icone = TextureLoader.getTexture("PNG",ResourceLoader.getResourceAsStream("texture/snake_icone.png"));
+		Texture pomme = TextureLoader.getTexture("PNG",ResourceLoader.getResourceAsStream("texture/pomme_ml.png"));
 		// Selector
 		icone.bind();
 		glColor3f(1, 1, 1);
 		glBegin(GL_QUADS);
 		glTexCoord2d(1, 0);
-		glVertex3f(-90, -90, 0);
+		glVertex3f(10, 10, 0);
 		glTexCoord2d(1, 1);
-		glVertex3f(-90, -70, 0);
+		glVertex3f(10, 80, 0);
 		glTexCoord2d(0, 1);
-		glVertex3f(-70, -70, 0);
+		glVertex3f(80, 80, 0);
 		glTexCoord2d(0, 0);
-		glVertex3f(-70, -90, 0);
+		glVertex3f(80, 10, 0);
 		glEnd();
-		
-		
+
 		pomme.bind();
 		glColor3f(1, 1, 1);
 		glBegin(GL_QUADS);
 		glTexCoord2d(1, 0);
-		glVertex3f(-50, -15 + 30 * menuChoiceTemp, 0);
+		glVertex3f(140, 250 + 50 * menuChoiceTemp, 0);
 		glTexCoord2d(1, 1);
-		glVertex3f(-50, -5 + 30 * menuChoiceTemp, 0);
+		glVertex3f(140, 300 + 50 * menuChoiceTemp, 0);
 		glTexCoord2d(0, 1);
-		glVertex3f(-60, -5 + 30 * menuChoiceTemp, 0);
+		glVertex3f(190, 300 + 50 * menuChoiceTemp, 0);
 		glTexCoord2d(0, 0);
-		glVertex3f(-60, -15 + 30 * menuChoiceTemp, 0);
+		glVertex3f(190, 250 + 50 * menuChoiceTemp, 0);
 		glEnd();
 
-		glBegin(GL_QUADS);
-		glVertex3f(-50, -80, 0);
-		glVertex3f(-50, -50, 0);
-		glVertex3f(50, -50, 0);
-		glVertex3f(50, -80, 0);
-		glEnd();
+		fontTitre.drawString(200, 10, "SNAKE 3D",
+				Color.red);
 
-		
-		start.bind();
-		glBegin(GL_QUADS);
-		// Start New game
-		glTexCoord2d(0, 0);
-		glVertex3f(-40, -20, 0);
-		glTexCoord2d(0, 1);
-		glVertex3f(-40, 0, 0);
-		glTexCoord2d(1, 1);
-		glVertex3f(40, 0, 0);
-		glTexCoord2d(1, 0);
-		glVertex3f(40, -20, 0);
-		glEnd();
-
-		glBegin(GL_QUADS);
-		// Get HIgh Score
-		glVertex3f(-40, 30, 0);
-		glVertex3f(-40, 10, 0);
-		glVertex3f(40, 10, 0);
-		glVertex3f(40, 30, 0);
-		glEnd();
-
-		glBegin(GL_QUADS);
-		// Exit
-		glVertex3f(-40, 60, 0);
-		glVertex3f(-40, 40, 0);
-		glVertex3f(40, 40, 0);
-		glVertex3f(40, 60, 0);
-		glEnd();
-		/*
-		 * glVertex3f(-50, -80, 0); glVertex3f(-50, -60, 0); glVertex3f(50, -60,
-		 * 0); glVertex3f(50, -80, 0);
-		 */
+		//start.bind();
+		fontMenu.drawString(200, 250, "START NEW GAME",
+				Color.yellow);
+		fontMenu.drawString(200, 300, "HIGH SCORE",
+				Color.yellow);
+		fontMenu.drawString(200, 350, "EXIT",
+				Color.yellow);
 
 	}
 

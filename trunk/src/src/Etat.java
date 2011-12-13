@@ -1,16 +1,27 @@
 package src;
 
+import java.awt.Font;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.Display;
+import org.newdawn.slick.TrueTypeFont;
+import org.newdawn.slick.opengl.TextureLoader;
 
-import tools.TextureLoader;
+import org.newdawn.slick.util.ResourceLoader;
 
+
+@SuppressWarnings("deprecation")
 public abstract class Etat {
 	boolean lighting = false;
 	TextureLoader tl = new TextureLoader();
 	
+	
+	protected TrueTypeFont font;
+	protected TrueTypeFont fontMenu;
+	protected TrueTypeFont fontTitre;
+	private boolean antiAlias = true;
 	/** time at last frame */
 	long lastFrame;
 	/** frames per second */
@@ -18,6 +29,24 @@ public abstract class Etat {
 	/** last fps time */
 	long lastFPS;
 	
+	public Etat(){
+		Font awtFont = new Font("Times New Roman", Font.BOLD, 24);
+		font = new TrueTypeFont(awtFont, antiAlias);
+
+		// load font from file
+		try {
+			InputStream inputStream = ResourceLoader
+					.getResourceAsStream("texture/FOO.ttf");
+
+			Font awtFont2 = Font.createFont(Font.TRUETYPE_FONT, inputStream);
+			awtFont2 = awtFont2.deriveFont(36f); // set font size
+			fontMenu = new TrueTypeFont(awtFont2, antiAlias);
+			awtFont2 = awtFont2.deriveFont(60f); // set font size
+			fontTitre = new TrueTypeFont(awtFont2, antiAlias);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	public abstract int update(int delta) ;
 	public abstract void renderGL() throws IOException;
 	

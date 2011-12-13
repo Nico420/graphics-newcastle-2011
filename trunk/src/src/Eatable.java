@@ -1,11 +1,13 @@
 package src;
 
 import java.awt.Color;
+import tools.Position;
 
 public class Eatable {
 
 	public static final int GROW_UP = 1;
 	public static final int REDUCE = 2;
+	public static final int SLOW=3;
 	
 	public float x;
 	public float y;
@@ -24,6 +26,18 @@ public class Eatable {
 		this.y = y;
 		this.color = color;
 		this.action = action;
+		while((new Position(this.x,this.y)).checkCollapse(Game.walls, Game.WALL_SIZE, Game.APPLE_SIZE)){
+			this.x = (float) (-(Game.MAP_SIZE-Game.APPLE_SIZE) + (Game.MAP_SIZE * 2 - Game.APPLE_SIZE)
+					* Math.random());
+			this.y = (float) (-(Game.MAP_SIZE-Game.APPLE_SIZE) + (Game.MAP_SIZE * 2 - Game.APPLE_SIZE)
+					* Math.random());	
+			}
+		while((new Position(this.x,this.y)).checkCollapse(Game.object, Game.SNAKE_SIZE, Game.APPLE_SIZE)){
+			this.x = (float) (-(Game.MAP_SIZE-Game.APPLE_SIZE) + (Game.MAP_SIZE * 2 - Game.APPLE_SIZE)
+					* Math.random());
+			this.y = (float) (-(Game.MAP_SIZE-Game.APPLE_SIZE) + (Game.MAP_SIZE * 2 - Game.APPLE_SIZE)
+					* Math.random());	
+			}
 	}
 	/**
 	 * @return the x

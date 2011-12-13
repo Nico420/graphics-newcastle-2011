@@ -22,8 +22,10 @@ public class Snake {
 	Color c;
 	int lenght;
 	int mouvement;
-	int direction;
-
+	int direction = Game.DOWN;
+	private int score;
+	
+	private float speed = 0.05f;
 	/**
 	 * @return the mouvement
 	 */
@@ -385,10 +387,20 @@ public class Snake {
 				+ Math.pow(yTemp - this.getY(), 2)) > (Game.SNAKE_SIZE * 2)) {
 			draw3DQuad(xTemp, yTemp, 0, Game.SNAKE_SIZE * 2);
 			this.positions.add(new Position(xTemp, yTemp));
-			if (appleEat==0) {
-				this.positions = this.positions.subList(1, lenght + 1);
-			} else {
+			switch(appleEat){
+			case Apple.GROW_UP:
 				appleEat = 0;
+				this.score+=100;
+				break;
+			case Apple.REDUCE:
+				this.positions = this.positions.subList((int) Math.ceil(lenght/2), lenght);
+				this.setLenght(this.positions.size());
+				appleEat = 0;
+				this.score+=100;
+				break;
+			case 0:
+				this.positions = this.positions.subList(1, lenght + 1);
+				break;
 			}
 			xTemp = this.getX();
 			yTemp = this.getY();
@@ -421,16 +433,16 @@ public class Snake {
 
 			switch (this.getMouvement()) {
 			case Game.LEFT:
-				this.setX(this.getX() - 0.05f * delta);
+				this.setX(this.getX() - this.speed * delta);
 				break;
 			case Game.RIGHT:
-				this.setX(this.getX() + 0.05f * delta);
+				this.setX(this.getX() + this.speed * delta);
 				break;
 			case Game.UP:
-				this.setY(this.getY() - 0.05f * delta);
+				this.setY(this.getY() - this.speed * delta);
 				break;
 			case Game.DOWN:
-				this.setY(this.getY() + 0.05f * delta);
+				this.setY(this.getY() + this.speed * delta);
 				break;
 			}
 			this.setDirection(this.getMouvement());
@@ -440,14 +452,16 @@ public class Snake {
 					if (Keyboard.getEventKey() == Keyboard.KEY_LEFT) {
 						System.out.println("GAUCHE");
 						this.setMouvement(Game.LEFT);
-						if (this.getDirection() == 0)
-							this.setDirection(Game.RIGHT);
+						if(this.getDirection()==0){
+							this.setDirection(Game.DOWN);
+						}
 					}
 					if (Keyboard.getEventKey() == Keyboard.KEY_RIGHT) {
 						System.out.println("DROITE");
 						this.setMouvement(Game.RIGHT);
-						if (this.getDirection() == 0)
-							this.setDirection(Game.LEFT);
+						if(this.getDirection()==0){
+							this.setDirection(Game.DOWN);
+						}
 					}
 				}
 			}
@@ -455,15 +469,16 @@ public class Snake {
 			switch (this.getDirection()) {
 			case Game.LEFT:
 				if (this.getMouvement() == Game.RIGHT)
-					this.setDirection(Game.DOWN);
-				if (this.getMouvement() == Game.LEFT)
 					this.setDirection(Game.UP);
+				if (this.getMouvement() == Game.LEFT)
+					this.setDirection(Game.DOWN);
 				break;
 			case Game.RIGHT:
-				if (this.getMouvement() == Game.LEFT)
-					this.setDirection(Game.DOWN);
 				if (this.getMouvement() == Game.RIGHT)
+					this.setDirection(Game.DOWN);
+				if (this.getMouvement() == Game.LEFT)
 					this.setDirection(Game.UP);
+				
 				break;
 			case Game.UP:
 				if (this.getMouvement() == Game.RIGHT)
@@ -472,29 +487,29 @@ public class Snake {
 					this.setDirection(Game.LEFT);
 				break;
 			case Game.DOWN:
-				if (this.getMouvement() == Game.LEFT)
-					this.setDirection(Game.LEFT);
 				if (this.getMouvement() == Game.RIGHT)
+					this.setDirection(Game.LEFT);
+				if (this.getMouvement() == Game.LEFT)
 					this.setDirection(Game.RIGHT);
+
 				break;
 			}
 
 			switch (this.getDirection()) {
 			case Game.LEFT:
-				this.setX(this.getX() - 0.05f * delta);
+				this.setX(this.getX() - this.speed * delta);
 				break;
 			case Game.RIGHT:
-				this.setX(this.getX() + 0.05f * delta);
+				this.setX(this.getX() + this.speed * delta);
 				break;
 			case Game.UP:
-				this.setY(this.getY() - 0.05f * delta);
+				this.setY(this.getY() - this.speed * delta);
 				break;
 			case Game.DOWN:
-				this.setY(this.getY() + 0.05f * delta);
+				this.setY(this.getY() + this.speed * delta);
 				break;
 			}
 			this.setMouvement(0);
-			//System.out.println(direction+" "+mouvement);
 		}
 
 	}
@@ -525,6 +540,14 @@ public class Snake {
 		if (actual.checkCollapse(this.positions, Game.SNAKE_SIZE / 2, Game.SNAKE_SIZE))
 			return true;
 		return false;
+	}
+
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
 	}
 
 }
