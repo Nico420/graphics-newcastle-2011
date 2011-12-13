@@ -11,6 +11,9 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.glu.GLU;
+
+import tools.Position;
 
 public class SnakeGame {
 
@@ -30,7 +33,7 @@ public class SnakeGame {
 	public static final int HEIGHT=600;
 	public static final int WIDTH=800;
 	
-
+	public static final Position MAP_MILIEU = new Position(WIDTH-300, HEIGHT-300); 
 	// float lightPosition1[] = { -MAP_SIZE, -MAP_SIZE, 1f, 1f };
 
 	/** time at last frame */
@@ -118,6 +121,7 @@ public class SnakeGame {
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
+		
 		glOrtho(0, WIDTH, HEIGHT, 0, 100, -100);
 		glMatrixMode(GL_MODELVIEW);
 	}

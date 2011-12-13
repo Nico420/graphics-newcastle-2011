@@ -25,7 +25,7 @@ public class Snake {
 	int direction = Game.DOWN;
 	private int score;
 	
-	private float speed = 0.05f;
+	private float speed = 0.15f;
 	/**
 	 * @return the mouvement
 	 */
@@ -161,7 +161,7 @@ public class Snake {
 	}
 
 	public void draw() {
-
+		
 		drawSnakeHead(x, y, 0, Game.SNAKE_SIZE * 2);
 		// Dessin du serpent
 		glColor3f(1, 1, 1);
@@ -188,6 +188,7 @@ public class Snake {
 		glPushMatrix(); // Reset The View
 		glLoadIdentity();
 		Game.setCamera();
+		glTranslated(SnakeGame.MAP_MILIEU.getX(), SnakeGame.MAP_MILIEU.getY(),0);
 		glTranslatef(x, y, 0);
 		float rotation = 0;
 		switch (this.getDirection()) {
@@ -330,6 +331,8 @@ public class Snake {
 		glPushMatrix();
 		glLoadIdentity();
 		Game.setCamera();
+		glTranslated(SnakeGame.MAP_MILIEU.getX(), SnakeGame.MAP_MILIEU.getY(),0);
+		
 		glBegin(GL_QUADS);
 		glTexCoord2d(0, 0.5);
 		glVertex3f(x - a, y - a, z - a);
@@ -537,7 +540,7 @@ public class Snake {
 			return true;
 		}
 
-		if (actual.checkCollapse(this.positions, Game.SNAKE_SIZE / 2, Game.SNAKE_SIZE))
+		if (actual.checkCollapse(this.positions, Game.SNAKE_SIZE / 2, Game.SNAKE_SIZE/2))
 			return true;
 		return false;
 	}

@@ -19,6 +19,7 @@ public class BlueApple extends Eatable {
 		float a = Game.APPLE_SIZE / 2;
 		glPushMatrix();
 		glLoadIdentity();
+		glTranslated(SnakeGame.MAP_MILIEU.getX(), SnakeGame.MAP_MILIEU.getY(),0);
 		Game.setCamera();
 		// Make the apple bounce !
 		glTranslatef(x, y, -bounce);
