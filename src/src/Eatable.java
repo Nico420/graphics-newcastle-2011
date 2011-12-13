@@ -8,6 +8,7 @@ public class Eatable {
 	public static final int GROW_UP = 1;
 	public static final int REDUCE = 2;
 	public static final int SLOW=3;
+	public static final int DOUBLE = 4;
 	
 	public float x;
 	public float y;
@@ -32,7 +33,7 @@ public class Eatable {
 			this.y = (float) (-(Game.MAP_SIZE-Game.APPLE_SIZE) + (Game.MAP_SIZE * 2 - Game.APPLE_SIZE)
 					* Math.random());	
 			}
-		while((new Position(this.x,this.y)).checkCollapse(Game.object, Game.SNAKE_SIZE, Game.APPLE_SIZE)){
+		while((new Position(this.x,this.y)).checkCollapse(Game.object, Game.SNAKE_SIZE*2, Game.APPLE_SIZE)){
 			this.x = (float) (-(Game.MAP_SIZE-Game.APPLE_SIZE) + (Game.MAP_SIZE * 2 - Game.APPLE_SIZE)
 					* Math.random());
 			this.y = (float) (-(Game.MAP_SIZE-Game.APPLE_SIZE) + (Game.MAP_SIZE * 2 - Game.APPLE_SIZE)
