@@ -1,17 +1,6 @@
 package src;
 
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glTexCoord2d;
-import static org.lwjgl.opengl.GL11.glVertex3f;
+import static org.lwjgl.opengl.GL11.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -88,7 +77,7 @@ public class Game extends Etat {
 			}
 		} else {
 			Fichier.ecrire("highScore.txt",
-					snake.getName() + " - " + snake.getScore());
+					snake.getName() + " - " + snake.getScore()+"\n");
 			return SnakeGame.PERDU;
 		}
 		updateFPS();
@@ -180,9 +169,9 @@ public class Game extends Etat {
 			}
 
 		} else {
-			//glRotatef(-90, 0, 0, 1);
-			/*GLU.gluLookAt(0, 0, 5, // where is the eye
-					0, 0, 0f, // what point are we looking at
+			//glRotatef(-90f, 0f, 0f, 1f);
+			/*GLU.gluLookAt(400, 400, -5, // where is the eye
+					400, 400, 0f, // what point are we looking at
 					0f, 0f, 1f); // which way is up*/
 		}
 
