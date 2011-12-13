@@ -24,6 +24,7 @@ public class Apple extends Eatable {
 		glPushMatrix();
 		glLoadIdentity();
 		Game.setCamera();
+		glTranslated(SnakeGame.MAP_MILIEU.getX(), SnakeGame.MAP_MILIEU.getY(),0);
 		// Make the apple bounce !
 		glTranslatef(x, y, -bounce);
 		if (!direction)

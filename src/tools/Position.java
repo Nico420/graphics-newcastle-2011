@@ -46,27 +46,33 @@ public class Position {
 		return false;
 	}
 
-	public boolean checkCollapse(List<Position> positions, int firstSize, int secondSize) {
+	public boolean checkCollapse(List<Position> positions, int firstSize,
+			int secondSize) {
 		Iterator<Position> ite = positions.iterator();
 		while (ite.hasNext()) {
-			Position t = ite.next();
-			boolean collisionX = Math.abs(t.getX()-this.getX())<secondSize + firstSize;
-			boolean collisionY = Math.abs(t.getY()-this.getY())<secondSize + firstSize;
-			if (collisionX && collisionY)
-				return true;				
+				Position t = ite.next();
+				boolean collisionX = Math.abs(t.getX() - this.getX()) < secondSize
+						+ firstSize;
+				boolean collisionY = Math.abs(t.getY() - this.getY()) < secondSize
+						+ firstSize;
+				if (collisionX && collisionY)
+					return true;
 		}
 		return false;
 	}
 
-	public boolean checkCollapse(ArrayList<Eatable> object, int firstSize, int secondSize) {
+	public boolean checkCollapse(ArrayList<Eatable> object, int firstSize,
+			int secondSize) {
 		Iterator<Eatable> ite = object.iterator();
 		while (ite.hasNext()) {
 			Eatable item = ite.next();
 			Position t = new Position(item.getX(), item.getY());
-			boolean collisionX = Math.abs(t.getX()-this.getX())<secondSize + firstSize;
-			boolean collisionY = Math.abs(t.getY()-this.getY())<secondSize + firstSize;
+			boolean collisionX = Math.abs(t.getX() - this.getX()) < secondSize
+					+ firstSize;
+			boolean collisionY = Math.abs(t.getY() - this.getY()) < secondSize
+					+ firstSize;
 			if (collisionX && collisionY)
-				return true;				
+				return true;
 		}
 		return false;
 	}
