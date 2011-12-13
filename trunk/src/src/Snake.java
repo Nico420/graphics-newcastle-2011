@@ -394,12 +394,19 @@ public class Snake {
 			case Apple.GROW_UP:
 				appleEat = 0;
 				this.score+=100;
+				if(Game.doublePoint>0){
+					this.score+=100;
+				}
 				break;
 			case Apple.REDUCE:
 				this.positions = this.positions.subList((int) Math.ceil(lenght/2), lenght);
 				this.setLenght(this.positions.size());
 				appleEat = 0;
 				this.score+=100;
+				break;
+			case Apple.DOUBLE:
+				appleEat = 0;
+				this.score+=1000;
 				break;
 			case 0:
 				this.positions = this.positions.subList(1, lenght + 1);

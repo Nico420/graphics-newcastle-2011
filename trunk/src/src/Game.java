@@ -35,6 +35,8 @@ public class Game extends Etat {
 
 	public boolean perdu = false;
 
+	public static int tailReduce = 0;
+	public static int doublePoint = 0;
 	public int appleEat = 0;
 
 	static ArrayList<Eatable> object = new ArrayList<Eatable>();
@@ -66,18 +68,23 @@ public class Game extends Etat {
 						&& snake.getY() + SNAKE_SIZE > item.getY()) {
 					snake.setLenght(snake.lenght + 1);
 					appleEat = item.getAction();
+					if(appleEat == Eatable.REDUCE){
+						tailReduce=600;
+					}else if(appleEat == Eatable.DOUBLE){
+						doublePoint=2000;
+					}
 					// Generate new item
 					if (Math.random() > 0.9)
 						object.set(i, new BlueApple());
 					else if (Math.random() < 0.1)
-						object.set(i, new Apple());
+						object.set(i, new GoldApple());
 					else
 						object.set(i, new Apple());
 				}
 			}
 		} else {
 			Fichier.ecrire("highScore.txt",
-					snake.getName() + " - " + snake.getScore()+"\n");
+					snake.getScore());
 			return SnakeGame.PERDU;
 		}
 		updateFPS();
@@ -102,7 +109,7 @@ public class Game extends Etat {
 		snake.draw();
 		// Draw Walls
 		textureMur.bind();
-		//glColor3f(1, 1, 1);
+		// glColor3f(1, 1, 1);
 		for (int i = 0; i < walls.size(); i++) {
 			draw3DQuad(walls.get(i).getX(), walls.get(i).getY(), WALL_SIZE,
 					WALL_SIZE * 2);
@@ -113,8 +120,19 @@ public class Game extends Etat {
 	}
 
 	private void affichePower() {
-		// TODO Auto-generated method stub
-		
+		if(tailReduce>0){
+			font.drawString(20, 300, "TAIL REDUCTION",Color.green);
+			tailReduce--;
+		}else{
+			font.drawString(20, 300, "TAIL REDUCTION",Color.red);
+		}
+		if(doublePoint>0){
+			font.drawString(20, 340, "Points X5",Color.green);
+			doublePoint--;
+		}else{
+			font.drawString(20, 340, "Points X5",Color.red);
+		}
+
 	}
 
 	private void afficheRaccourci() {
@@ -124,12 +142,12 @@ public class Game extends Etat {
 		font.drawString(50, 490, "(A) : Full screen");
 		font.drawString(50, 510, "(V) : Switch view");
 		font.drawString(50, 530, "(Esc) : Quit");
-		
+
 	}
 
 	private void afficheScore(Snake s) throws IOException {
 		fontMenu.drawString(50, 50, "Snake 3D");
-		font.drawString(50, 150, "Score : \n"+s.getScore(), Color.red);
+		font.drawString(50, 150, "Score : \n" + s.getScore(), Color.red);
 	}
 
 	public static void setCamera() {
@@ -180,9 +198,19 @@ public class Game extends Etat {
 			}
 
 		} else {
-			GLU.gluLookAt(SnakeGame.MAP_MILIEU.getX(),SnakeGame.MAP_MILIEU.getY(), 50f, // where is the eye
-					SnakeGame.MAP_MILIEU.getX(),SnakeGame.MAP_MILIEU.getY(), 0f, // what point are we looking at
-					1f, 1f, 1f); // which way is up
+			/* glTranslatef(0, -100, 0); */
+			// GLU.gluLookAt(0, -1, 20, 1 ,1, 0, 0, 0, 1);
+			/*
+			 * glRotatef(-90,0,0,1); GLU.gluLookAt(1.5f, 1.5f, 5f,
+			 * SnakeGame.MAP_MILIEU.getX(), SnakeGame.MAP_MILIEU.getY(), 0f, 1f,
+			 * 1f, 1f);
+			 */
+			/*
+			 * GLU.gluLookAt(SnakeGame.MAP_MILIEU.getX(),SnakeGame.MAP_MILIEU.getY
+			 * (), 50f, // where is the eye
+			 * SnakeGame.MAP_MILIEU.getX(),SnakeGame.MAP_MILIEU.getY(), 0f, //
+			 * what point are we looking at 1f, 0f, 0f); // which way is up
+			 */
 		}
 
 	}
@@ -190,7 +218,8 @@ public class Game extends Etat {
 	private void drawMap() {
 		// Navigable map
 		textureSol.bind();
-		glTranslated(SnakeGame.MAP_MILIEU.getX(), SnakeGame.MAP_MILIEU.getY(),0);
+		glTranslated(SnakeGame.MAP_MILIEU.getX(), SnakeGame.MAP_MILIEU.getY(),
+				0);
 		glBegin(GL_QUADS);
 		glColor3f(1f, 0.5f, 0.5f);
 		glVertex3f(0 - (MAP_SIZE + WALL_SIZE), 0 - (MAP_SIZE + WALL_SIZE), 0.1f);
@@ -204,18 +233,19 @@ public class Game extends Etat {
 		glTexCoord2d(0.5, 0.5);
 		glVertex3f(0 + MAP_SIZE, 0 - MAP_SIZE, 0);
 		glTexCoord2d(0.5, 0);
-		glVertex3f(0 + MAP_SIZE,0 + MAP_SIZE, 0);
+		glVertex3f(0 + MAP_SIZE, 0 + MAP_SIZE, 0);
 		glTexCoord2d(0, 0);
 		glVertex3f(0 - MAP_SIZE, 0 + MAP_SIZE, 0);
 		glEnd();
 		// Walls around it
-		/*
-		 * for (int i = -MAP_SIZE; i <= MAP_SIZE; i += WALL_SIZE) { glColor3f(1,
-		 * 0, 0); draw3DQuad(i, -(MAP_SIZE+WALL_SIZE/2), -WALL_SIZE, WALL_SIZE);
-		 * draw3DQuad(i, (MAP_SIZE+WALL_SIZE/2), -WALL_SIZE, WALL_SIZE);
-		 * draw3DQuad((MAP_SIZE+WALL_SIZE/2), i, -WALL_SIZE, WALL_SIZE);
-		 * draw3DQuad(-(MAP_SIZE+WALL_SIZE/2), i, -WALL_SIZE, WALL_SIZE); }
-		 */
+		for (int i = -MAP_SIZE; i <= MAP_SIZE; i += WALL_SIZE) {
+			//glColor3f(1, 0, 0);
+			textureMur.bind();
+			draw3DQuad(i, -(MAP_SIZE + WALL_SIZE / 2), -WALL_SIZE, WALL_SIZE);
+			draw3DQuad(i, (MAP_SIZE + WALL_SIZE / 2), -WALL_SIZE, WALL_SIZE);
+			draw3DQuad((MAP_SIZE + WALL_SIZE / 2), i, -WALL_SIZE, WALL_SIZE);
+			draw3DQuad(-(MAP_SIZE + WALL_SIZE / 2), i, -WALL_SIZE, WALL_SIZE);
+		}
 
 	}
 
@@ -223,7 +253,7 @@ public class Game extends Etat {
 		float a = size / 2;
 
 		glPushMatrix();
-		//glTranslated(SnakeGame.MAP_MILIEU.getX(), SnakeGame.MAP_MILIEU.getX(),0);
+		setCamera();
 		glBegin(GL_QUADS);
 		// glColor3f(1, 0, 0);
 		glTexCoord2d(0, 1);
@@ -280,7 +310,7 @@ public class Game extends Etat {
 	private void initializeGame() throws IOException {
 		snake = new Snake();
 		walls = MazeReader.buildWallList("maze.txt");
-		object= new ArrayList<Eatable>();
+		object = new ArrayList<Eatable>();
 		for (int i = 0; i < SnakeGame.APPLENUMBER; i++) {
 			// Randow other object
 			object.add(new Apple());
@@ -288,9 +318,12 @@ public class Game extends Etat {
 		// Initialize Snake start_position
 		snake.intialize(walls, WALL_SIZE);
 		SnakeGame.switchView = false;
-		textureSerpent = TextureLoader.getTexture("JPG",ResourceLoader.getResourceAsStream("texture/serpent.jpg"));
-		textureSol = TextureLoader.getTexture("JPG",ResourceLoader.getResourceAsStream("texture/herbe.jpg"));
-		textureMur = TextureLoader.getTexture("JPG",ResourceLoader.getResourceAsStream("texture/metal.jpg"));
+		textureSerpent = TextureLoader.getTexture("JPG",
+				ResourceLoader.getResourceAsStream("texture/serpent.jpg"));
+		textureSol = TextureLoader.getTexture("JPG",
+				ResourceLoader.getResourceAsStream("texture/herbe.jpg"));
+		textureMur = TextureLoader.getTexture("JPG",
+				ResourceLoader.getResourceAsStream("texture/metal.jpg"));
 	}
 
 }

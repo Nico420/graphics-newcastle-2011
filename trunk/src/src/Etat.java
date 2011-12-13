@@ -4,7 +4,9 @@ import java.awt.Font;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.opengl.TextureLoader;
@@ -47,7 +49,24 @@ public abstract class Etat {
 			e.printStackTrace();
 		}
 	}
-	public abstract int update(int delta) ;
+	public int update(int delta) throws LWJGLException{
+		while (Keyboard.next()) {
+			if (Keyboard.getEventKeyState()) {
+				if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
+					return SnakeGame.MENU;
+				}
+			}
+			if (Keyboard.getEventKey() == Keyboard.KEY_A) {
+				System.out.println("A Key Pressed");
+				if (Display.isFullscreen())
+					Display.setFullscreen(false);
+				else
+					Display.setFullscreen(true);
+			}
+		}
+		
+		return -1;
+	}
 	public abstract void renderGL() throws IOException;
 	
 	public void updateFPS() {

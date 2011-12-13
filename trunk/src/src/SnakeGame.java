@@ -3,6 +3,9 @@ package src;
 import static org.lwjgl.opengl.GL11.*;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
@@ -32,6 +35,10 @@ public class SnakeGame {
 	
 	public static final int HEIGHT=600;
 	public static final int WIDTH=800;
+	
+	private float lightAmbient[] = { 0.5f, 0.5f, 0.5f, 1.0f };  // Ambient Light Values ( NEW )
+    private float lightDiffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };      // Diffuse Light Values ( NEW )
+    private float lightPosition[] = { 0.0f, 0.0f, 2.0f, 1.0f }; // Light Position ( NEW )
 	
 	public static final Position MAP_MILIEU = new Position(WIDTH-300, HEIGHT-300); 
 	// float lightPosition1[] = { -MAP_SIZE, -MAP_SIZE, 1f, 1f };
@@ -90,6 +97,8 @@ public class SnakeGame {
 				case PERDU:
 					etat = new Menu();
 					break;
+				case HIGHSCORE:
+					etat = new HighScore();
 				}
 				etatActual = etatTemp;
 			}
@@ -114,16 +123,28 @@ public class SnakeGame {
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST); // Really Nice
 															// Perspective
 															// Calculations
+		glEnable(GL_COLOR_MATERIAL);
+		glEnable(GL_LIGHTING);
 		glEnable(GL_TEXTURE_2D);
 		GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		GL11.glClearDepth(1);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		
 		glOrtho(0, WIDTH, HEIGHT, 0, 100, -100);
+		GLU.gluPerspective(0.0f, (float) Display.getWidth() / (float) Display.getWidth(),0.1f,100.0f);
+
+		glEnable(GL_LIGHTING);
+		glEnable(GL_LIGHT0);
+
+		
 		glMatrixMode(GL_MODELVIEW);
+		ByteBuffer temp = ByteBuffer.allocateDirect(16);
+        temp.order(ByteOrder.nativeOrder());
+		GL11.glLight(GL11.GL_LIGHT1, GL11.GL_AMBIENT, (FloatBuffer)temp.asFloatBuffer().put(lightAmbient).flip());              // Setup The Ambient Light
+        GL11.glLight(GL11.GL_LIGHT1, GL11.GL_DIFFUSE, (FloatBuffer)temp.asFloatBuffer().put(lightDiffuse).flip());              // Setup The Diffuse Light
+        GL11.glLight(GL11.GL_LIGHT1, GL11.GL_POSITION,(FloatBuffer)temp.asFloatBuffer().put(lightPosition).flip());         // Position The Light
+        GL11.glEnable(GL11.GL_LIGHT1);
 	}
 
 	public static void main(String[] argv) throws LWJGLException,
