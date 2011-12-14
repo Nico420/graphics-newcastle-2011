@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.Display;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.glu.GLU;
 import org.newdawn.slick.Color;
 import tools.MazeReader;
@@ -39,7 +39,9 @@ public class Game extends Etat {
 
 	public static int tailReduce = 0;
 	public static int pointMulti = 0;
+	public static int bulletTime;
 	public int appleEat = 0;
+	private static int bulletTimeTimer=0;;
 
 	static ArrayList<Eatable> object = new ArrayList<Eatable>();
 	public static float rotation;
@@ -55,6 +57,16 @@ public class Game extends Etat {
 	@Override
 	public int update(int delta) {
 		if (!perdu) {
+			if (bulletTime > 0)
+				while (Keyboard.next()) {
+					if (Keyboard.getEventKeyState()) {
+						if (Keyboard.getEventKey() == Keyboard.KEY_B) {
+							snake.setSpeed(0.05f);
+							bulletTime--;
+							bulletTimeTimer=6000;
+						}
+					}
+				}
 
 			snake.update(delta, SnakeGame.switchView);
 			// Adding a new position for snake, and notify snake lenght
@@ -146,7 +158,7 @@ public class Game extends Etat {
 		// ----------- END: Variables & method calls added for Lighting Test
 		// -----------//
 		// ------- Added for Lighting Test----------//
-		
+
 		glPushMatrix();
 		setCamera();
 		drawMap();
@@ -191,6 +203,13 @@ public class Game extends Etat {
 			pointMulti--;
 		} else {
 			fontPower.drawString(20, 340, "Points X5", Color.red);
+		}
+		if (bulletTimeTimer > 0) {
+			fontPower.drawString(20, 380, "(B)ullet-time ("+bulletTime+")", Color.green);
+			bulletTimeTimer--;
+		} else {
+			fontPower.drawString(20, 380, "(B)ullet-time ("+bulletTime+")", Color.red);
+			snake.setSpeed(0.15f);
 		}
 
 	}
@@ -258,11 +277,12 @@ public class Game extends Etat {
 			}
 
 		} else {
-			/*GLU.gluLookAt(SnakeGame.MAP_MILIEU.getX(),
-					SnakeGame.MAP_MILIEU.getY(),
-					50f, // where is the eye
-					SnakeGame.MAP_MILIEU.getX(), SnakeGame.MAP_MILIEU.getY(),0f, // what point are we looking at
-					1f, 0f, 1f); // which way is up*/
+			/*
+			 * GLU.gluLookAt(SnakeGame.MAP_MILIEU.getX(),
+			 * SnakeGame.MAP_MILIEU.getY(), 50f, // where is the eye
+			 * SnakeGame.MAP_MILIEU.getX(), SnakeGame.MAP_MILIEU.getY(),0f, //
+			 * what point are we looking at 1f, 0f, 1f); // which way is up
+			 */
 
 		}
 
@@ -363,6 +383,7 @@ public class Game extends Etat {
 	}
 
 	private void initializeGame() throws IOException {
+		bulletTime = 5;
 		snake = new Snake();
 		walls = MazeReader.buildWallList("maze.txt");
 		object = new ArrayList<Eatable>();
@@ -383,7 +404,7 @@ public class Game extends Etat {
 
 	@Override
 	protected void initGL() throws IOException {
-		
+
 		glClearColor(0.0f, 0.0f, 0.0f, 0.5f); // Black Background
 		glClearDepth(1.0f); // Depth Buffer Setup
 		glEnable(GL_DEPTH_TEST); // Enables Depth Testing
@@ -400,7 +421,6 @@ public class Game extends Etat {
 		glLoadIdentity();
 		glOrtho(0, SnakeGame.WIDTH, SnakeGame.HEIGHT, 0, 100, -100);
 		glMatrixMode(GL_MODELVIEW);
-		
 
 	}
 
