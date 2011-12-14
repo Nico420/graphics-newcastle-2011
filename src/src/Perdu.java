@@ -36,7 +36,6 @@ public class Perdu extends Etat {
 	public void renderGL() throws IOException {
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		Color.green.bind();
 		fontTitre.drawString(SnakeGame.WIDTH / 2 - 200,
 					SnakeGame.HEIGHT / 2 - 50, "GAME OVER !",Color.red);
 		fontMenu.drawString(SnakeGame.WIDTH / 2 - 200,
@@ -54,6 +53,7 @@ public class Perdu extends Etat {
 															// Perspective
 															// Calculations
 		glEnable(GL_TEXTURE_2D);
+		glDisable(GL_LIGHTING);
 		GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);

@@ -27,6 +27,20 @@ public class Snake {
 	
 	private float speed = 0.15f;
 	/**
+	 * @return the speed
+	 */
+	public float getSpeed() {
+		return speed;
+	}
+
+	/**
+	 * @param speed the speed to set
+	 */
+	public void setSpeed(float speed) {
+		this.speed = speed;
+	}
+
+	/**
 	 * @return the mouvement
 	 */
 	public int getMouvement() {
