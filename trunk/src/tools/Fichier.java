@@ -13,7 +13,6 @@ public class Fichier {
 	public static final int MAX_SCORE = 10;
 	static LinkedList<Integer> highScore = new LinkedList<Integer>();
 
-	@SuppressWarnings("unchecked")
 	public static void ecrire(String nomFic, int i) {
 
 		highScore = getScore(nomFic);
