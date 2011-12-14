@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL11.*;
 import java.io.IOException;
 import java.util.LinkedList;
 
+import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
@@ -26,13 +27,7 @@ public class HighScore extends Etat {
 	}
 	@Override
 	public int update(int delta) {
-		while (Keyboard.next()) {
-			if (Keyboard.getEventKeyState()) {
-				if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
-					return SnakeGame.MENU;
-				}
-			}
-		}
+		
 		updateFPS();
 		return SnakeGame.HIGHSCORE;
 	}
@@ -80,6 +75,25 @@ public class HighScore extends Etat {
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		
+	}
+	@Override
+	public int pollInput() throws LWJGLException {
+		while (Keyboard.next()) {
+			if (Keyboard.getEventKeyState()) {
+				if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
+					return SnakeGame.MENU;
+				}
+				if (Keyboard.getEventKey() == Keyboard.KEY_A) {
+					System.out.println("A Key Pressed");
+					if (Display.isFullscreen())
+						Display.setFullscreen(false);
+					else
+						Display.setFullscreen(true);
+				}
+			}
+			
+		}
+		return SnakeGame.HIGHSCORE;
 	}
 
 }

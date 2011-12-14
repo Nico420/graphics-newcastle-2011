@@ -21,16 +21,18 @@ public class SnakeGame {
 	public static final int QUIT = 3;
 	public static final int COUNTDOWN = 1;
 	public static final int PERDU = 5;
-
+	public static final int RESTART = 6;
+	
 	public static final int APPLENUMBER = 5;
-	
-	public static final int HEIGHT=600;
-	public static final int WIDTH=800;
-	
+
+	public static final int HEIGHT = 600;
+	public static final int WIDTH = 800;
+
 	public static int score;
 
+	public static final Position MAP_MILIEU = new Position(WIDTH - 300,
+			HEIGHT - 300);
 	
-	public static final Position MAP_MILIEU = new Position(WIDTH-300, HEIGHT-300); 
 	// float lightPosition1[] = { -MAP_SIZE, -MAP_SIZE, 1f, 1f };
 
 	/** time at last frame */
@@ -58,7 +60,7 @@ public class SnakeGame {
 			Display.setDisplayMode(dm);
 			Display.setFullscreen(false);
 			Display.setResizable(true);
-			
+
 			Display.setTitle("Snake 3D - 2012 - version 1.0");
 			Display.create();
 
@@ -79,6 +81,7 @@ public class SnakeGame {
 					etat = new Menu();
 					break;
 				case GAME:
+				case RESTART:
 					etat = new Game();
 					break;
 				case COUNTDOWN:
@@ -89,6 +92,8 @@ public class SnakeGame {
 					break;
 				case HIGHSCORE:
 					etat = new HighScore();
+					break;
+
 				}
 				etatActual = etatTemp;
 			}
@@ -96,7 +101,10 @@ public class SnakeGame {
 			int delta = getDelta();
 			etatTemp = etat.update(delta);
 			etat.renderGL();
-			pollInput();
+			int etatT = etat.pollInput();
+			if(etatT!=etatActual){
+				etatTemp=etatT;
+			}
 			Display.update(); // flushes OpenGL pipeline and swaps back and
 								// front buffers. perhaps waits for v-sync.
 		}
