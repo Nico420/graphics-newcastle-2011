@@ -100,12 +100,24 @@ public class Game extends Etat {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// Score Display
-		afficheScore(snake);
-		afficheRaccourci();
-		affichePower();
-		glLoadIdentity();
-		
+		creationTexte();
+		creationJeu();
+
+	}
+
+	private void creationJeu() {
 		// Dessin de la carte
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(0, SnakeGame.WIDTH, SnakeGame.HEIGHT, 0, 100, -100);
+		/*
+		 * GLU.gluPerspective(0.0f, (float) Display.getWidth() / (float)
+		 * Display.getWidth(), 0.1f, 100.0f);
+		 */
+
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+
 		glPushMatrix();
 		setCamera();
 		drawMap();
@@ -121,6 +133,24 @@ public class Game extends Etat {
 		for (int i = 0; i < object.size(); i++)
 			object.get(i).draw();
 		glPopMatrix();
+
+	}
+
+	private void creationTexte() throws IOException {
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(0, SnakeGame.WIDTH, SnakeGame.HEIGHT, 0, 100, -100);
+		/*
+		 * GLU.gluPerspective(0.0f, (float) Display.getWidth() / (float)
+		 * Display.getWidth(), 0.1f, 100.0f);
+		 */
+
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		afficheScore(snake);
+		afficheRaccourci();
+		affichePower();
+
 	}
 
 	private void affichePower() {
@@ -203,19 +233,12 @@ public class Game extends Etat {
 			}
 
 		} else {
-			/* glTranslatef(0, -100, 0); */
-			// GLU.gluLookAt(0, -1, 20, 1 ,1, 0, 0, 0, 1);
-			/*
-			 * glRotatef(-90,0,0,1); GLU.gluLookAt(1.5f, 1.5f, 5f,
-			 * SnakeGame.MAP_MILIEU.getX(), SnakeGame.MAP_MILIEU.getY(), 0f, 1f,
-			 * 1f, 1f);
-			 */
-			/*
-			 * GLU.gluLookAt(SnakeGame.MAP_MILIEU.getX(),SnakeGame.MAP_MILIEU.getY
-			 * (), 50f, // where is the eye
-			 * SnakeGame.MAP_MILIEU.getX(),SnakeGame.MAP_MILIEU.getY(), 0f, //
-			 * what point are we looking at 1f, 0f, 0f); // which way is up
-			 */
+			GLU.gluLookAt(SnakeGame.MAP_MILIEU.getX(),
+					SnakeGame.MAP_MILIEU.getY(),
+					50f, // where is the eye
+					SnakeGame.MAP_MILIEU.getX(), SnakeGame.MAP_MILIEU.getY(),0f, // what point are we looking at
+					1f, 0f, 1f); // which way is up
+
 		}
 
 	}
@@ -227,10 +250,10 @@ public class Game extends Etat {
 				0);
 		glBegin(GL_QUADS);
 		glColor3f(1f, 0.5f, 0.5f);
-		glVertex3f(0 - (MAP_SIZE + WALL_SIZE), 0 - (MAP_SIZE + WALL_SIZE), 0.1f);
-		glVertex3f(0 + MAP_SIZE + WALL_SIZE, 0 - (MAP_SIZE + WALL_SIZE), 0.1f);
-		glVertex3f(0 + MAP_SIZE + WALL_SIZE, 0 + MAP_SIZE + WALL_SIZE, 0.1f);
-		glVertex3f(0 - (MAP_SIZE + WALL_SIZE), 0 + MAP_SIZE + WALL_SIZE, 0.1f);
+		glVertex3f(0 - (MAP_SIZE + WALL_SIZE), 0 - (MAP_SIZE + WALL_SIZE), 0f);
+		glVertex3f(0 + MAP_SIZE + WALL_SIZE, 0 - (MAP_SIZE + WALL_SIZE), 0f);
+		glVertex3f(0 + MAP_SIZE + WALL_SIZE, 0 + MAP_SIZE + WALL_SIZE, 0f);
+		glVertex3f(0 - (MAP_SIZE + WALL_SIZE), 0 + MAP_SIZE + WALL_SIZE, 0f);
 
 		glColor3f(1, 1, 1);
 		glTexCoord2d(0, 0.5);
