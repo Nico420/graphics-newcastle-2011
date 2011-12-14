@@ -22,11 +22,10 @@ public class Apple extends Eatable {
 	public void draw() {
 		float a = Game.APPLE_SIZE / 2;
 		glPushMatrix();
-		glLoadIdentity();
-		Game.setCamera();
 		glTranslated(SnakeGame.MAP_MILIEU.getX(), SnakeGame.MAP_MILIEU.getY(),0);
 		// Make the apple bounce !
-		glTranslatef(x, y, -bounce);
+		glTranslatef(x, y, bounce);
+		
 		if (!direction)
 			bounce = (float) ((bounce + 0.001) % 2);
 		else
@@ -38,8 +37,8 @@ public class Apple extends Eatable {
 		}
 
 		// Make the apple turn !
-		glRotatef(rotation, 0, 0, 1);
-		rotation+=0.3;
+		//glRotatef(rotation, 0, 0, 1);
+		rotation+=Game.delta*0.3;
 		rotation%=360;
 
 		

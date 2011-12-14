@@ -20,6 +20,9 @@ public class Menu extends Etat {
 	int menuChoice = 0;
 	int menuChoiceTemp = 0;
 
+	Texture icone;
+	Texture pomme;
+	
 	/**
 	 * Boolean flag on whether AntiAliasing is enabled or not
 	 * 
@@ -29,6 +32,10 @@ public class Menu extends Etat {
 	public Menu() throws IOException {
 		super();
 		initGL();
+		icone = TextureLoader.getTexture("PNG",
+				ResourceLoader.getResourceAsStream("texture/snake_icone.png"));
+		pomme = TextureLoader.getTexture("PNG",
+				ResourceLoader.getResourceAsStream("texture/pomme_ml.png"));
 	}
 
 	@Override
@@ -92,7 +99,6 @@ public class Menu extends Etat {
 	@Override
 	protected void initGL() throws IOException {
 		glShadeModel(GL_SMOOTH); // Enable Smooth Shading
-		glClearColor(0.0f, 0.0f, 0.0f, 0.5f); // Black Background
 		glClearDepth(1.0f); // Depth Buffer Setup
 		glEnable(GL_DEPTH_TEST); // Enables Depth Testing
 		glDepthFunc(GL_LEQUAL); // The Type Of Depth Testing To Do
@@ -127,7 +133,7 @@ public class Menu extends Etat {
 					if (menuChoiceTemp < 0)
 						menuChoiceTemp = 2;
 				}
-				if (Keyboard.getEventKey() == Keyboard.KEY_RETURN) {
+				if (Keyboard.getEventKey() == Keyboard.KEY_RETURN || Keyboard.getEventKey() == Keyboard.KEY_NUMPADENTER) {
 					menuChoice = menuChoiceTemp + 1;
 				}
 

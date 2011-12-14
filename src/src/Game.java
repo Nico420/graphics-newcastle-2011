@@ -28,10 +28,10 @@ public class Game extends Etat {
 	public static final int UP = 2;
 	public static final int DOWN = 4;
 
-	public static final int SNAKE_SIZE = 10;
-	public static final int MAP_SIZE = 250;
-	public static final int APPLE_SIZE = 7;
-	public static final int WALL_SIZE = 20;
+	public static final int SNAKE_SIZE = 3;
+	public static final int MAP_SIZE = 100;
+	public static final int APPLE_SIZE = 2;
+	public static final int WALL_SIZE = 5;
 
 	Texture textureSerpent;
 	Texture textureSol;
@@ -50,6 +50,8 @@ public class Game extends Etat {
 	public static float rotation;
 	static Snake snake;
 
+	static int delta;
+
 	public static List<Position> walls = new ArrayList<Position>();
 
 	public Game() throws IOException {
@@ -59,8 +61,8 @@ public class Game extends Etat {
 
 	@Override
 	public int update(int delta) {
+		Game.delta = delta;
 		if (!perdu) {
-			
 
 			snake.update(delta, SnakeGame.switchView);
 			// Adding a new position for snake, and notify snake lenght
@@ -98,45 +100,44 @@ public class Game extends Etat {
 			if (mortSerpent < 0)
 				return SnakeGame.PERDU;
 			else
-				mortSerpent--;
+				mortSerpent -= delta;
 		}
 		updateFPS();
 		return SnakeGame.GAME;
 	}
 
 	private void tuerSerpent() {
-		glColor3f(1,0,0);
-		draw3DQuad(snake.getX(), snake.getY(), 0, SNAKE_SIZE*2);
+		glColor3f(1, 0, 0);
+		draw3DQuad(snake.getX(), snake.getY(), 0, SNAKE_SIZE * 2);
 		for (int i = 0; i < snake.positions.size(); i++) {
 			draw3DQuad(snake.positions.get(i).getX(), snake.positions.get(i)
-					.getY(), 0, SNAKE_SIZE*2);
+					.getY(), 0, SNAKE_SIZE * 2);
 		}
 
 	}
 
 	@Override
 	public void renderGL() throws IOException {
-
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 		// Score Display
 		creationTexte();
 		creationJeu();
-
 	}
 
 	private void creationJeu() {
 		// Dessin de la carte
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glOrtho(0, SnakeGame.WIDTH, SnakeGame.HEIGHT, 0, 100, -100);
-		/*
-		 * GLU.gluPerspective(0.0f, (float) Display.getWidth() / (float)
-		 * Display.getWidth(), 0.1f, 100.0f);
-		 */
+
+		GLU.gluPerspective(90.0f,
+				(float) Display.getWidth() / (float) Display.getHeight(), 0.1f,
+				500.0f);
 
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
+
+		// transform for camera
+		setCamera();
 
 		initLightArrays();
 		glShadeModel(GL_SMOOTH);
@@ -168,17 +169,14 @@ public class Game extends Etat {
 		// ------- Added for Lighting Test----------//
 
 		glPushMatrix();
-		setCamera();
+
 		drawMap();
 		textureSerpent.bind();
 		snake.draw();
 		// Draw Walls
 		textureMur.bind();
 		// glColor3f(1, 1, 1);
-		for (int i = 0; i < walls.size(); i++) {
-			draw3DQuad(walls.get(i).getX(), walls.get(i).getY(), WALL_SIZE,
-					WALL_SIZE * 2);
-		}
+
 		for (int i = 0; i < object.size(); i++)
 			object.get(i).draw();
 		glPopMatrix();
@@ -186,6 +184,7 @@ public class Game extends Etat {
 	}
 
 	private void creationTexte() throws IOException {
+
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		glOrtho(0, SnakeGame.WIDTH, SnakeGame.HEIGHT, 0, 100, -100);
@@ -202,24 +201,24 @@ public class Game extends Etat {
 		fontPower.drawString(20, 250, "POWERS UP", Color.yellow);
 		if (tailReduce > 0) {
 			fontPower.drawString(20, 300, "Tail reduction", Color.green);
-			tailReduce--;
+			tailReduce -= delta;
 		} else {
 			fontPower.drawString(20, 300, "Tail reduction", Color.red);
 		}
 		if (pointMulti > 0) {
 			fontPower.drawString(20, 340, "Points X5", Color.green);
-			pointMulti--;
+			pointMulti -= delta;
 		} else {
 			fontPower.drawString(20, 340, "Points X5", Color.red);
 		}
 		if (bulletTimeTimer > 0) {
 			fontPower.drawString(20, 380, "(B)ullet-time (" + bulletTime + ")",
 					Color.green);
-			bulletTimeTimer--;
+			bulletTimeTimer -= delta;
 		} else {
 			fontPower.drawString(20, 380, "(B)ullet-time (" + bulletTime + ")",
 					Color.red);
-			snake.setSpeed(0.15f);
+			snake.setSpeed(0.10f);
 		}
 
 	}
@@ -241,10 +240,11 @@ public class Game extends Etat {
 
 	public static void setCamera() {
 		if (SnakeGame.switchView) {
-			float distance = 0.01f;
+			//glTranslatef(SnakeGame.MAP_MILIEU.getX(),SnakeGame.MAP_MILIEU.getY(),0);
+			float distance = 1f;
 			switch (snake.getDirection()) {
 			case LEFT:
-				GLU.gluLookAt(snake.getX() - distance, snake.getY(), 0.5f, // where
+				GLU.gluLookAt(snake.getX() - distance, snake.getY(), 100f, // where
 						// is
 						// the
 						// eye
@@ -255,7 +255,7 @@ public class Game extends Etat {
 				break;
 			case DOWN:
 			default:
-				GLU.gluLookAt(snake.getX(), snake.getY() + distance, 1f, // where
+				GLU.gluLookAt(snake.getX(), snake.getY() + distance, 100f, // where
 						// is
 						// the
 						// eye
@@ -265,7 +265,7 @@ public class Game extends Etat {
 						0f, 0f, 1f); // which way is up
 				break;
 			case UP:
-				GLU.gluLookAt(snake.getX(), snake.getY() - distance, 1f, // where
+				GLU.gluLookAt(snake.getX(), snake.getY() - distance, 100f, // where
 						// is
 						// the
 						// eye
@@ -275,7 +275,7 @@ public class Game extends Etat {
 						0f, 0f, 1f); // which way is up
 				break;
 			case RIGHT:
-				GLU.gluLookAt(snake.getX() + distance, snake.getY(), 1f, // where
+				GLU.gluLookAt(snake.getX() + distance, snake.getY(), 100f, // where
 						// is
 						// the
 						// eye
@@ -287,18 +287,13 @@ public class Game extends Etat {
 			}
 
 		} else {
-			/*
-			 * GLU.gluLookAt(SnakeGame.MAP_MILIEU.getX(),
-			 * SnakeGame.MAP_MILIEU.getY(), 50f, // where is the eye
-			 * SnakeGame.MAP_MILIEU.getX(), SnakeGame.MAP_MILIEU.getY(),0f, //
-			 * what point are we looking at 1f, 0f, 1f); // which way is up
-			 */
-
+			GLU.gluLookAt(SnakeGame.MAP_MILIEU.getX()-10, SnakeGame.MAP_MILIEU.getY()-10, 100f, SnakeGame.MAP_MILIEU.getX(), SnakeGame.MAP_MILIEU.getY(), 0f, 0f, 1f, 0f);
 		}
 
 	}
 
 	private void drawMap() {
+		glPushMatrix();
 		// Navigable map
 		textureSol.bind();
 		glTranslated(SnakeGame.MAP_MILIEU.getX(), SnakeGame.MAP_MILIEU.getY(),
@@ -321,25 +316,28 @@ public class Game extends Etat {
 		glTexCoord2d(0, 0);
 		glVertex3f(0 - MAP_SIZE, 0 + MAP_SIZE, 0);
 		glEnd();
-		// Walls around it
+		// Walls around it and in it
 		for (int i = -MAP_SIZE; i <= MAP_SIZE; i += WALL_SIZE) {
 			// glColor3f(1, 0, 0);
 			textureMur.bind();
 			glPushMatrix();
-			setCamera();
-			draw3DQuad(i, -(MAP_SIZE + WALL_SIZE / 2), -WALL_SIZE, WALL_SIZE);
-			draw3DQuad(i, (MAP_SIZE + WALL_SIZE / 2), -WALL_SIZE, WALL_SIZE);
-			draw3DQuad((MAP_SIZE + WALL_SIZE / 2), i, -WALL_SIZE, WALL_SIZE);
-			draw3DQuad(-(MAP_SIZE + WALL_SIZE / 2), i, -WALL_SIZE, WALL_SIZE);
+			// setCamera();
+			draw3DQuad(i, -(MAP_SIZE + WALL_SIZE / 2), WALL_SIZE, WALL_SIZE);
+			draw3DQuad(i, (MAP_SIZE + WALL_SIZE / 2), WALL_SIZE, WALL_SIZE);
+			draw3DQuad((MAP_SIZE + WALL_SIZE / 2), i, WALL_SIZE, WALL_SIZE);
+			draw3DQuad(-(MAP_SIZE + WALL_SIZE / 2), i, WALL_SIZE, WALL_SIZE);
 			glPopMatrix();
 		}
-
+		for (int i = 0; i < walls.size(); i++) {
+			draw3DQuad(walls.get(i).getX(), walls.get(i).getY(), WALL_SIZE,
+					WALL_SIZE * 2);
+		}
+		glPopMatrix();
 	}
 
 	public static void draw3DQuad(float x, float y, float z, float size) {
 		float a = size / 2;
 
-		
 		glBegin(GL_QUADS);
 		// glColor3f(1, 0, 0);
 		glNormal3f(0, 0, -1);
@@ -417,7 +415,6 @@ public class Game extends Etat {
 	@Override
 	protected void initGL() throws IOException {
 
-		glClearColor(0.0f, 0.0f, 0.0f, 0.5f); // Black Background
 		glClearDepth(1.0f); // Depth Buffer Setup
 		glEnable(GL_DEPTH_TEST); // Enables Depth Testing
 		glDepthFunc(GL_LEQUAL); // The Type Of Depth Testing To Do
@@ -450,35 +447,53 @@ public class Game extends Etat {
 		lModelAmbient.put(1f).put(0.5f).put(0.5f).put(1.0f).flip();
 	}
 
-	public int pollInput() throws LWJGLException{
-			while (Keyboard.next()) {
-				if (Keyboard.getEventKeyState()) {
-					if ((bulletTime > 0) && Keyboard.getEventKey() == Keyboard.KEY_B) {
-						snake.setSpeed(0.05f);
-						bulletTime--;
-						bulletTimeTimer = 6000;
+	public int pollInput() throws LWJGLException {
+		while (Keyboard.next()) {
+			if (Keyboard.getEventKeyState()) {
+				if ((bulletTime > 0)
+						&& Keyboard.getEventKey() == Keyboard.KEY_B) {
+					snake.setSpeed(0.05f);
+					bulletTime--;
+					bulletTimeTimer = 6000;
+				}
+				if (Keyboard.getEventKey() == Keyboard.KEY_A) {
+					System.out.println("A Key Pressed");
+					if (Display.isFullscreen())
+						Display.setFullscreen(false);
+					else
+						Display.setFullscreen(true);
+				}
+				if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
+					System.out.println("Escape Key Pressed");
+					return SnakeGame.MENU;
+				}
+				if (Keyboard.getEventKey() == Keyboard.KEY_V) {
+					System.out.println("V Key Pressed");
+					SnakeGame.switchView = SnakeGame.switchView ? false : true;
+				}
+				if (Keyboard.getEventKey() == Keyboard.KEY_R) {
+					System.out.println("R Key Pressed - Game restart");
+					return SnakeGame.RESTART;
+				}
+
+				if (Keyboard.getEventKey() == Keyboard.KEY_LEFT
+						&& SnakeGame.switchView) {
+					System.out.println("GAUCHE");
+					snake.setMouvement(Game.LEFT);
+					if (snake.getDirection() == 0) {
+						snake.setDirection(Game.DOWN);
 					}
-					if (Keyboard.getEventKey() == Keyboard.KEY_A) {
-						System.out.println("A Key Pressed");
-						if (Display.isFullscreen())
-							Display.setFullscreen(false);
-						else
-							Display.setFullscreen(true);
-					}
-					if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
-						System.out.println("Escape Key Pressed");
-						return SnakeGame.MENU;
-					}
-					if (Keyboard.getEventKey() == Keyboard.KEY_V) {
-						System.out.println("V Key Pressed");
-						SnakeGame.switchView = SnakeGame.switchView ? false : true;
-					}
-					if (Keyboard.getEventKey() == Keyboard.KEY_R) {
-						System.out.println("R Key Pressed - Game restart");
-						return SnakeGame.RESTART;
+				}
+				if (Keyboard.getEventKey() == Keyboard.KEY_RIGHT
+						&& SnakeGame.switchView) {
+					System.out.println("DROITE");
+					snake.setMouvement(Game.RIGHT);
+					if (snake.getDirection() == 0) {
+						snake.setDirection(Game.DOWN);
 					}
 				}
 			}
-			return SnakeGame.GAME;
+		}
+		return SnakeGame.GAME;
 	}
 }
