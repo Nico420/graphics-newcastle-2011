@@ -1,6 +1,7 @@
 package src;
 
 import static org.lwjgl.opengl.GL11.*;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +57,7 @@ public class Game extends Etat {
 
 	public Game() throws IOException {
 		initializeGame();
-
+		initGL();
 	}
 
 	@Override
@@ -108,9 +109,9 @@ public class Game extends Etat {
 
 	private void tuerSerpent() {
 		glColor3f(1, 0, 0);
-		draw3DQuad(snake.getX(), snake.getY(), 0, SNAKE_SIZE * 2);
+		drawMur(snake.getX(), snake.getY(), 0, SNAKE_SIZE * 2);
 		for (int i = 0; i < snake.positions.size(); i++) {
-			draw3DQuad(snake.positions.get(i).getX(), snake.positions.get(i)
+			drawMur(snake.positions.get(i).getX(), snake.positions.get(i)
 					.getY(), 0, SNAKE_SIZE * 2);
 		}
 
@@ -239,57 +240,51 @@ public class Game extends Etat {
 	}
 
 	public static void setCamera() {
+
 		if (SnakeGame.switchView) {
-			// glTranslatef(SnakeGame.MAP_MILIEU.getX(),SnakeGame.MAP_MILIEU.getY(),0);
-			float distance = 1f;
+			float zoom = 40f;
+			float reculCam = 20;
 			switch (snake.getDirection()) {
 			case LEFT:
-				GLU.gluLookAt(snake.getX() - distance, snake.getY(), 100f, // where
-						// is
-						// the
-						// eye
-						snake.getX(), snake.getY(), 0f, // what point are we
-														// looking
-														// at
-						0f, 0f, 1f); // which way is up
+				glRotatef(270, 0, 0, 1);
+				GLU.gluLookAt(SnakeGame.MAP_MILIEU.getX() + snake.getX()
+						+ reculCam, SnakeGame.MAP_MILIEU.getY() + snake.getY(),
+						zoom, SnakeGame.MAP_MILIEU.getX() + snake.getX(),
+						SnakeGame.MAP_MILIEU.getY() + snake.getY(), 0f, 0f, 1f,
+						0f);
 				break;
 			case DOWN:
 			default:
-				GLU.gluLookAt(snake.getX(), snake.getY() + distance, 100f, // where
-						// is
-						// the
-						// eye
-						snake.getX(), snake.getY(), 0f, // what point are we
-														// looking
-														// at
-						0f, 0f, 1f); // which way is up
+				glRotatef(0, 0, 0, 1);
+				GLU.gluLookAt(SnakeGame.MAP_MILIEU.getX() + snake.getX(),
+						SnakeGame.MAP_MILIEU.getY() + snake.getY() - reculCam,
+						zoom, SnakeGame.MAP_MILIEU.getX() + snake.getX(),
+						SnakeGame.MAP_MILIEU.getY() + snake.getY(), 0f, 0f, 1f,
+						0f);
 				break;
 			case UP:
-				GLU.gluLookAt(snake.getX(), snake.getY() - distance, 100f, // where
-						// is
-						// the
-						// eye
-						snake.getX(), snake.getY(), 0f, // what point are we
-														// looking
-														// at
-						0f, 0f, 1f); // which way is up
+				glRotatef(180, 0, 0, 1);
+				GLU.gluLookAt(SnakeGame.MAP_MILIEU.getX() + snake.getX(),
+						SnakeGame.MAP_MILIEU.getY() + snake.getY() + reculCam,
+						zoom, SnakeGame.MAP_MILIEU.getX() + snake.getX(),
+						SnakeGame.MAP_MILIEU.getY() + snake.getY(), 0f, 0f, 1f,
+						0f);
 				break;
 			case RIGHT:
-				GLU.gluLookAt(snake.getX() + distance, snake.getY(), 100f, // where
-						// is
-						// the
-						// eye
-						snake.getX(), snake.getY(), 0f, // what point are we
-														// looking
-														// at
-						0f, 0f, 1f); // which way is up
+				glRotatef(90, 0, 0, 1);
+				GLU.gluLookAt(SnakeGame.MAP_MILIEU.getX() + snake.getX()
+						- reculCam, SnakeGame.MAP_MILIEU.getY() + snake.getY(),
+						zoom, SnakeGame.MAP_MILIEU.getX() + snake.getX(),
+						SnakeGame.MAP_MILIEU.getY() + snake.getY(), 0f, 0f, 1f,
+						0f);
 				break;
 			}
 
 		} else {
 			glTranslatef(80, 10, 0);
 			// Camera is on a corner,looking for the middle of the map.
-			GLU.gluLookAt(SnakeGame.MAP_MILIEU.getX() - MAP_SIZE / 2 +20,SnakeGame.MAP_MILIEU.getY(), 150f,
+			GLU.gluLookAt(SnakeGame.MAP_MILIEU.getX() - MAP_SIZE / 2 + 20,
+					SnakeGame.MAP_MILIEU.getY(), 150f,
 					SnakeGame.MAP_MILIEU.getX(), SnakeGame.MAP_MILIEU.getY(),
 					0f, 0f, 1f, 0f);
 		}
@@ -326,70 +321,78 @@ public class Game extends Etat {
 			textureMur.bind();
 			glPushMatrix();
 			// setCamera();
-			draw3DQuad(i, -(MAP_SIZE + WALL_SIZE / 2), WALL_SIZE, WALL_SIZE);
-			draw3DQuad(i, (MAP_SIZE + WALL_SIZE / 2), WALL_SIZE, WALL_SIZE);
-			draw3DQuad((MAP_SIZE + WALL_SIZE / 2), i, WALL_SIZE, WALL_SIZE);
-			draw3DQuad(-(MAP_SIZE + WALL_SIZE / 2), i, WALL_SIZE, WALL_SIZE);
+			drawMur(i, -(MAP_SIZE + WALL_SIZE / 2), WALL_SIZE, WALL_SIZE);
+			drawMur(i, (MAP_SIZE + WALL_SIZE / 2), WALL_SIZE, WALL_SIZE);
+			drawMur((MAP_SIZE + WALL_SIZE / 2), i, WALL_SIZE, WALL_SIZE);
+			drawMur(-(MAP_SIZE + WALL_SIZE / 2), i, WALL_SIZE, WALL_SIZE);
 			glPopMatrix();
 		}
 		for (int i = 0; i < walls.size(); i++) {
-			draw3DQuad(walls.get(i).getX(), walls.get(i).getY(), WALL_SIZE,
+			drawMur(walls.get(i).getX(), walls.get(i).getY(), WALL_SIZE,
 					WALL_SIZE * 2);
 		}
 		glPopMatrix();
 	}
 
-	public static void draw3DQuad(float x, float y, float z, float size) {
+	public static void drawMur(float x, float y, float z, float size) {
 		float a = size / 2;
 
 		glBegin(GL_QUADS);
-		// glColor3f(1, 0, 0);
-		glNormal3f(0, 0, -1);
+		
+		//glNormal3f(0, 0, -1);
 		glTexCoord2d(0, 1);
-		glVertex3f(x - a, y - a, z - a);
+		glVertex3f(x - a, y - a, 0);
 		glTexCoord2d(1, 1);
-		glVertex3f(x + a, y - a, z - a);
+		glVertex3f(x + a, y - a, 0);
 		glTexCoord2d(1, 0);
-		glVertex3f(x + a, y + a, z - a);
+		glVertex3f(x + a, y + a, 0);
 		glTexCoord2d(0, 0);
-		glVertex3f(x - a, y + a, z - a);
-		// glColor3f(1, 1, 0);
-		/*
-		 * glTexCoord2d(0, 1); glVertex3f(x - a, y - a, z + a); glTexCoord2d(0,
-		 * 1); glVertex3f(x + a, y - a, z + a); glTexCoord2d(0, 1); glVertex3f(x
-		 * + a, y + a, z + a); glTexCoord2d(0, 1); glVertex3f(x - a, y + a, z +
-		 * a);
-		 */
-		// glColor3f(1, 0, 1);
-		glTexCoord2d(0, 1);
-		glVertex3f(x - a, y - a, z + a);
-		glTexCoord2d(1, 1);
-		glVertex3f(x + a, y - a, z + a);
-		glTexCoord2d(0, 1);
-		glVertex3f(x + a, y - a, z - a);
-		glTexCoord2d(1, 0);
-		glVertex3f(x - a, y - a, z - a);
-		// glColor3f(1, 1, 1);
-		glTexCoord2d(0, 1);
-		glVertex3f(x + a, y + a, z + a);
-		glTexCoord2d(1, 1);
-		glVertex3f(x - a, y + a, z + a);
-		glTexCoord2d(1, 0);
-		glVertex3f(x - a, y + a, z - a);
-		glTexCoord2d(0, 0);
-		glVertex3f(x + a, y + a, z - a);
+		glVertex3f(x - a, y + a, 0);
 
-		/*
-		 * glTexCoord2d(0, 1); glVertex3f(x - a, y - a, z - a); glTexCoord2d(1,
-		 * 1); glVertex3f(x + a, y - a, z - a); glTexCoord2d(1, 0); glVertex3f(x
-		 * - a, y - a, z + a); glTexCoord2d(0, 0); glVertex3f(x + a, y - a, z +
-		 * a);
-		 * 
-		 * glTexCoord2d(1, 0); glVertex3f(x + a, y + a, z - a); glTexCoord2d(0,
-		 * 0); glVertex3f(x - a, y + a, z - a); glTexCoord2d(0, 1); glVertex3f(x
-		 * + a, y + a, z + a); glTexCoord2d(1, 1); glVertex3f(x - a, y + a, z +
-		 * a);
-		 */
+		glTexCoord2d(0, 1);
+		glVertex3f(x - a, y - a, size);
+		glTexCoord2d(0, 1);
+		glVertex3f(x + a, y - a, size);
+		glTexCoord2d(0, 1);
+		glVertex3f(x + a, y + a, size);
+		glTexCoord2d(0, 1);
+		glVertex3f(x - a, y + a, size);
+
+		glTexCoord2d(0, 1);
+		glVertex3f(x - a, y - a, size);
+		glTexCoord2d(1, 1);
+		glVertex3f(x + a, y - a, size);
+		glTexCoord2d(0, 1);
+		glVertex3f(x + a, y - a, 0);
+		glTexCoord2d(1, 0);
+		glVertex3f(x - a, y - a, 0);
+		
+		glTexCoord2d(0, 1);
+		glVertex3f(x + a, y + a, size);
+		glTexCoord2d(1, 1);
+		glVertex3f(x - a, y + a, size);
+		glTexCoord2d(1, 0);
+		glVertex3f(x - a, y + a, 0);
+		glTexCoord2d(0, 0);
+		glVertex3f(x + a, y + a, 0);
+
+		glTexCoord2d(0, 1);
+		glVertex3f(x - a, y - a, 0);
+		glTexCoord2d(1, 1);
+		glVertex3f(x - a, y + a, 0);
+		glTexCoord2d(1, 0);
+		glVertex3f(x - a, y + a, size);
+		glTexCoord2d(0, 0);
+		glVertex3f(x - a, y - a, size);
+
+		glTexCoord2d(1, 0);
+		glVertex3f(x + a, y + a, 0);
+		glTexCoord2d(0, 0);
+		glVertex3f(x + a, y - a, 0);
+		glTexCoord2d(0, 1);
+		glVertex3f(x + a, y - a, size);
+		glTexCoord2d(1, 1);
+		glVertex3f(x + a, y + a, size);
 
 		glEnd();
 
@@ -448,7 +451,7 @@ public class Game extends Etat {
 		whiteLight.put(1.0f).put(1.0f).put(1.0f).put(1.0f).flip();
 
 		lModelAmbient = BufferUtils.createFloatBuffer(4);
-		lModelAmbient.put(1f).put(0.5f).put(0.5f).put(1.0f).flip();
+		lModelAmbient.put(0.5f).put(0.5f).put(0.5f).put(1.0f).flip();
 	}
 
 	public int pollInput() throws LWJGLException {
@@ -483,7 +486,7 @@ public class Game extends Etat {
 				if (Keyboard.getEventKey() == Keyboard.KEY_LEFT
 						&& SnakeGame.switchView) {
 					System.out.println("GAUCHE");
-					snake.setMouvement(Game.LEFT);
+					snake.setMouvement(Game.RIGHT);
 					if (snake.getDirection() == 0) {
 						snake.setDirection(Game.DOWN);
 					}
@@ -491,7 +494,7 @@ public class Game extends Etat {
 				if (Keyboard.getEventKey() == Keyboard.KEY_RIGHT
 						&& SnakeGame.switchView) {
 					System.out.println("DROITE");
-					snake.setMouvement(Game.RIGHT);
+					snake.setMouvement(Game.LEFT);
 					if (snake.getDirection() == 0) {
 						snake.setDirection(Game.DOWN);
 					}
