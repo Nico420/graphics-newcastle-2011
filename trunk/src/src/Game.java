@@ -118,6 +118,35 @@ public class Game extends Etat {
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
+		initLightArrays();
+		glShadeModel(GL_SMOOTH);
+		glMaterial(GL_FRONT, GL_SPECULAR, matSpecular); // sets specular
+														// material color
+		glMaterialf(GL_FRONT, GL_SHININESS, 50.0f); // sets shininess
+
+		glLight(GL_LIGHT0, GL_POSITION, lightPosition); // sets light position
+		glLight(GL_LIGHT0, GL_SPECULAR, whiteLight); // sets specular light to
+														// white
+		glLight(GL_LIGHT0, GL_DIFFUSE, whiteLight); // sets diffuse light to
+													// white
+		glLightModel(GL_LIGHT_MODEL_AMBIENT, lModelAmbient); // global ambient
+																// light
+
+		glEnable(GL_LIGHTING); // enables lighting
+		glEnable(GL_LIGHT0); // enables light0
+
+		glEnable(GL_COLOR_MATERIAL); // enables opengl to use glColor3f to
+										// define material color
+		glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE); // tell opengl
+															// glColor3f effects
+															// the ambient and
+															// diffuse
+															// properties of
+															// material
+		// ----------- END: Variables & method calls added for Lighting Test
+		// -----------//
+		// ------- Added for Lighting Test----------//
+		
 		glPushMatrix();
 		setCamera();
 		drawMap();
@@ -140,10 +169,6 @@ public class Game extends Etat {
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		glOrtho(0, SnakeGame.WIDTH, SnakeGame.HEIGHT, 0, 100, -100);
-		/*
-		 * GLU.gluPerspective(0.0f, (float) Display.getWidth() / (float)
-		 * Display.getWidth(), 0.1f, 100.0f);
-		 */
 
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
@@ -233,11 +258,11 @@ public class Game extends Etat {
 			}
 
 		} else {
-			GLU.gluLookAt(SnakeGame.MAP_MILIEU.getX(),
+			/*GLU.gluLookAt(SnakeGame.MAP_MILIEU.getX(),
 					SnakeGame.MAP_MILIEU.getY(),
 					50f, // where is the eye
 					SnakeGame.MAP_MILIEU.getX(), SnakeGame.MAP_MILIEU.getY(),0f, // what point are we looking at
-					1f, 0f, 1f); // which way is up
+					1f, 0f, 1f); // which way is up*/
 
 		}
 
@@ -256,6 +281,7 @@ public class Game extends Etat {
 		glVertex3f(0 - (MAP_SIZE + WALL_SIZE), 0 + MAP_SIZE + WALL_SIZE, 0f);
 
 		glColor3f(1, 1, 1);
+		glNormal3f(0, 0, -1);
 		glTexCoord2d(0, 0.5);
 		glVertex3f(0 - MAP_SIZE, 0 - MAP_SIZE, 0);
 		glTexCoord2d(0.5, 0.5);
@@ -284,6 +310,7 @@ public class Game extends Etat {
 		setCamera();
 		glBegin(GL_QUADS);
 		// glColor3f(1, 0, 0);
+		glNormal3f(0, 0, -1);
 		glTexCoord2d(0, 1);
 		glVertex3f(x - a, y - a, z - a);
 		glTexCoord2d(1, 1);
@@ -356,7 +383,7 @@ public class Game extends Etat {
 
 	@Override
 	protected void initGL() throws IOException {
-		glShadeModel(GL_SMOOTH); // Enable Smooth Shading
+		
 		glClearColor(0.0f, 0.0f, 0.0f, 0.5f); // Black Background
 		glClearDepth(1.0f); // Depth Buffer Setup
 		glEnable(GL_DEPTH_TEST); // Enables Depth Testing
@@ -372,39 +399,8 @@ public class Game extends Etat {
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		glOrtho(0, SnakeGame.WIDTH, SnakeGame.HEIGHT, 0, 100, -100);
-		GLU.gluPerspective(0.0f,
-				(float) Display.getWidth() / (float) Display.getWidth(), 0.1f,
-				100.0f);
-
 		glMatrixMode(GL_MODELVIEW);
-		initLightArrays();
-		glShadeModel(GL_SMOOTH);
-		glMaterial(GL_FRONT, GL_SPECULAR, matSpecular); // sets specular
-														// material color
-		glMaterialf(GL_FRONT, GL_SHININESS, 50.0f); // sets shininess
-
-		glLight(GL_LIGHT0, GL_POSITION, lightPosition); // sets light position
-		glLight(GL_LIGHT0, GL_SPECULAR, whiteLight); // sets specular light to
-														// white
-		glLight(GL_LIGHT0, GL_DIFFUSE, whiteLight); // sets diffuse light to
-													// white
-		glLightModel(GL_LIGHT_MODEL_AMBIENT, lModelAmbient); // global ambient
-																// light
-
-		glEnable(GL_LIGHTING); // enables lighting
-		glEnable(GL_LIGHT0); // enables light0
-
-		glEnable(GL_COLOR_MATERIAL); // enables opengl to use glColor3f to
-										// define material color
-		glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE); // tell opengl
-															// glColor3f effects
-															// the ambient and
-															// diffuse
-															// properties of
-															// material
-		// ----------- END: Variables & method calls added for Lighting Test
-		// -----------//
-		// ------- Added for Lighting Test----------//
+		
 
 	}
 
@@ -419,7 +415,7 @@ public class Game extends Etat {
 		whiteLight.put(1.0f).put(1.0f).put(1.0f).put(1.0f).flip();
 
 		lModelAmbient = BufferUtils.createFloatBuffer(4);
-		lModelAmbient.put(0.5f).put(0.5f).put(0.5f).put(1.0f).flip();
+		lModelAmbient.put(1f).put(0.5f).put(0.5f).put(1.0f).flip();
 	}
 
 }
