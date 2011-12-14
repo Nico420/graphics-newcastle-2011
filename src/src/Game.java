@@ -81,7 +81,7 @@ public class Game extends Etat {
 					appleEat = item.getAction();
 					if (appleEat == Eatable.REDUCE) {
 						tailReduce = 600;
-					} else if (appleEat == Eatable.DOUBLE) {
+					} else if (appleEat == Eatable.MULTI) {
 						pointMulti = 2000;
 					}
 					// Generate new item
@@ -240,7 +240,7 @@ public class Game extends Etat {
 
 	public static void setCamera() {
 		if (SnakeGame.switchView) {
-			//glTranslatef(SnakeGame.MAP_MILIEU.getX(),SnakeGame.MAP_MILIEU.getY(),0);
+			// glTranslatef(SnakeGame.MAP_MILIEU.getX(),SnakeGame.MAP_MILIEU.getY(),0);
 			float distance = 1f;
 			switch (snake.getDirection()) {
 			case LEFT:
@@ -287,7 +287,11 @@ public class Game extends Etat {
 			}
 
 		} else {
-			GLU.gluLookAt(SnakeGame.MAP_MILIEU.getX()-10, SnakeGame.MAP_MILIEU.getY()-10, 100f, SnakeGame.MAP_MILIEU.getX(), SnakeGame.MAP_MILIEU.getY(), 0f, 0f, 1f, 0f);
+			glTranslatef(80, 10, 0);
+			// Camera is on a corner,looking for the middle of the map.
+			GLU.gluLookAt(SnakeGame.MAP_MILIEU.getX() - MAP_SIZE / 2 +20,SnakeGame.MAP_MILIEU.getY(), 150f,
+					SnakeGame.MAP_MILIEU.getX(), SnakeGame.MAP_MILIEU.getY(),
+					0f, 0f, 1f, 0f);
 		}
 
 	}
