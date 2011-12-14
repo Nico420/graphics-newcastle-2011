@@ -16,21 +16,14 @@ public class Fichier {
 	@SuppressWarnings("unchecked")
 	public static void ecrire(String nomFic, int i) {
 
-		try {
-			FileInputStream fichier = new FileInputStream("highscore.txt");
-			ObjectInputStream ois = new ObjectInputStream(fichier);
-			highScore = (LinkedList<Integer>) ois.readObject();
-		} catch (java.io.IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-		}
+		highScore = getScore(nomFic);
 		int position = sort(highScore,i);
 		highScore.add(position,i);
 		if(highScore.size()>MAX_SCORE)
 			highScore = new LinkedList<Integer>(highScore.subList(0, MAX_SCORE));
 		
 		try {
-			FileOutputStream fichier = new FileOutputStream("highscore.txt");
+			FileOutputStream fichier = new FileOutputStream(nomFic);
 			ObjectOutputStream oos = new ObjectOutputStream(fichier);
 			oos.writeObject(highScore);
 			oos.flush();
@@ -61,7 +54,7 @@ public class Fichier {
 	@SuppressWarnings("unchecked")
 	public static LinkedList<Integer> getScore(String string) {
 		try {
-			FileInputStream fichier = new FileInputStream("highscore.txt");
+			FileInputStream fichier = new FileInputStream(string);
 			ObjectInputStream ois = new ObjectInputStream(fichier);
 			highScore = (LinkedList<Integer>) ois.readObject();
 		} catch (java.io.IOException e) {
