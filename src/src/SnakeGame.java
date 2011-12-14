@@ -27,6 +27,7 @@ public class SnakeGame {
 	public static final int HEIGHT=600;
 	public static final int WIDTH=800;
 	
+	public static int score;
 
 	
 	public static final Position MAP_MILIEU = new Position(WIDTH-300, HEIGHT-300); 
@@ -84,7 +85,7 @@ public class SnakeGame {
 					etat = new Countdown();
 					break;
 				case PERDU:
-					etat = new Menu();
+					etat = new Perdu(score);
 					break;
 				case HIGHSCORE:
 					etat = new HighScore();
