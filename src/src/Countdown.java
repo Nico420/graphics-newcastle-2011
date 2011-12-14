@@ -4,6 +4,8 @@ import static org.lwjgl.opengl.GL11.*;
 
 import java.io.IOException;
 
+import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
@@ -69,6 +71,26 @@ public class Countdown extends Etat {
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
+	}
+
+	@Override
+	public int pollInput() throws LWJGLException {
+		while (Keyboard.next()) {
+			if (Keyboard.getEventKeyState()) {
+				if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
+					return SnakeGame.MENU;
+				}
+				if (Keyboard.getEventKey() == Keyboard.KEY_A) {
+					System.out.println("A Key Pressed");
+					if (Display.isFullscreen())
+						Display.setFullscreen(false);
+					else
+						Display.setFullscreen(true);
+				}
+			}
+			
+		}
+		return SnakeGame.COUNTDOWN;
 	}
 
 }

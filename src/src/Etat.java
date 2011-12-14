@@ -96,4 +96,7 @@ public abstract class Etat {
 
 	protected abstract void initGL() throws IOException;
 
+	public abstract int pollInput() throws LWJGLException;
+	
+
 }

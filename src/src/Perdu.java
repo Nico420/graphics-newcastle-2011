@@ -4,6 +4,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 import java.io.IOException;
 
+import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
@@ -65,6 +66,11 @@ public class Perdu extends Etat {
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
+	}
+
+	@Override
+	public int pollInput() throws LWJGLException {
+		return SnakeGame.PERDU;
 	}
 
 }

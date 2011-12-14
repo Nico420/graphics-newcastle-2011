@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.util.glu.GLU;
 import org.newdawn.slick.Color;
 import tools.MazeReader;
@@ -40,8 +42,9 @@ public class Game extends Etat {
 	public static int tailReduce = 0;
 	public static int pointMulti = 0;
 	public static int bulletTime;
+	public static int mortSerpent;
 	public int appleEat = 0;
-	private static int bulletTimeTimer=0;;
+	private static int bulletTimeTimer = 0;;
 
 	static ArrayList<Eatable> object = new ArrayList<Eatable>();
 	public static float rotation;
@@ -57,16 +60,7 @@ public class Game extends Etat {
 	@Override
 	public int update(int delta) {
 		if (!perdu) {
-			if (bulletTime > 0)
-				while (Keyboard.next()) {
-					if (Keyboard.getEventKeyState()) {
-						if (Keyboard.getEventKey() == Keyboard.KEY_B) {
-							snake.setSpeed(0.05f);
-							bulletTime--;
-							bulletTimeTimer=6000;
-						}
-					}
-				}
+			
 
 			snake.update(delta, SnakeGame.switchView);
 			// Adding a new position for snake, and notify snake lenght
@@ -100,10 +94,24 @@ public class Game extends Etat {
 		} else {
 			Fichier.ecrire("highScore.txt", snake.getScore());
 			SnakeGame.score = snake.getScore();
-			return SnakeGame.PERDU;
+			tuerSerpent();
+			if (mortSerpent < 0)
+				return SnakeGame.PERDU;
+			else
+				mortSerpent--;
 		}
 		updateFPS();
 		return SnakeGame.GAME;
+	}
+
+	private void tuerSerpent() {
+		glColor3f(1,0,0);
+		draw3DQuad(snake.getX(), snake.getY(), 0, SNAKE_SIZE*2);
+		for (int i = 0; i < snake.positions.size(); i++) {
+			draw3DQuad(snake.positions.get(i).getX(), snake.positions.get(i)
+					.getY(), 0, SNAKE_SIZE*2);
+		}
+
 	}
 
 	@Override
@@ -205,10 +213,12 @@ public class Game extends Etat {
 			fontPower.drawString(20, 340, "Points X5", Color.red);
 		}
 		if (bulletTimeTimer > 0) {
-			fontPower.drawString(20, 380, "(B)ullet-time ("+bulletTime+")", Color.green);
+			fontPower.drawString(20, 380, "(B)ullet-time (" + bulletTime + ")",
+					Color.green);
 			bulletTimeTimer--;
 		} else {
-			fontPower.drawString(20, 380, "(B)ullet-time ("+bulletTime+")", Color.red);
+			fontPower.drawString(20, 380, "(B)ullet-time (" + bulletTime + ")",
+					Color.red);
 			snake.setSpeed(0.15f);
 		}
 
@@ -315,10 +325,13 @@ public class Game extends Etat {
 		for (int i = -MAP_SIZE; i <= MAP_SIZE; i += WALL_SIZE) {
 			// glColor3f(1, 0, 0);
 			textureMur.bind();
+			glPushMatrix();
+			setCamera();
 			draw3DQuad(i, -(MAP_SIZE + WALL_SIZE / 2), -WALL_SIZE, WALL_SIZE);
 			draw3DQuad(i, (MAP_SIZE + WALL_SIZE / 2), -WALL_SIZE, WALL_SIZE);
 			draw3DQuad((MAP_SIZE + WALL_SIZE / 2), i, -WALL_SIZE, WALL_SIZE);
 			draw3DQuad(-(MAP_SIZE + WALL_SIZE / 2), i, -WALL_SIZE, WALL_SIZE);
+			glPopMatrix();
 		}
 
 	}
@@ -326,8 +339,7 @@ public class Game extends Etat {
 	public static void draw3DQuad(float x, float y, float z, float size) {
 		float a = size / 2;
 
-		glPushMatrix();
-		setCamera();
+		
 		glBegin(GL_QUADS);
 		// glColor3f(1, 0, 0);
 		glNormal3f(0, 0, -1);
@@ -378,12 +390,12 @@ public class Game extends Etat {
 		 */
 
 		glEnd();
-		glPopMatrix();
 
 	}
 
 	private void initializeGame() throws IOException {
 		bulletTime = 5;
+		mortSerpent = 500;
 		snake = new Snake();
 		walls = MazeReader.buildWallList("maze.txt");
 		object = new ArrayList<Eatable>();
@@ -438,4 +450,35 @@ public class Game extends Etat {
 		lModelAmbient.put(1f).put(0.5f).put(0.5f).put(1.0f).flip();
 	}
 
+	public int pollInput() throws LWJGLException{
+			while (Keyboard.next()) {
+				if (Keyboard.getEventKeyState()) {
+					if ((bulletTime > 0) && Keyboard.getEventKey() == Keyboard.KEY_B) {
+						snake.setSpeed(0.05f);
+						bulletTime--;
+						bulletTimeTimer = 6000;
+					}
+					if (Keyboard.getEventKey() == Keyboard.KEY_A) {
+						System.out.println("A Key Pressed");
+						if (Display.isFullscreen())
+							Display.setFullscreen(false);
+						else
+							Display.setFullscreen(true);
+					}
+					if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
+						System.out.println("Escape Key Pressed");
+						return SnakeGame.MENU;
+					}
+					if (Keyboard.getEventKey() == Keyboard.KEY_V) {
+						System.out.println("V Key Pressed");
+						SnakeGame.switchView = SnakeGame.switchView ? false : true;
+					}
+					if (Keyboard.getEventKey() == Keyboard.KEY_R) {
+						System.out.println("R Key Pressed - Game restart");
+						return SnakeGame.RESTART;
+					}
+				}
+			}
+			return SnakeGame.GAME;
+	}
 }
