@@ -1,2 +1,3 @@
-sh build.sh $1 && sh run.sh $1 $2
+echo $1;
+sh build.sh $2 $3 && sh run.sh $1
 

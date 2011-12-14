@@ -82,6 +82,7 @@ public class Snake {
 		this.y = 0;
 		this.c = Color.BLUE;
 		this.lenght = 0;
+		//this.mouvement=Game.DOWN;
 	}
 
 	/**
@@ -438,7 +439,7 @@ public class Snake {
 				appleEat = 0;
 				this.score+=100;
 				break;
-			case Apple.DOUBLE:
+			case Apple.MULTI:
 				appleEat = 0;
 				this.score+=1000;
 				break;
