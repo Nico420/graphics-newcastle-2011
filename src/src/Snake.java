@@ -74,7 +74,7 @@ public class Snake {
 		this.y = y;
 		this.c = c;
 		this.lenght = lenght;
-		this.speed = 0.05f;
+		this.speed = Game.SPEED;
 
 	}
 
@@ -86,7 +86,7 @@ public class Snake {
 		this.c = Color.BLUE;
 		this.lenght = 0;
 
-		this.speed = 0.05f;
+		this.speed = Game.SPEED;
 	}
 
 	/**
@@ -331,9 +331,31 @@ public class Snake {
 
 		glEnd();
 		// Rajouter deux yeux !
-		glColor3f(0, 0, 0);
+		glColor3f(0.5f,0.5f,0.5f);
+		int eyes = size/2;
 		glBegin(GL_QUADS);
+		glColor3f(1f,1f,1f);
+		glVertex3f(0, eyes, size);
+		glVertex3f(eyes, eyes, size);
+		glVertex3f(eyes, 0, size);
+		glVertex3f(0, 0, size);
+		glVertex3f(0, eyes, size);
+		glVertex3f(-eyes, eyes, size);
+		glVertex3f(-eyes, 0, size);
+		glVertex3f(0, 0, size);
+		
+		eyes/=2;
+		glColor3f(0f,0f,1f);
+		glVertex3f(eyes, eyes*2, size);
+		glVertex3f(eyes*2, eyes*2, size);
+		glVertex3f(eyes*2, eyes, size);
+		glVertex3f(eyes, eyes, size);
+		glVertex3f(eyes, eyes*2, size);
+		glVertex3f(-eyes*2, eyes*2, size);
+		glVertex3f(-eyes*2, eyes, size);
+		glVertex3f(eyes, eyes, size);
 		glEnd();
+		
 		glPopMatrix();
 	}
 

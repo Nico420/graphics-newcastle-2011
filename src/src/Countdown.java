@@ -82,7 +82,6 @@ public class Countdown extends Etat {
 					return SnakeGame.MENU;
 				}
 				if (Keyboard.getEventKey() == Keyboard.KEY_A) {
-					System.out.println("A Key Pressed");
 					if (Display.isFullscreen())
 						Display.setFullscreen(false);
 					else

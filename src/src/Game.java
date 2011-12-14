@@ -3,6 +3,9 @@ package src;
 import static org.lwjgl.opengl.GL11.*;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +13,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 import org.newdawn.slick.Color;
 import tools.MazeReader;
@@ -34,6 +38,9 @@ public class Game extends Etat {
 	public static final int APPLE_SIZE = 2;
 	public static final int WALL_SIZE = 5;
 
+	public static final float SPEED = 0.07f;
+	public static final float SPEED_BULLET = 0.02f;
+
 	Texture textureSerpent;
 	Texture textureSol;
 	Texture textureMur;
@@ -52,6 +59,17 @@ public class Game extends Etat {
 	static Snake snake;
 
 	static int delta;
+
+	float lightPos[] = { 0.0f, 5.0f, -4.0f, 1.0f }; // Light Position
+	float lightAmb[] = { 0.2f, 0.2f, 0.2f, 1.0f }; // Ambient Light Values
+	float lightDif[] = { 0.6f, 0.6f, 0.6f, 1.0f }; // Diffuse Light Values
+	float lightSpc[] = { -0.2f, -0.2f, -0.2f, 1.0f }; // Specular Light Values
+	ByteBuffer byteBuffer;
+	ByteBuffer floatBuffer;
+	float matAmb[] = { 0.4f, 0.4f, 0.4f, 1.0f }; // Material - Ambient Values
+	float matDif[] = { 0.2f, 0.6f, 0.9f, 1.0f }; // Material - Diffuse Values
+	float matSpc[] = { 0.0f, 0.0f, 0.0f, 1.0f }; // Material - Specular Values
+	float matShn[] = { 0.0f, 0.0f, 0.0f, 0.0f }; // Material - Shininess
 
 	public static List<Position> walls = new ArrayList<Position>();
 
@@ -136,38 +154,46 @@ public class Game extends Etat {
 
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-
+		glEnable(GL_NORMALIZE);
 		// transform for camera
 		setCamera();
 
-		initLightArrays();
-		glShadeModel(GL_SMOOTH);
-		glMaterial(GL_FRONT, GL_SPECULAR, matSpecular); // sets specular
-														// material color
-		glMaterialf(GL_FRONT, GL_SHININESS, 50.0f); // sets shininess
+		floatBuffer = ByteBuffer.allocateDirect(64);
+		floatBuffer.order(ByteOrder.nativeOrder());
+		byteBuffer = ByteBuffer.allocateDirect(16);
+		byteBuffer.order(ByteOrder.nativeOrder());
+		GL11.glLight(GL11.GL_LIGHT1, GL11.GL_POSITION, (FloatBuffer) byteBuffer
+				.asFloatBuffer().put(lightPos).flip()); // Set Light1 Position
+		GL11.glLight(GL11.GL_LIGHT1, GL11.GL_AMBIENT, (FloatBuffer) byteBuffer
+				.asFloatBuffer().put(lightAmb).flip()); // Set Light1 Ambience
+		GL11.glLight(GL11.GL_LIGHT1, GL11.GL_DIFFUSE, (FloatBuffer) byteBuffer
+				.asFloatBuffer().put(lightDif).flip()); // Set Light1 Diffuse
+		GL11.glLight(GL11.GL_LIGHT1, GL11.GL_SPECULAR, (FloatBuffer) byteBuffer
+				.asFloatBuffer().put(lightSpc).flip()); // Set Light1 Specular
+		GL11.glEnable(GL11.GL_LIGHT1); // Enable Light1
+		GL11.glEnable(GL11.GL_LIGHTING); // Enable Lighting
 
-		glLight(GL_LIGHT0, GL_POSITION, lightPosition); // sets light position
-		glLight(GL_LIGHT0, GL_SPECULAR, whiteLight); // sets specular light to
-														// white
-		glLight(GL_LIGHT0, GL_DIFFUSE, whiteLight); // sets diffuse light to
-													// white
-		glLightModel(GL_LIGHT_MODEL_AMBIENT, lModelAmbient); // global ambient
-																// light
+		GL11.glMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT,
+				(FloatBuffer) byteBuffer.asFloatBuffer().put(matAmb).flip()); // Set
+																				// Material
+																				// Ambience
+		GL11.glMaterial(GL11.GL_FRONT, GL11.GL_DIFFUSE,
+				(FloatBuffer) byteBuffer.asFloatBuffer().put(matDif).flip()); // Set
+																				// Material
+																				// Diffuse
+		GL11.glMaterial(GL11.GL_FRONT, GL11.GL_SPECULAR,
+				(FloatBuffer) byteBuffer.asFloatBuffer().put(matSpc).flip()); // Set
+																				// Material
+																				// Specular
+		GL11.glMaterial(GL11.GL_FRONT, GL11.GL_SHININESS,
+				(FloatBuffer) byteBuffer.asFloatBuffer().put(matShn).flip()); // Set
+																				// Material
+																				// Shininess
 
-		glEnable(GL_LIGHTING); // enables lighting
-		glEnable(GL_LIGHT0); // enables light0
-
-		glEnable(GL_COLOR_MATERIAL); // enables opengl to use glColor3f to
-										// define material color
-		glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE); // tell opengl
-															// glColor3f effects
-															// the ambient and
-															// diffuse
-															// properties of
-															// material
-		// ----------- END: Variables & method calls added for Lighting Test
-		// -----------//
-		// ------- Added for Lighting Test----------//
+		GL11.glCullFace(GL11.GL_BACK); // Set Culling Face To Back Face
+		GL11.glEnable(GL11.GL_CULL_FACE); // Enable Culling
+		//GL11.glClearColor(0.1f, 1.0f, 0.5f, 1.0f); // Set Clear Color (Greenish
+													// Color)
 
 		glPushMatrix();
 
@@ -187,6 +213,7 @@ public class Game extends Etat {
 	private void creationTexte() throws IOException {
 
 		glMatrixMode(GL_PROJECTION);
+		glDisable(GL_LIGHTING);
 		glLoadIdentity();
 		glOrtho(0, SnakeGame.WIDTH, SnakeGame.HEIGHT, 0, 100, -100);
 
@@ -219,7 +246,7 @@ public class Game extends Etat {
 		} else {
 			fontPower.drawString(20, 380, "(B)ullet-time (" + bulletTime + ")",
 					Color.red);
-			snake.setSpeed(0.10f);
+			snake.setSpeed(Game.SPEED);
 		}
 
 	}
@@ -243,7 +270,7 @@ public class Game extends Etat {
 
 		if (SnakeGame.switchView) {
 			float zoom = 40f;
-			float reculCam = 20;
+			float reculCam = 30;
 			switch (snake.getDirection()) {
 			case LEFT:
 				glRotatef(270, 0, 0, 1);
@@ -284,7 +311,7 @@ public class Game extends Etat {
 			glTranslatef(80, 10, 0);
 			// Camera is on a corner,looking for the middle of the map.
 			GLU.gluLookAt(SnakeGame.MAP_MILIEU.getX() - MAP_SIZE / 2 + 20,
-					SnakeGame.MAP_MILIEU.getY(), 150f,
+					SnakeGame.MAP_MILIEU.getY() + 10, 150f,
 					SnakeGame.MAP_MILIEU.getX(), SnakeGame.MAP_MILIEU.getY(),
 					0f, 0f, 1f, 0f);
 		}
@@ -298,11 +325,6 @@ public class Game extends Etat {
 		glTranslated(SnakeGame.MAP_MILIEU.getX(), SnakeGame.MAP_MILIEU.getY(),
 				0);
 		glBegin(GL_QUADS);
-		glColor3f(1f, 0.5f, 0.5f);
-		glVertex3f(0 - (MAP_SIZE + WALL_SIZE), 0 - (MAP_SIZE + WALL_SIZE), 0f);
-		glVertex3f(0 + MAP_SIZE + WALL_SIZE, 0 - (MAP_SIZE + WALL_SIZE), 0f);
-		glVertex3f(0 + MAP_SIZE + WALL_SIZE, 0 + MAP_SIZE + WALL_SIZE, 0f);
-		glVertex3f(0 - (MAP_SIZE + WALL_SIZE), 0 + MAP_SIZE + WALL_SIZE, 0f);
 
 		glColor3f(1, 1, 1);
 		glNormal3f(0, 0, -1);
@@ -452,7 +474,8 @@ public class Game extends Etat {
 		matSpecular.put(1.0f).put(1.0f).put(1.0f).put(1.0f).flip();
 
 		lightPosition = BufferUtils.createFloatBuffer(4);
-		lightPosition.put(1.0f).put(1.0f).put(1.0f).put(0.0f).flip();
+		lightPosition.put(Game.MAP_SIZE).put(Game.MAP_SIZE).put(Game.MAP_SIZE)
+				.put(0.0f).flip();
 
 		whiteLight = BufferUtils.createFloatBuffer(4);
 		whiteLight.put(1.0f).put(1.0f).put(1.0f).put(1.0f).flip();
@@ -466,33 +489,28 @@ public class Game extends Etat {
 			if (Keyboard.getEventKeyState()) {
 				if ((bulletTime > 0)
 						&& Keyboard.getEventKey() == Keyboard.KEY_B) {
-					snake.setSpeed(0.05f);
+					snake.setSpeed(Game.SPEED_BULLET);
 					bulletTime--;
 					bulletTimeTimer = 6000;
 				}
 				if (Keyboard.getEventKey() == Keyboard.KEY_A) {
-					System.out.println("A Key Pressed");
 					if (Display.isFullscreen())
 						Display.setFullscreen(false);
 					else
 						Display.setFullscreen(true);
 				}
 				if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
-					System.out.println("Escape Key Pressed");
 					return SnakeGame.MENU;
 				}
 				if (Keyboard.getEventKey() == Keyboard.KEY_V) {
-					System.out.println("V Key Pressed");
 					SnakeGame.switchView = SnakeGame.switchView ? false : true;
 				}
 				if (Keyboard.getEventKey() == Keyboard.KEY_R) {
-					System.out.println("R Key Pressed - Game restart");
 					return SnakeGame.RESTART;
 				}
 
 				if (Keyboard.getEventKey() == Keyboard.KEY_LEFT
 						&& SnakeGame.switchView) {
-					System.out.println("GAUCHE");
 					snake.setMouvement(Game.RIGHT);
 					if (snake.getDirection() == 0) {
 						snake.setDirection(Game.DOWN);
@@ -500,7 +518,6 @@ public class Game extends Etat {
 				}
 				if (Keyboard.getEventKey() == Keyboard.KEY_RIGHT
 						&& SnakeGame.switchView) {
-					System.out.println("DROITE");
 					snake.setMouvement(Game.LEFT);
 					if (snake.getDirection() == 0) {
 						snake.setDirection(Game.DOWN);
