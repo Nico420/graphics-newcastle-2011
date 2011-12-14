@@ -22,7 +22,7 @@ public class SnakeGame {
 	public static final int COUNTDOWN = 1;
 	public static final int PERDU = 5;
 	public static final int RESTART = 6;
-	
+
 	public static final int APPLENUMBER = 5;
 
 	public static final int HEIGHT = 600;
@@ -32,7 +32,7 @@ public class SnakeGame {
 
 	public static final Position MAP_MILIEU = new Position(WIDTH - 400,
 			HEIGHT - 300);
-	
+
 	// float lightPosition1[] = { -MAP_SIZE, -MAP_SIZE, 1f, 1f };
 
 	/** time at last frame */
@@ -102,8 +102,8 @@ public class SnakeGame {
 			etatTemp = etat.update(delta);
 			etat.renderGL();
 			int etatT = etat.pollInput();
-			if(etatT!=etatActual){
-				etatTemp=etatT;
+			if (etatT != etatActual) {
+				etatTemp = etatT;
 			}
 			Display.update(); // flushes OpenGL pipeline and swaps back and
 								// front buffers. perhaps waits for v-sync.
