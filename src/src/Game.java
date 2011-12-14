@@ -9,7 +9,6 @@ import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
@@ -60,8 +59,8 @@ public class Game extends Etat {
 
 	static int delta;
 
-	float lightPos[] = { 0.0f, 5.0f, -4.0f, 1.0f }; // Light Position
-	float lightAmb[] = { 0.2f, 0.2f, 0.2f, 1.0f }; // Ambient Light Values
+	float lightPos[] = { 5.0f, 5.0f, 4.0f, 10.0f }; // Light Position
+	float lightAmb[] = { 0.7f, 0.7f, 0.7f, 1.0f }; // Ambient Light Values
 	float lightDif[] = { 0.6f, 0.6f, 0.6f, 1.0f }; // Diffuse Light Values
 	float lightSpc[] = { -0.2f, -0.2f, -0.2f, 1.0f }; // Specular Light Values
 	ByteBuffer byteBuffer;
@@ -154,48 +153,31 @@ public class Game extends Etat {
 
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		glEnable(GL_NORMALIZE);
+		glEnable(GL_COLOR_MATERIAL);
 		// transform for camera
 		setCamera();
 
-		floatBuffer = ByteBuffer.allocateDirect(64);
-		floatBuffer.order(ByteOrder.nativeOrder());
-		byteBuffer = ByteBuffer.allocateDirect(16);
-		byteBuffer.order(ByteOrder.nativeOrder());
-		GL11.glLight(GL11.GL_LIGHT1, GL11.GL_POSITION, (FloatBuffer) byteBuffer
-				.asFloatBuffer().put(lightPos).flip()); // Set Light1 Position
-		GL11.glLight(GL11.GL_LIGHT1, GL11.GL_AMBIENT, (FloatBuffer) byteBuffer
-				.asFloatBuffer().put(lightAmb).flip()); // Set Light1 Ambience
-		GL11.glLight(GL11.GL_LIGHT1, GL11.GL_DIFFUSE, (FloatBuffer) byteBuffer
-				.asFloatBuffer().put(lightDif).flip()); // Set Light1 Diffuse
-		GL11.glLight(GL11.GL_LIGHT1, GL11.GL_SPECULAR, (FloatBuffer) byteBuffer
-				.asFloatBuffer().put(lightSpc).flip()); // Set Light1 Specular
-		GL11.glEnable(GL11.GL_LIGHT1); // Enable Light1
-		GL11.glEnable(GL11.GL_LIGHTING); // Enable Lighting
-
-		GL11.glMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT,
-				(FloatBuffer) byteBuffer.asFloatBuffer().put(matAmb).flip()); // Set
-																				// Material
-																				// Ambience
-		GL11.glMaterial(GL11.GL_FRONT, GL11.GL_DIFFUSE,
-				(FloatBuffer) byteBuffer.asFloatBuffer().put(matDif).flip()); // Set
-																				// Material
-																				// Diffuse
-		GL11.glMaterial(GL11.GL_FRONT, GL11.GL_SPECULAR,
-				(FloatBuffer) byteBuffer.asFloatBuffer().put(matSpc).flip()); // Set
-																				// Material
-																				// Specular
-		GL11.glMaterial(GL11.GL_FRONT, GL11.GL_SHININESS,
-				(FloatBuffer) byteBuffer.asFloatBuffer().put(matShn).flip()); // Set
-																				// Material
-																				// Shininess
-
-		GL11.glCullFace(GL11.GL_BACK); // Set Culling Face To Back Face
-		GL11.glEnable(GL11.GL_CULL_FACE); // Enable Culling
-		//GL11.glClearColor(0.1f, 1.0f, 0.5f, 1.0f); // Set Clear Color (Greenish
-													// Color)
-
 		glPushMatrix();
+
+		float lDR = 1.0f;
+
+		float lightAmbient[] = { 5f, 5f, 5f, 1.0f }; // Ambient Light Values
+		float lightDiffuse[] = { 0.3f, lDR, lDR, 1.0f }; // Diffuse Light Values
+		float lightPosition[] = { 0.0f, 0.0f, 0.0f, 0.0f }; // Light Position
+
+		ByteBuffer temp = ByteBuffer.allocateDirect(16);
+		temp.order(ByteOrder.nativeOrder());
+		GL11.glLight(GL11.GL_LIGHT1, GL11.GL_AMBIENT, (FloatBuffer) temp
+				.asFloatBuffer().put(lightAmbient).flip()); // Setup The Ambient
+															// Light
+		GL11.glLight(GL11.GL_LIGHT1, GL11.GL_DIFFUSE, (FloatBuffer) temp
+				.asFloatBuffer().put(lightDiffuse).flip()); // Setup The Diffuse
+															// Light
+		GL11.glLight(GL11.GL_LIGHT1, GL11.GL_POSITION, (FloatBuffer) temp
+				.asFloatBuffer().put(lightPosition).flip()); // Position The
+																// Light
+		GL11.glEnable(GL11.GL_LIGHTING);
+		GL11.glEnable(GL11.GL_LIGHT1); // Enable Light One
 
 		drawMap();
 		textureSerpent.bind();
@@ -457,7 +439,7 @@ public class Game extends Etat {
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST); // Really Nice
 															// Perspective
 															// Calculations
-		glEnable(GL_COLOR_MATERIAL);
+		//glEnable(GL_COLOR_MATERIAL);
 		glEnable(GL_TEXTURE_2D);
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glEnable(GL_BLEND);
@@ -467,21 +449,6 @@ public class Game extends Etat {
 		glOrtho(0, SnakeGame.WIDTH, SnakeGame.HEIGHT, 0, 100, -100);
 		glMatrixMode(GL_MODELVIEW);
 
-	}
-
-	private void initLightArrays() {
-		matSpecular = BufferUtils.createFloatBuffer(4);
-		matSpecular.put(1.0f).put(1.0f).put(1.0f).put(1.0f).flip();
-
-		lightPosition = BufferUtils.createFloatBuffer(4);
-		lightPosition.put(Game.MAP_SIZE).put(Game.MAP_SIZE).put(Game.MAP_SIZE)
-				.put(0.0f).flip();
-
-		whiteLight = BufferUtils.createFloatBuffer(4);
-		whiteLight.put(1.0f).put(1.0f).put(1.0f).put(1.0f).flip();
-
-		lModelAmbient = BufferUtils.createFloatBuffer(4);
-		lModelAmbient.put(1.0f).put(1.0f).put(1.0f).put(1.0f).flip();
 	}
 
 	public int pollInput() throws LWJGLException {

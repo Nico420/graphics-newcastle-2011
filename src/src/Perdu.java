@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL11.*;
 import java.io.IOException;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
@@ -12,9 +13,10 @@ import org.newdawn.slick.Color;
 
 public class Perdu extends Etat {
 	int score;
+
 	public Perdu(int score) throws IOException {
 		super();
-		this.score= score;
+		this.score = score;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -22,7 +24,7 @@ public class Perdu extends Etat {
 
 	@Override
 	public int update(int delta) {
-		perdu -= delta*0.0015f;
+		perdu -= delta * 0.0015f;
 		updateFPS();
 		if (perdu > 0)
 			return SnakeGame.PERDU;
@@ -38,9 +40,10 @@ public class Perdu extends Etat {
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		fontTitre.drawString(SnakeGame.WIDTH / 2 - 200,
-					SnakeGame.HEIGHT / 2 - 50, "GAME OVER !",Color.red);
+				SnakeGame.HEIGHT / 2 - 50, "GAME OVER !", Color.red);
 		fontMenu.drawString(SnakeGame.WIDTH / 2 - 200,
-				SnakeGame.HEIGHT / 2 +50, "Final Score : "+score,Color.yellow);
+				SnakeGame.HEIGHT / 2 + 50, "Final Score : " + score,
+				Color.yellow);
 	}
 
 	@Override
@@ -58,8 +61,7 @@ public class Perdu extends Etat {
 		GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		glViewport(0, 0, Display.getWidth(),
-				Display.getHeight());
+		glViewport(0, 0, Display.getWidth(), Display.getHeight());
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		GLU.gluOrtho2D(0, SnakeGame.WIDTH, SnakeGame.HEIGHT, 0);
@@ -70,6 +72,8 @@ public class Perdu extends Etat {
 
 	@Override
 	public int pollInput() throws LWJGLException {
+		while (Keyboard.next()) {
+		}
 		return SnakeGame.PERDU;
 	}
 
