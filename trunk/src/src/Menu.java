@@ -138,14 +138,12 @@ public class Menu extends Etat {
 				}
 
 				if (Keyboard.getEventKey() == Keyboard.KEY_A) {
-					System.out.println("A Key Pressed");
 					if (Display.isFullscreen())
 						Display.setFullscreen(false);
 					else
 						Display.setFullscreen(true);
 				}
 				if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
-					System.out.println("Escape Key Pressed");
 					return SnakeGame.QUIT;
 				}
 			}

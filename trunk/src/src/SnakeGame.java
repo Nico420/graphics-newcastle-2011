@@ -4,7 +4,6 @@ import java.io.IOException;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import tools.Position;
@@ -56,7 +55,6 @@ public class SnakeGame {
 		try {
 			int bestDisplay = chooseBestDisplay();
 			DisplayMode dm = Display.getAvailableDisplayModes()[bestDisplay];
-			System.out.println(dm);
 			Display.setDisplayMode(dm);
 			Display.setFullscreen(false);
 			Display.setResizable(true);
@@ -119,32 +117,21 @@ public class SnakeGame {
 	}
 
 	public void pollInput() throws LWJGLException, IOException {
-
-		if (Mouse.isButtonDown(0)) {
-			int x = Mouse.getX();
-			int y = Mouse.getY();
-			System.out.println("MOUSE DOWN @ X: " + x + " Y: " + y);
-		}
-
 		while (Keyboard.next()) {
 			if (Keyboard.getEventKeyState()) {
 				if (Keyboard.getEventKey() == Keyboard.KEY_A) {
-					System.out.println("A Key Pressed");
 					if (Display.isFullscreen())
 						Display.setFullscreen(false);
 					else
 						Display.setFullscreen(true);
 				}
 				if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
-					System.out.println("Escape Key Pressed");
 					exit = true;
 				}
 				if (Keyboard.getEventKey() == Keyboard.KEY_V) {
-					System.out.println("V Key Pressed");
 					switchView = switchView ? false : true;
 				}
 				if (Keyboard.getEventKey() == Keyboard.KEY_R) {
-					System.out.println("R Key Pressed - Game restart");
 					etat = new Game();
 				}
 			}
