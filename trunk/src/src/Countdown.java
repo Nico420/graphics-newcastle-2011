@@ -18,11 +18,12 @@ public class Countdown extends Etat {
 		// TODO Auto-generated constructor stub
 	}
 
+	//Starting value for the countdown
 	public float countDown = 3;
 
 	@Override
 	public int update(int delta) {
-		countDown -= 0.0015f;
+		countDown -= delta*0.0015f;
 		updateFPS();
 		if (countDown > 0)
 			return SnakeGame.COUNTDOWN;

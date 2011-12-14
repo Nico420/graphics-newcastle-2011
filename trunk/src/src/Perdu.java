@@ -18,13 +18,13 @@ public class Perdu extends Etat {
 		// TODO Auto-generated constructor stub
 	}
 
-	public float countDown = 3;
+	public float perdu = 2;
 
 	@Override
 	public int update(int delta) {
-		countDown -= 0.0015f;
+		perdu -= delta*0.0015f;
 		updateFPS();
-		if (countDown > 0)
+		if (perdu > 0)
 			return SnakeGame.PERDU;
 		else {
 			return SnakeGame.MENU;

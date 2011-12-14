@@ -25,7 +25,7 @@ public class Snake {
 	int direction = Game.DOWN;
 	private int score;
 	
-	private float speed = 0.15f;
+	private float speed = 0.05f;
 	/**
 	 * @return the speed
 	 */
@@ -200,8 +200,8 @@ public class Snake {
 	private void drawSnakeHead(float x, float y, float z, int size) {
 
 		glPushMatrix(); // Reset The View
-		glLoadIdentity();
-		Game.setCamera();
+		//glLoadIdentity();
+		//Game.setCamera();
 		glTranslated(SnakeGame.MAP_MILIEU.getX(), SnakeGame.MAP_MILIEU.getY(),0);
 		glTranslatef(x, y, 0);
 		float rotation = 0;
@@ -224,116 +224,116 @@ public class Snake {
 		glBegin(GL_QUADS);
 		// bottom RIGHT
 		glVertex3f(0, Game.SNAKE_SIZE, 0);
-		glVertex3f(0, Game.SNAKE_SIZE, -1);
-		glVertex3f(Game.SNAKE_SIZE, 0, -1);
+		glVertex3f(0, Game.SNAKE_SIZE, 1);
+		glVertex3f(Game.SNAKE_SIZE, 0, 1);
 		glVertex3f(Game.SNAKE_SIZE, 0, 0);
 
-		glVertex3f(Game.SNAKE_SIZE, 0, -1);
+		glVertex3f(Game.SNAKE_SIZE, 0, 1);
 		glVertex3f(Game.SNAKE_SIZE, 0, 0);
 		glVertex3f(Game.SNAKE_SIZE, -Game.SNAKE_SIZE, 0);
-		glVertex3f(Game.SNAKE_SIZE, -Game.SNAKE_SIZE, -1);
+		glVertex3f(Game.SNAKE_SIZE, -Game.SNAKE_SIZE, 1);
 
-		glVertex3f(Game.SNAKE_SIZE, -Game.SNAKE_SIZE, -1);
+		glVertex3f(Game.SNAKE_SIZE, -Game.SNAKE_SIZE, 1);
 		glVertex3f(Game.SNAKE_SIZE, -Game.SNAKE_SIZE, 0);
 		glVertex3f(0.5f * Game.SNAKE_SIZE, -1.5f * Game.SNAKE_SIZE, 0);
 		glVertex3f(0.5f * Game.SNAKE_SIZE, -1.5f * Game.SNAKE_SIZE,
-				-1);
+				1);
 
 		// bottom Left
 		glVertex3f(0, Game.SNAKE_SIZE, 0);
-		glVertex3f(0, Game.SNAKE_SIZE, -1);
-		glVertex3f(-Game.SNAKE_SIZE, 0, -1);
+		glVertex3f(0, Game.SNAKE_SIZE, 1);
+		glVertex3f(-Game.SNAKE_SIZE, 0, 1);
 		glVertex3f(-Game.SNAKE_SIZE, 0, 0);
 
-		glVertex3f(-Game.SNAKE_SIZE, 0, -1);
+		glVertex3f(-Game.SNAKE_SIZE, 0, 1);
 		glVertex3f(-Game.SNAKE_SIZE, 0, 0);
 		glVertex3f(-Game.SNAKE_SIZE, -Game.SNAKE_SIZE, 0);
-		glVertex3f(-Game.SNAKE_SIZE, -Game.SNAKE_SIZE, -1);
+		glVertex3f(-Game.SNAKE_SIZE, -Game.SNAKE_SIZE, 1);
 
-		glVertex3f(-Game.SNAKE_SIZE, -Game.SNAKE_SIZE, -1);
+		glVertex3f(-Game.SNAKE_SIZE, -Game.SNAKE_SIZE, 1);
 		glVertex3f(-Game.SNAKE_SIZE, -Game.SNAKE_SIZE, 0);
 		glVertex3f(-0.5f * Game.SNAKE_SIZE, -1.5f * Game.SNAKE_SIZE,
 				0);
 		glVertex3f(-0.5f * Game.SNAKE_SIZE, -1.5f * Game.SNAKE_SIZE,
-				-1);
+				1);
 
 		// top RIGHT
-		glVertex3f(0, Game.SNAKE_SIZE, -Game.SNAKE_SIZE);
+		glVertex3f(0, Game.SNAKE_SIZE, Game.SNAKE_SIZE);
 		glVertex3f(0, Game.SNAKE_SIZE, -2);
 		glVertex3f(Game.SNAKE_SIZE, 0, -2);
-		glVertex3f(Game.SNAKE_SIZE, 0, -Game.SNAKE_SIZE);
+		glVertex3f(Game.SNAKE_SIZE, 0, Game.SNAKE_SIZE);
 
-		glVertex3f(Game.SNAKE_SIZE, 0, -1);
-		glVertex3f(Game.SNAKE_SIZE, 0, -Game.SNAKE_SIZE);
+		glVertex3f(Game.SNAKE_SIZE, 0, 1);
+		glVertex3f(Game.SNAKE_SIZE, 0, Game.SNAKE_SIZE);
 		glVertex3f(Game.SNAKE_SIZE, -Game.SNAKE_SIZE,
-				-Game.SNAKE_SIZE);
-		glVertex3f(Game.SNAKE_SIZE, -Game.SNAKE_SIZE, -1);
+				Game.SNAKE_SIZE);
+		glVertex3f(Game.SNAKE_SIZE, -Game.SNAKE_SIZE, 1);
 
-		glVertex3f(Game.SNAKE_SIZE, -Game.SNAKE_SIZE, -1);
+		glVertex3f(Game.SNAKE_SIZE, -Game.SNAKE_SIZE, 1);
 		glVertex3f(Game.SNAKE_SIZE, -Game.SNAKE_SIZE,
-				-Game.SNAKE_SIZE);
+				Game.SNAKE_SIZE);
 		glVertex3f(0.5f * Game.SNAKE_SIZE, -1.5f * Game.SNAKE_SIZE,
-				-Game.SNAKE_SIZE);
+				Game.SNAKE_SIZE);
 		glVertex3f(0.5f * Game.SNAKE_SIZE, -1.5f * Game.SNAKE_SIZE,
-				-1);
+				1);
 
 		// top Left
-		glVertex3f(0, Game.SNAKE_SIZE, -Game.SNAKE_SIZE);
+		glVertex3f(0, Game.SNAKE_SIZE, Game.SNAKE_SIZE);
 		glVertex3f(0, Game.SNAKE_SIZE, -2);
 		glVertex3f(-Game.SNAKE_SIZE, 0, -2);
-		glVertex3f(-Game.SNAKE_SIZE, 0, -Game.SNAKE_SIZE);
+		glVertex3f(-Game.SNAKE_SIZE, 0, Game.SNAKE_SIZE);
 
-		glVertex3f(-Game.SNAKE_SIZE, 0, -1);
-		glVertex3f(-Game.SNAKE_SIZE, 0, -Game.SNAKE_SIZE);
+		glVertex3f(-Game.SNAKE_SIZE, 0, 1);
+		glVertex3f(-Game.SNAKE_SIZE, 0, Game.SNAKE_SIZE);
 		glVertex3f(-Game.SNAKE_SIZE, -Game.SNAKE_SIZE,
-				-Game.SNAKE_SIZE);
-		glVertex3f(-Game.SNAKE_SIZE, -Game.SNAKE_SIZE, -1);
+				Game.SNAKE_SIZE);
+		glVertex3f(-Game.SNAKE_SIZE, -Game.SNAKE_SIZE, 1);
 
-		glVertex3f(-Game.SNAKE_SIZE, -Game.SNAKE_SIZE, -1);
+		glVertex3f(-Game.SNAKE_SIZE, -Game.SNAKE_SIZE, 1);
 		glVertex3f(-Game.SNAKE_SIZE, -Game.SNAKE_SIZE,
-				-Game.SNAKE_SIZE);
+				Game.SNAKE_SIZE);
 		glVertex3f(-0.5f * Game.SNAKE_SIZE, -1.5f * Game.SNAKE_SIZE,
-				-Game.SNAKE_SIZE);
+				Game.SNAKE_SIZE);
 		glVertex3f(-0.5f * Game.SNAKE_SIZE, -1.5f * Game.SNAKE_SIZE,
-				-1);
+				1);
 
 		glEnd();
 
 		glBegin(GL_POLYGON);
 		glColor3f(1, 0, 0);
-		glVertex3f(0, Game.SNAKE_SIZE, -1);
-		glVertex3f(Game.SNAKE_SIZE, 0, -1);
-		glVertex3f(Game.SNAKE_SIZE, -Game.SNAKE_SIZE, -1);
+		glVertex3f(0, Game.SNAKE_SIZE, 1);
+		glVertex3f(Game.SNAKE_SIZE, 0, 1);
+		glVertex3f(Game.SNAKE_SIZE, -Game.SNAKE_SIZE, 1);
 		glVertex3f(0.5f * Game.SNAKE_SIZE, -1.5f * Game.SNAKE_SIZE,
-				-1);
+				1);
 		glVertex3f(-0.5f * Game.SNAKE_SIZE, -1.5f * Game.SNAKE_SIZE,
-				-1);
-		glVertex3f(-Game.SNAKE_SIZE, -Game.SNAKE_SIZE, -1);
-		glVertex3f(-Game.SNAKE_SIZE, 0, -1);
-		glVertex3f(0, Game.SNAKE_SIZE, -1);
+				1);
+		glVertex3f(-Game.SNAKE_SIZE, -Game.SNAKE_SIZE, 1);
+		glVertex3f(-Game.SNAKE_SIZE, 0, 1);
+		glVertex3f(0, Game.SNAKE_SIZE, 1);
 
 		glEnd();
 		glBegin(GL_POLYGON);
 		glColor3f(0, 1, 0);
-		glVertex3f(0, Game.SNAKE_SIZE, -Game.SNAKE_SIZE);
-		glVertex3f(Game.SNAKE_SIZE, 0, -Game.SNAKE_SIZE);
+		glVertex3f(0, Game.SNAKE_SIZE, Game.SNAKE_SIZE);
+		glVertex3f(Game.SNAKE_SIZE, 0, Game.SNAKE_SIZE);
 		glVertex3f(Game.SNAKE_SIZE, -Game.SNAKE_SIZE,
-				-Game.SNAKE_SIZE);
+				Game.SNAKE_SIZE);
 		glVertex3f(0.5f * Game.SNAKE_SIZE, -1.5f * Game.SNAKE_SIZE,
-				-Game.SNAKE_SIZE);
+				Game.SNAKE_SIZE);
 		glVertex3f(-0.5f * Game.SNAKE_SIZE, -1.5f * Game.SNAKE_SIZE,
-				-Game.SNAKE_SIZE);
+				Game.SNAKE_SIZE);
 		glVertex3f(-Game.SNAKE_SIZE, -Game.SNAKE_SIZE,
-				-Game.SNAKE_SIZE);
-		glVertex3f(-Game.SNAKE_SIZE, 0, -Game.SNAKE_SIZE);
-		glVertex3f(0, Game.SNAKE_SIZE, -Game.SNAKE_SIZE);
+				Game.SNAKE_SIZE);
+		glVertex3f(-Game.SNAKE_SIZE, 0, Game.SNAKE_SIZE);
+		glVertex3f(0, Game.SNAKE_SIZE, Game.SNAKE_SIZE);
 
 		glEnd();
 		glBegin(GL_POLYGON);
 		glColor3f(1, 0, 0);
-		glVertex3f(0, Game.SNAKE_SIZE, -Game.SNAKE_SIZE);
-		glVertex3f(-Game.SNAKE_SIZE, 0, -1);
-		glVertex3f(Game.SNAKE_SIZE, 0, -1);
+		glVertex3f(0, Game.SNAKE_SIZE, Game.SNAKE_SIZE);
+		glVertex3f(-Game.SNAKE_SIZE, 0, 1);
+		glVertex3f(Game.SNAKE_SIZE, 0, 1);
 
 		glEnd();
 		glPopMatrix();
@@ -343,8 +343,8 @@ public class Snake {
 		float a = size / 2;
 		
 		glPushMatrix();
-		glLoadIdentity();
-		Game.setCamera();
+		//glLoadIdentity();
+		//Game.setCamera();
 		glTranslated(SnakeGame.MAP_MILIEU.getX(), SnakeGame.MAP_MILIEU.getY(),0);
 		
 		glBegin(GL_QUADS);
@@ -470,10 +470,10 @@ public class Snake {
 					this.setMouvement(Game.RIGHT);
 			if (Keyboard.isKeyDown(Keyboard.KEY_UP))
 				if (!(this.getMouvement() == Game.DOWN))
-					this.setMouvement(Game.UP);
+					this.setMouvement(Game.DOWN);
 			if (Keyboard.isKeyDown(Keyboard.KEY_DOWN))
 				if (!(this.getMouvement() == Game.UP))
-					this.setMouvement(Game.DOWN);
+					this.setMouvement(Game.UP);
 
 			switch (this.getMouvement()) {
 			case Game.LEFT:
@@ -491,24 +491,6 @@ public class Snake {
 			}
 			this.setDirection(this.getMouvement());
 		} else {	
-			while (Keyboard.next()) {
-				if (Keyboard.getEventKeyState()) {
-					if (Keyboard.getEventKey() == Keyboard.KEY_LEFT) {
-						System.out.println("GAUCHE");
-						this.setMouvement(Game.LEFT);
-						if(this.getDirection()==0){
-							this.setDirection(Game.DOWN);
-						}
-					}
-					if (Keyboard.getEventKey() == Keyboard.KEY_RIGHT) {
-						System.out.println("DROITE");
-						this.setMouvement(Game.RIGHT);
-						if(this.getDirection()==0){
-							this.setDirection(Game.DOWN);
-						}
-					}
-				}
-			}
 		
 			switch (this.getDirection()) {
 			case Game.LEFT:

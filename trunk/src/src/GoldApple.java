@@ -18,11 +18,11 @@ public class GoldApple extends Eatable {
 	public void draw() {
 		float a = Game.APPLE_SIZE / 2;
 		glPushMatrix();
-		glLoadIdentity();
+		//glLoadIdentity();
 		glTranslated(SnakeGame.MAP_MILIEU.getX(), SnakeGame.MAP_MILIEU.getY(),0);
-		Game.setCamera();
+		//Game.setCamera();
 		// Make the apple bounce !
-		glTranslatef(x, y, -bounce);
+		glTranslatef(x,y, bounce);
 		if (!direction)
 			bounce = (float) ((bounce + 0.001) % 2);
 		else

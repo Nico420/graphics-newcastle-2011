@@ -30,7 +30,7 @@ public class SnakeGame {
 
 	public static int score;
 
-	public static final Position MAP_MILIEU = new Position(WIDTH - 300,
+	public static final Position MAP_MILIEU = new Position(WIDTH - 400,
 			HEIGHT - 300);
 	
 	// float lightPosition1[] = { -MAP_SIZE, -MAP_SIZE, 1f, 1f };
