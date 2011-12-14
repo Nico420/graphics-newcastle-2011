@@ -28,7 +28,6 @@ public class Fichier {
 		highScore.add(position,i);
 		if(highScore.size()>MAX_SCORE)
 			highScore = new LinkedList<Integer>(highScore.subList(0, MAX_SCORE));
-		System.out.println(highScore);
 		
 		try {
 			FileOutputStream fichier = new FileOutputStream("highscore.txt");
@@ -59,6 +58,7 @@ public class Fichier {
 		ecrire("highScore.txt", 350);
 	}
 
+	@SuppressWarnings("unchecked")
 	public static LinkedList<Integer> getScore(String string) {
 		try {
 			FileInputStream fichier = new FileInputStream("highscore.txt");
@@ -68,7 +68,6 @@ public class Fichier {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
 		}
-		System.out.println(highScore);
 		return highScore;
 	}
 }

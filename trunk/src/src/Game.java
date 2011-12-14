@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.util.glu.GLU;
 import org.newdawn.slick.Color;
 import tools.MazeReader;
@@ -47,6 +49,7 @@ public class Game extends Etat {
 
 	public Game() throws IOException {
 		initializeGame();
+
 	}
 
 	@Override
@@ -68,10 +71,10 @@ public class Game extends Etat {
 						&& snake.getY() + SNAKE_SIZE > item.getY()) {
 					snake.setLenght(snake.lenght + 1);
 					appleEat = item.getAction();
-					if(appleEat == Eatable.REDUCE){
-						tailReduce=600;
-					}else if(appleEat == Eatable.DOUBLE){
-						PointMulti=2000;
+					if (appleEat == Eatable.REDUCE) {
+						tailReduce = 600;
+					} else if (appleEat == Eatable.DOUBLE) {
+						PointMulti = 2000;
 					}
 					// Generate new item
 					if (Math.random() > 0.9)
@@ -83,8 +86,7 @@ public class Game extends Etat {
 				}
 			}
 		} else {
-			Fichier.ecrire("highScore.txt",
-					snake.getScore());
+			Fichier.ecrire("highScore.txt", snake.getScore());
 			return SnakeGame.PERDU;
 		}
 		updateFPS();
@@ -96,58 +98,91 @@ public class Game extends Etat {
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		// Viewport, text display (score,power,...)
+		glViewport(0, 0, Display.getWidth() / 4, Display.getHeight());
+		glMatrixMode(GL_PROJECTION); // Select The Projection Matrix
+		glLoadIdentity(); // Reset The Projection Matrix
+		// Set Up Ortho Mode To Fit 1/4 The Screen (Size Of A Viewport)
+		GLU.gluOrtho2D(0, SnakeGame.WIDTH / 4, SnakeGame.HEIGHT, 0);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		glClear(GL_DEPTH_BUFFER_BIT);
 		// Score Display
 		afficheScore(snake);
 		afficheRaccourci();
 		affichePower();
+
+		// ViewPort for the game.
+		glViewport(Display.getWidth() / 4, Display.getHeight(),
+				3 * Display.getWidth() / 4, Display.getHeight());
+		glMatrixMode(GL_PROJECTION); // Select The Projection Matrix
+		
+		glLoadIdentity(); // Reset The Projection Matrix
+		// Set Up Perspective Mode To Fit 1/4 The Screen (Size Of A Viewport)
+		GLU.gluPerspective(45.0f, Display.getWidth() / Display.getHeight(), 0.1f,
+				500.0f);
+		
+		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		// Dessin de la carte
-		glPushMatrix();
-		setCamera();
-		drawMap();
-		textureSerpent.bind();
-		snake.draw();
-		// Draw Walls
-		textureMur.bind();
-		// glColor3f(1, 1, 1);
-		for (int i = 0; i < walls.size(); i++) {
-			draw3DQuad(walls.get(i).getX(), walls.get(i).getY(), WALL_SIZE,
-					WALL_SIZE * 2);
-		}
-		for (int i = 0; i < object.size(); i++)
-			object.get(i).draw();
-		glPopMatrix();
+		glClear(GL_DEPTH_BUFFER_BIT);
+
+		glTranslatef(0.0f, 0.0f, -2.0f); // Move 2 Units Into The Screen
+		glRotatef(-45.0f,1.0f,0.0f,0.0f); 
+
+		glColor3f(1,0,0);
+		draw3DQuad(100, 100, 0, 100);
+		glBegin(GL_QUADS); // Begin Drawing A Single Quad
+		glVertex3f(1.0f, 1.0f, 0.0f);
+		glVertex3f(-1.0f, 1.0f, 0.0f);
+		glVertex3f(-1.0f, -1.0f, 0.0f);
+		glVertex3f(1.0f, -1.0f, 0.0f);
+		glEnd(); 
+		// Done Drawing The Textured Quad
+		// glTranslatef(0.0f, 0.0f, 7.0f);
+		/*
+		 * glEnable(GL_LIGHTING); // Enable Lighting //
+		 * glTranslatef(0.0f,0.0f,-2.0f); drawMap(); glDisable(GL_LIGHTING); //
+		 * Disable Lighting // Dessin de la carte glPushMatrix(); //
+		 * setCamera();
+		 * 
+		 * textureSerpent.bind(); snake.draw(); // Draw Walls textureMur.bind();
+		 * // glColor3f(1, 1, 1); for (int i = 0; i < walls.size(); i++) {
+		 * draw3DQuad(walls.get(i).getX(), walls.get(i).getY(), WALL_SIZE,
+		 * WALL_SIZE * 2); } for (int i = 0; i < object.size(); i++)
+		 * object.get(i).draw(); glPopMatrix();
+		 */
 	}
 
 	private void affichePower() {
-		if(tailReduce>0){
-			font.drawString(20, 300, "TAIL REDUCTION",Color.green);
+		fontPower.drawString(20, 250, "POWERS UP", Color.yellow);
+		if (tailReduce > 0) {
+			fontPower.drawString(20, 300, "Tail reduction", Color.green);
 			tailReduce--;
-		}else{
-			font.drawString(20, 300, "TAIL REDUCTION",Color.red);
+		} else {
+			fontPower.drawString(20, 300, "Tail reduction", Color.red);
 		}
-		if(PointMulti>0){
-			font.drawString(20, 340, "Points X5",Color.green);
+		if (PointMulti > 0) {
+			fontPower.drawString(20, 340, "Points X5", Color.green);
 			PointMulti--;
-		}else{
-			font.drawString(20, 340, "Points X5",Color.red);
+		} else {
+			fontPower.drawString(20, 340, "Points X5", Color.red);
 		}
 
 	}
 
 	private void afficheRaccourci() {
 
-		font.drawString(50, 450, "Shortcuts : ");
-		font.drawString(50, 470, "(R) : Restart");
-		font.drawString(50, 490, "(A) : Full screen");
-		font.drawString(50, 510, "(V) : Switch view");
-		font.drawString(50, 530, "(Esc) : Quit");
+		font.drawString(20, 450, "Shortcuts : ");
+		font.drawString(20, 470, "(R) : Restart");
+		font.drawString(20, 490, "(A) : Full screen");
+		font.drawString(20, 510, "(V) : Switch view");
+		font.drawString(20, 530, "(Esc) : Quit");
 
 	}
 
 	private void afficheScore(Snake s) throws IOException {
-		fontMenu.drawString(50, 50, "Snake 3D");
-		font.drawString(50, 150, "Score : \n" + s.getScore(), Color.red);
+		fontMenu.drawString(20, 50, "Snake 3D", Color.blue);
+		fontPower.drawString(20, 150, "Score : \n" + s.getScore(), Color.red);
 	}
 
 	public static void setCamera() {
@@ -218,8 +253,9 @@ public class Game extends Etat {
 	private void drawMap() {
 		// Navigable map
 		textureSol.bind();
-		glTranslated(SnakeGame.MAP_MILIEU.getX(), SnakeGame.MAP_MILIEU.getY(),
-				0);
+		// glTranslated(SnakeGame.MAP_MILIEU.getX(),
+		// SnakeGame.MAP_MILIEU.getY(),
+		// 0);
 		glBegin(GL_QUADS);
 		glColor3f(1f, 0.5f, 0.5f);
 		glVertex3f(0 - (MAP_SIZE + WALL_SIZE), 0 - (MAP_SIZE + WALL_SIZE), 0.1f);
@@ -239,7 +275,7 @@ public class Game extends Etat {
 		glEnd();
 		// Walls around it
 		for (int i = -MAP_SIZE; i <= MAP_SIZE; i += WALL_SIZE) {
-			//glColor3f(1, 0, 0);
+			// glColor3f(1, 0, 0);
 			textureMur.bind();
 			draw3DQuad(i, -(MAP_SIZE + WALL_SIZE / 2), -WALL_SIZE, WALL_SIZE);
 			draw3DQuad(i, (MAP_SIZE + WALL_SIZE / 2), -WALL_SIZE, WALL_SIZE);
@@ -253,7 +289,7 @@ public class Game extends Etat {
 		float a = size / 2;
 
 		glPushMatrix();
-		setCamera();
+		//setCamera();
 		glBegin(GL_QUADS);
 		// glColor3f(1, 0, 0);
 		glTexCoord2d(0, 1);
@@ -326,4 +362,71 @@ public class Game extends Etat {
 				ResourceLoader.getResourceAsStream("texture/metal.jpg"));
 	}
 
+	@Override
+	protected void initGL() throws IOException {
+		glClearColor(0.0f, 0.0f, 0.0f, 0.5f); // Black Background
+		glClearDepth(1.0f); // Depth Buffer Setup
+		glEnable(GL_DEPTH_TEST); // Enables Depth Testing
+		glDepthFunc(GL_LEQUAL); // The Type Of Depth Testing To Do
+		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST); // Really Nice
+															// Perspective
+															// Calculations
+		glEnable(GL_COLOR_MATERIAL);
+		glEnable(GL_TEXTURE_2D);
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+
+
+		glMatrixMode(GL_MODELVIEW);
+		glViewport(0, 0, Display.getWidth(), Display.getHeight());
+		initLightArrays();
+
+	}
+
+	private void initLightArrays() {
+		matSpecular = BufferUtils.createFloatBuffer(4);
+		matSpecular.put(1.0f).put(1.0f).put(1.0f).put(1.0f).flip();
+
+		lightPosition = BufferUtils.createFloatBuffer(4);
+		lightPosition.put(1.0f).put(1.0f).put(1.0f).put(0.0f).flip();
+
+		whiteLight = BufferUtils.createFloatBuffer(4);
+		whiteLight.put(1.0f).put(1.0f).put(1.0f).put(1.0f).flip();
+
+		lModelAmbient = BufferUtils.createFloatBuffer(4);
+		lModelAmbient.put(0.5f).put(0.5f).put(0.5f).put(1.0f).flip();
+	}
+
 }
+
+/*
+ * glShadeModel(GL_SMOOTH);
+glMaterial(GL_FRONT, GL_SPECULAR, matSpecular); // sets specular
+												// material color
+glMaterialf(GL_FRONT, GL_SHININESS, 50.0f); // sets shininess
+
+glLight(GL_LIGHT0, GL_POSITION, lightPosition); // sets light position
+glLight(GL_LIGHT0, GL_SPECULAR, whiteLight); // sets specular light to
+												// white
+glLight(GL_LIGHT0, GL_DIFFUSE, whiteLight); // sets diffuse light to
+											// white
+glLightModel(GL_LIGHT_MODEL_AMBIENT, lModelAmbient); // global ambient
+														// light
+
+glEnable(GL_LIGHTING); // enables lighting
+glEnable(GL_LIGHT0); // enables light0
+
+glEnable(GL_COLOR_MATERIAL); // enables opengl to use glColor3f to
+								// define material color
+glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE); // tell opengl
+													// glColor3f effects
+													// the ambient and
+													// diffuse
+													// properties of
+													// material
+// ----------- END: Variables & method calls added for Lighting Test
+// -----------//
+// ------- Added for Lighting Test----------//*/

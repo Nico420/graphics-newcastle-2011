@@ -4,6 +4,9 @@ import static org.lwjgl.opengl.GL11.*;
 
 import java.io.IOException;
 
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.glu.GLU;
 import org.newdawn.slick.Color;
 
 public class Countdown extends Etat {
@@ -35,9 +38,35 @@ public class Countdown extends Etat {
 		int number = (int) Math.ceil(countDown);
 		Color.green.bind();
 		if (number >= 1)
-			fontMenu.drawString(SnakeGame.WIDTH/2 -10,SnakeGame.HEIGHT/2-10 , number + " !");
+			fontMenu.drawString(SnakeGame.WIDTH / 2 - 10,
+					SnakeGame.HEIGHT / 2 - 10, number + " !");
 		else
-			fontMenu.drawString(SnakeGame.WIDTH/2 -50, SnakeGame.HEIGHT/2-10, "START !");
+			fontMenu.drawString(SnakeGame.WIDTH / 2 - 60,
+					SnakeGame.HEIGHT / 2 - 10, "START !",Color.green);
+	}
+
+	@Override
+	protected void initGL() throws IOException {
+		glShadeModel(GL_SMOOTH); // Enable Smooth Shading
+		glClearColor(0.0f, 0.0f, 0.0f, 0.5f); // Black Background
+		glClearDepth(1.0f); // Depth Buffer Setup
+		glEnable(GL_DEPTH_TEST); // Enables Depth Testing
+		glDepthFunc(GL_LEQUAL); // The Type Of Depth Testing To Do
+		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST); // Really Nice
+															// Perspective
+															// Calculations
+		glEnable(GL_TEXTURE_2D);
+		GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		glViewport(0, 0, Display.getWidth(),
+				Display.getHeight());
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		GLU.gluOrtho2D(0, SnakeGame.WIDTH, SnakeGame.HEIGHT, 0);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+
 	}
 
 }

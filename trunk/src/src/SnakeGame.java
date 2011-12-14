@@ -57,7 +57,8 @@ public class SnakeGame {
 			Display.setDisplayMode(dm);
 			Display.setFullscreen(false);
 			Display.setResizable(true);
-			Display.setTitle("Graphics");
+			
+			Display.setTitle("Snake 3D - 2012 - version 1.0");
 			Display.create();
 
 		} catch (LWJGLException e) {

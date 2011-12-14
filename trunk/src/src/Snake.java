@@ -166,7 +166,7 @@ public class Snake {
 		// Dessin du serpent
 		glColor3f(1, 1, 1);
 		for (int i = 0; i < positions.size(); i++) {
-			draw3DQuad(positions.get(i).getX(), positions.get(i).getY(), 0,
+			drawBody(positions.get(i).getX(), positions.get(i).getY(), 0,
 					Game.SNAKE_SIZE * 2);
 		}
 
@@ -175,9 +175,9 @@ public class Snake {
 	public void intialize(List<Position> walls, int wallSize) {
 
 		while ((new Position(x, y).checkCollapse(walls, Game.WALL_SIZE, Game.SNAKE_SIZE))) {
-			x = (float) (-(Game.MAP_SIZE - Game.SNAKE_SIZE) + (Game.MAP_SIZE * 2 - Game.SNAKE_SIZE)
+			x = (float) (-((Game.MAP_SIZE-10) - Game.SNAKE_SIZE) + ((Game.MAP_SIZE-10) * 2 - Game.SNAKE_SIZE)
 					* Math.random());
-			y = (float) (-(Game.MAP_SIZE - Game.SNAKE_SIZE) + (Game.MAP_SIZE * 2 - Game.SNAKE_SIZE)
+			y = (float) (-((Game.MAP_SIZE-10) - Game.SNAKE_SIZE) + ((Game.MAP_SIZE-10) * 2 - Game.SNAKE_SIZE)
 					* Math.random());
 		}
 
@@ -325,9 +325,9 @@ public class Snake {
 		glPopMatrix();
 	}
 
-	public static void draw3DQuad(float x, float y, float z, float size) {
+	public static void drawBody(float x, float y, float z, float size) {
 		float a = size / 2;
-
+		
 		glPushMatrix();
 		glLoadIdentity();
 		Game.setCamera();
@@ -369,8 +369,28 @@ public class Snake {
 		glVertex3f(x - a, y + a, z - a);
 		glTexCoord2d(0, 0);
 		glVertex3f(x + a, y + a, z - a);
+		
+		glTexCoord2d(0.5, 0.5);
+		glVertex3f(x + a, y - a, z + a);
+		glTexCoord2d(0.5, 0);
+		glVertex3f(x + a, y - a, z - a);
+		glTexCoord2d(0.5, 0.5);
+		glVertex3f(x - a, y + a, z + a);
+		glTexCoord2d(0.5, 0);
+		glVertex3f(x - a, y + a, z - a);
+		
+		glTexCoord2d(0.5, 0.5);
+		glVertex3f(x + a, y - a, z + a);
+		glTexCoord2d(0.5, 0);
+		glVertex3f(x + a, y - a, z - a);
+		glTexCoord2d(0.5, 0.5);
+		glVertex3f(x - a, y + a, z + a);
+		glTexCoord2d(0.5, 0);
+		glVertex3f(x - a, y + a, z - a);
 		glEnd();
 		glPopMatrix();
+		
+		
 
 	}
 
@@ -388,7 +408,7 @@ public class Snake {
 	public int addPosition(int appleEat) {
 		if (Math.sqrt(Math.pow(xTemp - this.getX(), 2)
 				+ Math.pow(yTemp - this.getY(), 2)) > (Game.SNAKE_SIZE * 2)) {
-			draw3DQuad(xTemp, yTemp, 0, Game.SNAKE_SIZE * 2);
+			drawBody(xTemp, yTemp, 0, Game.SNAKE_SIZE * 2);
 			this.positions.add(new Position(xTemp, yTemp));
 			switch(appleEat){
 			case Apple.GROW_UP:
