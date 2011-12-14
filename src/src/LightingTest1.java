@@ -127,7 +127,7 @@ public class LightingTest1 {
 		matSpecular.put(1.0f).put(1.0f).put(1.0f).put(1.0f).flip();
 		
 		lightPosition = BufferUtils.createFloatBuffer(4);
-		lightPosition.put(1.0f).put(1.0f).put(1.0f).put(0.0f).flip();
+		lightPosition.put(0.0f).put(1.0f).put(0.0f).put(0.0f).flip();
 		
 		whiteLight = BufferUtils.createFloatBuffer(4);
 		whiteLight.put(1.0f).put(1.0f).put(1.0f).put(1.0f).flip();
