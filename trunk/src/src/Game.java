@@ -338,8 +338,8 @@ public class Game extends Etat {
 		float a = size / 2;
 
 		glBegin(GL_QUADS);
-		
-		//glNormal3f(0, 0, -1);
+
+		// glNormal3f(0, 0, -1);
 		glTexCoord2d(0, 1);
 		glVertex3f(x - a, y - a, 0);
 		glTexCoord2d(1, 1);
@@ -351,11 +351,11 @@ public class Game extends Etat {
 
 		glTexCoord2d(0, 1);
 		glVertex3f(x - a, y - a, size);
-		glTexCoord2d(0, 1);
+		glTexCoord2d(1, 1);
 		glVertex3f(x + a, y - a, size);
-		glTexCoord2d(0, 1);
+		glTexCoord2d(1, 0);
 		glVertex3f(x + a, y + a, size);
-		glTexCoord2d(0, 1);
+		glTexCoord2d(0, 0);
 		glVertex3f(x - a, y + a, size);
 
 		glTexCoord2d(0, 1);
@@ -366,7 +366,7 @@ public class Game extends Etat {
 		glVertex3f(x + a, y - a, 0);
 		glTexCoord2d(1, 0);
 		glVertex3f(x - a, y - a, 0);
-		
+
 		glTexCoord2d(0, 1);
 		glVertex3f(x + a, y + a, size);
 		glTexCoord2d(1, 1);
@@ -403,6 +403,13 @@ public class Game extends Etat {
 		mortSerpent = 500;
 		snake = new Snake();
 		walls = MazeReader.buildWallList("maze.txt");
+		if (walls.size() == 0) {
+			float x = (float) (-((Game.MAP_SIZE) - Game.SNAKE_SIZE) + ((Game.MAP_SIZE) * 2 - Game.SNAKE_SIZE)
+					* Math.random());
+			float y = (float) (-((Game.MAP_SIZE) - Game.SNAKE_SIZE) + ((Game.MAP_SIZE) * 2 - Game.SNAKE_SIZE)
+					* Math.random());
+			walls.add(new Position(x, y));
+		}
 		object = new ArrayList<Eatable>();
 		for (int i = 0; i < SnakeGame.APPLENUMBER; i++) {
 			// Randow other object
@@ -451,7 +458,7 @@ public class Game extends Etat {
 		whiteLight.put(1.0f).put(1.0f).put(1.0f).put(1.0f).flip();
 
 		lModelAmbient = BufferUtils.createFloatBuffer(4);
-		lModelAmbient.put(0.5f).put(0.5f).put(0.5f).put(1.0f).flip();
+		lModelAmbient.put(1.0f).put(1.0f).put(1.0f).put(1.0f).flip();
 	}
 
 	public int pollInput() throws LWJGLException {
