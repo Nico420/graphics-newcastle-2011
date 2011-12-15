@@ -39,22 +39,14 @@ public class Eatable {
 	 */
 	public Eatable(float x, float y, Color color, int action) {
 		super();
-		this.x = x;
-		this.y = y;
 		this.color = color;
 		this.action = action;
 		while ((new Position(this.x, this.y)).checkCollapse(Game.walls,
-				Game.WALL_SIZE, Game.APPLE_SIZE)) {
-			this.x = (float) (-(Game.MAP_SIZE - Game.APPLE_SIZE) + (Game.MAP_SIZE * 2 - Game.APPLE_SIZE)
+				Game.WALL_SIZE, Game.APPLE_SIZE) || (new Position(this.x, this.y)).checkCollapse(Game.object,
+						Game.SNAKE_SIZE * 2, Game.APPLE_SIZE)) {
+			this.x = (float) (-(Game.MAP_SIZE - Game.APPLE_SIZE) + ((Game.MAP_SIZE - Game.APPLE_SIZE) * 2)
 					* Math.random());
-			this.y = (float) (-(Game.MAP_SIZE - Game.APPLE_SIZE) + (Game.MAP_SIZE * 2 - Game.APPLE_SIZE)
-					* Math.random());
-		}
-		while ((new Position(this.x, this.y)).checkCollapse(Game.object,
-				Game.SNAKE_SIZE * 2, Game.APPLE_SIZE)) {
-			this.x = (float) (-(Game.MAP_SIZE - Game.APPLE_SIZE) + (Game.MAP_SIZE * 2 - Game.APPLE_SIZE)
-					* Math.random());
-			this.y = (float) (-(Game.MAP_SIZE - Game.APPLE_SIZE) + (Game.MAP_SIZE * 2 - Game.APPLE_SIZE)
+			this.y = (float) (-(Game.MAP_SIZE - Game.APPLE_SIZE) + ((Game.MAP_SIZE - Game.APPLE_SIZE) * 2)
 					* Math.random());
 		}
 	}

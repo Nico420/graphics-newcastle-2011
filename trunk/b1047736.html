@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+<head>
+<title>Snake 3D - b1047736 (Erasmus Student)</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+	<div>
+		<h1>
+			<img src="snake_icone.png" HEIGHT=100>3D Snake
+		</h1>
+		<h2>
+			Developed with <a href="http://www.lwjgl.org">LWJGL</a>
+		</h2>
+		<p>The purpose of this page is to overview my implementation of
+			Snake3D.</p>
+		<ul class="navbar">
+			<li><a href="doc/index.html">Code Documentation</a>
+			<li><a href="#dev">Snake3D Developpement</a>
+			<li><a href="#util">Snake3D Utilisation</a>
+		</ul>
+		<h3>
+			<A NAME="dev">Snake3D Developpement</A>
+		</h3>
+		<h4>Language use</h4>
+		The language uses to create that game is Java, in particular the LWJGL
+		library that allow OpenGL utilisation.
+		<h4>Architecture</h4>
+		The application is developp use the design Pattern <a
+			href="http://en.wikipedia.org/wiki/State_pattern">"States"</a>. Here
+		is the list of states :
+		<ul class="list">
+			<li>Menu : Displaying the Menu
+			<li>HighScore : Displaying the highiest scores
+			<li>Game : Running the game
+			<li>Countdown : Countdown before the game starts
+			<li>Restart : Create a new game
+			<li>Perdu : Displaying the final score, save it.
+		</ul>
+		Each states will indicate to the controller (a Java Classe) the next
+		state to launch. 
+		<h3>
+			<A NAME="util">Snake3D Utilisation</A>
+		</h3>
+		<h4>Seting up, launching and options</h4>
+		To run the application, unzip Snake3D.zip and launch the link
+		according to your operation System. You can modify the maze by editing
+		the file ""maze.txt". Each line correspond at a wall position. Number
+		must be between -100 and 100. (0,0) is the middle of the map. You can
+		also have a look at "options.txt". Here you can set : the default
+		number of apple on the field, and the two different snake speed. Just
+		increase the speed to make it faster, decrease to make it slower. You
+		can set the normal Speed, and the bullet-time speed.
+		<h4>User Manual</h4>
+		The application start with a menu. Three options are available :
+		Start, which will launch the game
+		<h5>Key shorcuts</h5>
+		There are some keys that you can press during the execution. Here is a
+		list of what they do :
+		<ul class="list">
+			<li><em>A</em> : These key enable and disable full screen for
+				the application.
+			<li><em>V</em> : These key allows, when a game is started, to
+				switch bet ween two cameras : a fixed one, and another one following
+				the snake.
+			<li><em>R</em> : If a game is started, the press of this key
+				will start a new game.
+			<li><em>Escape</em> : If your the menu, it will quit the game.
+				An other screen, it will bring you back to the menu.
+			<li><em>B</em> : Bullet Time. The user have a limited number of
+				Bullet-Time. Each time you press that Key, the game will slow down
+				for some seconds. Quiet useful to go next to the wall !
+		</ul>
+		<h5>Items</h5>
+		Here is a list of the item you'll find on the map
+		<ul class="list">
+			<li>Apples : Those are the classice Apples, it allows you to
+				grow up and win some points !
+			<li>Gold Apples : Those apples will appears less often on the
+				field. They make you earn more points for a limited time.
+			<li>Blue Apples : Those apples cut the snake tail, and remove
+				half of it.
+			<li>Walls : just an advice, don't it them.
+			<li>Snake : This is the object you control. And a quick
+				remberer, snakes don't do cannibalism.
+		</ul>
+
+		<Strong>Enjoy your play !</Strong>
+		<HR>
+		<address>
+			Nicolas Desfeux - Erasmus Student<br> Newcastle University -
+			December 2012.
+		</address>
+	</div>
+</body>
+</html>
