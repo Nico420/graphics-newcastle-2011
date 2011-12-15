@@ -107,9 +107,9 @@ public class Game extends Etat {
 					snake.setLenght(snake.lenght + 1);
 					appleEat = item.getAction();
 					if (appleEat == Eatable.REDUCE) {
-						tailReduce = 600;
+						tailReduce = 1000;
 					} else if (appleEat == Eatable.MULTI) {
-						pointMulti = 2000;
+						pointMulti = 4000;
 					}
 					// Generate new item
 					if (Math.random() > 0.9)
@@ -159,7 +159,7 @@ public class Game extends Etat {
 
 		glEnable(GL_LIGHTING);
 		glEnable(GL_LIGHT1); // Enable Light One
-
+		glEnable(GL_NORMALIZE);
 		drawMap();
 		textureSerpent.bind();
 		snake.draw();
@@ -429,11 +429,12 @@ public class Game extends Etat {
 		glOrtho(0, SnakeGame.WIDTH, SnakeGame.HEIGHT, 0, 100, -100);
 		glMatrixMode(GL_MODELVIEW);
 
-		float lDR = 1.0f;
-
-		float lightAmbient[] = { 5f, 5f, 5f, 1.0f }; // Ambient Light Values
-		float lightDiffuse[] = { 0.3f, lDR, lDR, 1.0f }; // Diffuse LightValues
-		float lightPosition[] = { 0.0f, 0.0f, 0.0f, 0.0f }; // Light Position
+		//Light Creation
+		float lDR = 10.0f;
+		float lightAmbient[] = { 0.5f, 0.5f, 0.5f, 1.0f }; // Ambient Light Values
+		float lightDiffuse[] = { lDR, lDR, lDR, 1.0f }; // Diffuse LightValues
+		//light Coming from a corner
+		float lightPosition[] = { SnakeGame.MAP_MILIEU.getX(), SnakeGame.MAP_MILIEU.getY(), 10.0f, 10.0f }; // Light Position
 
 		ByteBuffer temp = ByteBuffer.allocateDirect(16);
 		temp.order(ByteOrder.nativeOrder());

@@ -482,8 +482,8 @@ public class Snake {
 
 	public void update(int delta, boolean b) {
 		if (!b) {
-			if (this.getMouvement() == -1)
-				this.setMouvement(this.getDirection());
+			//Classic view
+			
 			if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
 				if (!(this.getMouvement() == Game.RIGHT))
 					this.setMouvement(Game.LEFT);
@@ -496,7 +496,9 @@ public class Snake {
 			if (Keyboard.isKeyDown(Keyboard.KEY_DOWN))
 				if (!(this.getMouvement() == Game.UP))
 					this.setMouvement(Game.UP);
-
+			if (this.getMouvement() == -1)
+				this.setMouvement(this.getDirection());
+			
 			switch (this.getMouvement()) {
 			case Game.LEFT:
 				this.setX(this.getX() - this.speed * delta);
@@ -513,7 +515,7 @@ public class Snake {
 			}
 			this.setDirection(this.getMouvement());
 		} else {
-
+			//Tracking view
 			switch (this.getDirection()) {
 			case Game.LEFT:
 				if (this.getMouvement() == Game.RIGHT)
