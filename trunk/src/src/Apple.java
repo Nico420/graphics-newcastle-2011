@@ -5,6 +5,12 @@ import static org.lwjgl.opengl.GL11.*;
 import java.awt.Color;
 import src.Game;
 
+
+/**
+ * Implementation of the classic apples.
+ * @author Nicolas
+ *
+ */
 public class Apple extends Eatable {
 
 
@@ -13,10 +19,9 @@ public class Apple extends Eatable {
 		super(0, 0, Color.GREEN, Eatable.GROW_UP);
 	}
 
-	public Apple(float x, float y) {
-		super(x, y, Color.GREEN, Eatable.GROW_UP);
-	}
-
+	/**
+	 * Drawing the apple
+	 */
 	public void draw() {
 		float a = Game.APPLE_SIZE / 2;
 		glPushMatrix();

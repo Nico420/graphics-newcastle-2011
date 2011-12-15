@@ -14,6 +14,11 @@ import org.newdawn.slick.Color;
 import tools.Fichier;
 
 
+/**
+ * State High Score, displaying the highScore
+ * @author Nicolas
+ *
+ */
 @SuppressWarnings("deprecation")
 public class HighScore extends Etat {
 

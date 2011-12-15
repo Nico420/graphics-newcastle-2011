@@ -10,6 +10,11 @@ import org.lwjgl.input.Keyboard;
 
 import tools.Position;
 
+/**
+ * Snake class, use for drawing and interacting with the snake.
+ * @author Nicolas
+ *
+ */
 public class Snake {
 
 	public static float xTemp = 0;
@@ -206,8 +211,6 @@ public class Snake {
 	private void drawSnakeHead(float x, float y, float z, float size) {
 
 		glPushMatrix(); // Reset The View
-		// glLoadIdentity();
-		// Game.setCamera();
 		glTranslated(SnakeGame.MAP_MILIEU.getX(), SnakeGame.MAP_MILIEU.getY(),
 				0);
 		glTranslatef(x, y, 0);
@@ -357,11 +360,8 @@ public class Snake {
 		float a = size / 2;
 
 		glPushMatrix();
-		// glLoadIdentity();
-		// Game.setCamera();
 		glTranslated(SnakeGame.MAP_MILIEU.getX(), SnakeGame.MAP_MILIEU.getY(),
 				0);
-
 		glBegin(GL_QUADS);
 
 		// glNormal3f(0, 0, -1);

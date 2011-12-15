@@ -6,6 +6,11 @@ import java.util.List;
 
 import src.Eatable;
 
+/**
+ * Position on the map
+ * @author Nicolas
+ *
+ */
 public class Position {
 	public float x;
 	public float y;

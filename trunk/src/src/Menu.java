@@ -14,6 +14,11 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
 
+/**
+ * Class for displaying and interacting with the Menu
+ * @author Nicolas
+ *
+ */
 @SuppressWarnings("deprecation")
 public class Menu extends Etat {
 

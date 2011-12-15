@@ -14,6 +14,12 @@ import org.newdawn.slick.opengl.TextureLoader;
 
 import org.newdawn.slick.util.ResourceLoader;
 
+/**
+ * Abstract class for states.
+ * 
+ * @author Nicolas
+ * 
+ */
 @SuppressWarnings("deprecation")
 public abstract class Etat {
 	boolean lighting = false;
@@ -40,6 +46,7 @@ public abstract class Etat {
 	long lastFPS;
 
 	public Etat() throws IOException {
+		// Font Creation
 		Font awtFont = new Font("Times New Roman", Font.BOLD, 24);
 		font = new TrueTypeFont(awtFont, antiAlias);
 		initGL();
@@ -60,6 +67,12 @@ public abstract class Etat {
 		}
 	}
 
+	/**
+	 * Updtaing the state
+	 * @param delta
+	 * @return New state to use
+	 * @throws LWJGLException
+	 */
 	public int update(int delta) throws LWJGLException {
 		while (Keyboard.next()) {
 			if (Keyboard.getEventKeyState()) {
@@ -78,6 +91,10 @@ public abstract class Etat {
 		return -1;
 	}
 
+	/**
+	 * Drawing the state
+	 * @throws IOException
+	 */
 	public abstract void renderGL() throws IOException;
 
 	public void updateFPS() {
@@ -93,9 +110,17 @@ public abstract class Etat {
 		return (Sys.getTime() * 1000) / Sys.getTimerResolution();
 	}
 
+	/**
+	 * OpenGL initialisation
+	 * @throws IOException
+	 */
 	protected abstract void initGL() throws IOException;
 
+	/**
+	 * Keyboard reading
+	 * @return new state to use
+	 * @throws LWJGLException
+	 */
 	public abstract int pollInput() throws LWJGLException;
-	
 
 }

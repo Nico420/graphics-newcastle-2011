@@ -11,7 +11,13 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 import org.newdawn.slick.Color;
 
+/**
+ * Displaying the Game Over
+ * @author Nicolas
+ *
+ */
 public class Perdu extends Etat {
+	//Get the score from the main application
 	int score;
 
 	public Perdu(int score) throws IOException {
