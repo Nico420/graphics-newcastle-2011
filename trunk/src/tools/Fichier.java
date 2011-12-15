@@ -75,14 +75,13 @@ public class Fichier {
 			BufferedReader br=new BufferedReader(ipsr);
 			String ligne;
 			while ((ligne=br.readLine())!=null){
-				System.out.println(ligne);
 				String[] tmp = ligne.split("\\s");
 				res.put(tmp[0], tmp[1]);
 			}
 			br.close(); 
 		}		
 		catch (Exception e){
-			System.out.println(e.toString());
+			//System.out.println(e.toString());
 		}
 		return res;
 	}
