@@ -44,7 +44,6 @@ public class HighScore extends Etat {
 				Color.red);
 		fontTitre.drawString(100, 110, "HIGH SCORE TABLE",
 				Color.green);
-
 		for(int i=0;i<score.size();i++){
 			fontMenu.drawString(250, 230+35*i, (i+1)+" - "+score.get(i),
 					Color.yellow);

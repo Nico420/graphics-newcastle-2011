@@ -60,16 +60,18 @@ public class Game extends Etat {
 	public static List<Position> walls = new ArrayList<Position>();
 
 	public Game() throws IOException {
-		try{
+		try {
 			options = Fichier.lire("options.txt");
-			SPEED =  options.get("SPEED").equals(null) ? 0.07f : Float.parseFloat(options.get("SPEED"));
-			SPEED_BULLET =  options.get("SPEED_BULLET").equals(null) ? 0.02f : Float.parseFloat(options.get("SPEED_BULLET"));
-			SnakeGame.APPLENUMBER =  options.get("APPLENUMBER") == null ? 5 : Integer.parseInt(options.get("APPLENUMBER"));
-		}catch(Exception e){
+			SPEED = options.get("SPEED").equals(null) ? 0.07f : Float
+					.parseFloat(options.get("SPEED"));
+			SPEED_BULLET = options.get("SPEED_BULLET").equals(null) ? 0.02f
+					: Float.parseFloat(options.get("SPEED_BULLET"));
+			SnakeGame.APPLENUMBER = options.get("APPLENUMBER") == null ? 5
+					: Integer.parseInt(options.get("APPLENUMBER"));
+		} catch (Exception e) {
 			System.err.println("Fichier d'options manquant ou incorrect.");
-			
+
 		}
-		
 
 		initializeGame();
 		initGL();
@@ -110,11 +112,11 @@ public class Game extends Etat {
 				}
 			}
 		} else {
-			Fichier.ecrire("highScore.txt", snake.getScore());
-			SnakeGame.score = snake.getScore();
-			if (mortSerpent < 0)
+			if (mortSerpent < 0) {
+				Fichier.ecrire("highScore.txt", snake.getScore());
+				SnakeGame.score = snake.getScore();
 				return SnakeGame.PERDU;
-			else
+			} else
 				mortSerpent -= delta;
 		}
 		updateFPS();
@@ -140,14 +142,16 @@ public class Game extends Etat {
 
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		//glEnable(GL_COLOR_MATERIAL);
+		// glEnable(GL_COLOR_MATERIAL);
 		// transform for camera
 		setCamera();
 
 		glPushMatrix();
 
-		/*GL11.glEnable(GL11.GL_LIGHTING);
-		GL11.glEnable(GL11.GL_LIGHT1); // Enable Light One*/
+		/*
+		 * GL11.glEnable(GL11.GL_LIGHTING); GL11.glEnable(GL11.GL_LIGHT1); //
+		 * Enable Light One
+		 */
 
 		drawMap();
 		textureSerpent.bind();
@@ -408,7 +412,7 @@ public class Game extends Etat {
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST); // Really Nice
 															// Perspective
 															// Calculations
-		//glEnable(GL_COLOR_MATERIAL);
+		// glEnable(GL_COLOR_MATERIAL);
 		glEnable(GL_TEXTURE_2D);
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glEnable(GL_BLEND);
@@ -417,25 +421,25 @@ public class Game extends Etat {
 		glLoadIdentity();
 		glOrtho(0, SnakeGame.WIDTH, SnakeGame.HEIGHT, 0, 100, -100);
 		glMatrixMode(GL_MODELVIEW);
-		
-		/*float lDR = 1.0f;
 
-		float lightAmbient[] = { 5f, 5f, 5f, 1.0f }; // Ambient Light Values
-		float lightDiffuse[] = { 0.3f, lDR, lDR, 1.0f }; // Diffuse Light Values
-		float lightPosition[] = { 0.0f, 0.0f, 0.0f, 0.0f }; // Light Position
-
-		ByteBuffer temp = ByteBuffer.allocateDirect(16);
-		temp.order(ByteOrder.nativeOrder());
-		GL11.glLight(GL11.GL_LIGHT1, GL11.GL_AMBIENT, (FloatBuffer) temp
-				.asFloatBuffer().put(lightAmbient).flip()); // Setup The Ambient
-															// Light
-		GL11.glLight(GL11.GL_LIGHT1, GL11.GL_DIFFUSE, (FloatBuffer) temp
-				.asFloatBuffer().put(lightDiffuse).flip()); // Setup The Diffuse
-															// Light
-		GL11.glLight(GL11.GL_LIGHT1, GL11.GL_POSITION, (FloatBuffer) temp
-				.asFloatBuffer().put(lightPosition).flip()); // Position The
-																// Light*/
-		
+		/*
+		 * float lDR = 1.0f;
+		 * 
+		 * float lightAmbient[] = { 5f, 5f, 5f, 1.0f }; // Ambient Light Values
+		 * float lightDiffuse[] = { 0.3f, lDR, lDR, 1.0f }; // Diffuse Light
+		 * Values float lightPosition[] = { 0.0f, 0.0f, 0.0f, 0.0f }; // Light
+		 * Position
+		 * 
+		 * ByteBuffer temp = ByteBuffer.allocateDirect(16);
+		 * temp.order(ByteOrder.nativeOrder()); GL11.glLight(GL11.GL_LIGHT1,
+		 * GL11.GL_AMBIENT, (FloatBuffer) temp
+		 * .asFloatBuffer().put(lightAmbient).flip()); // Setup The Ambient //
+		 * Light GL11.glLight(GL11.GL_LIGHT1, GL11.GL_DIFFUSE, (FloatBuffer)
+		 * temp .asFloatBuffer().put(lightDiffuse).flip()); // Setup The Diffuse
+		 * // Light GL11.glLight(GL11.GL_LIGHT1, GL11.GL_POSITION, (FloatBuffer)
+		 * temp .asFloatBuffer().put(lightPosition).flip()); // Position The //
+		 * Light
+		 */
 
 	}
 
@@ -463,29 +467,33 @@ public class Game extends Etat {
 				if (Keyboard.getEventKey() == Keyboard.KEY_R) {
 					return SnakeGame.RESTART;
 				}
-				
-				//Change the snake color
+
+				// Change the snake color
 				if (Keyboard.getEventKey() == Keyboard.KEY_U) {
-					float nRed = snake.getC().getRed()+10;
-					nRed%=256;
-					snake.setC(new java.awt.Color(nRed/255, snake.getC().getGreen()/255, snake.getC().getBlue()/255));
+					float nRed = snake.getC().getRed() + 10;
+					nRed %= 256;
+					snake.setC(new java.awt.Color(nRed / 255, snake.getC()
+							.getGreen() / 255, snake.getC().getBlue() / 255));
 				}
 				if (Keyboard.getEventKey() == Keyboard.KEY_I) {
-					float nGreen = snake.getC().getGreen()+10;
-					nGreen%=256;
-					snake.setC(new java.awt.Color(snake.getC().getRed()/255, nGreen/255, snake.getC().getBlue()/255));
+					float nGreen = snake.getC().getGreen() + 10;
+					nGreen %= 256;
+					snake.setC(new java.awt.Color(snake.getC().getRed() / 255,
+							nGreen / 255, snake.getC().getBlue() / 255));
 				}
 				if (Keyboard.getEventKey() == Keyboard.KEY_O) {
-					float nBlue = snake.getC().getBlue()+10;
-					nBlue%=256;
-					snake.setC(new java.awt.Color(snake.getC().getRed()/255, snake.getC().getGreen()/255, nBlue/255));
+					float nBlue = snake.getC().getBlue() + 10;
+					nBlue %= 256;
+					snake.setC(new java.awt.Color(snake.getC().getRed() / 255,
+							snake.getC().getGreen() / 255, nBlue / 255));
 				}
 
-				if ((Keyboard.getEventKey() == Keyboard.KEY_UP || Keyboard.getEventKey() == Keyboard.KEY_DOWN) 
-						&& SnakeGame.switchView && snake.getDirection()==0) {
-						snake.setDirection(Game.DOWN);
+				if ((Keyboard.getEventKey() == Keyboard.KEY_UP || Keyboard
+						.getEventKey() == Keyboard.KEY_DOWN)
+						&& SnakeGame.switchView && snake.getDirection() == 0) {
+					snake.setDirection(Game.DOWN);
 				}
-				
+
 				if (Keyboard.getEventKey() == Keyboard.KEY_LEFT
 						&& SnakeGame.switchView) {
 					snake.setMouvement(Game.RIGHT);
