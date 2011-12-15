@@ -60,10 +60,16 @@ public class Game extends Etat {
 	public static List<Position> walls = new ArrayList<Position>();
 
 	public Game() throws IOException {
-		options = Fichier.lire("options");
-		SPEED =  options.get("SPEED").equals(null) ? 0.07f : Float.parseFloat(options.get("SPEED"));
-		SPEED_BULLET =  options.get("SPEED_BULLET").equals(null) ? 0.02f : Float.parseFloat(options.get("SPEED_BULLET"));
-		SnakeGame.APPLENUMBER =  options.get("APPLENUMBER") == null ? 5 : Integer.parseInt(options.get("APPLENUMBER"));
+		try{
+			options = Fichier.lire("options.txt");
+			SPEED =  options.get("SPEED").equals(null) ? 0.07f : Float.parseFloat(options.get("SPEED"));
+			SPEED_BULLET =  options.get("SPEED_BULLET").equals(null) ? 0.02f : Float.parseFloat(options.get("SPEED_BULLET"));
+			SnakeGame.APPLENUMBER =  options.get("APPLENUMBER") == null ? 5 : Integer.parseInt(options.get("APPLENUMBER"));
+		}catch(Exception e){
+			System.err.println("Fichier d'options manquant ou incorrect.");
+			
+		}
+		
 
 		initializeGame();
 		initGL();
