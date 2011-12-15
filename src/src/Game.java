@@ -3,9 +3,6 @@ package src;
 import static org.lwjgl.opengl.GL11.*;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +10,6 @@ import java.util.List;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 import org.newdawn.slick.Color;
 import tools.MazeReader;
@@ -144,8 +140,8 @@ public class Game extends Etat {
 
 		glPushMatrix();
 
-		GL11.glEnable(GL11.GL_LIGHTING);
-		GL11.glEnable(GL11.GL_LIGHT1); // Enable Light One
+		/*GL11.glEnable(GL11.GL_LIGHTING);
+		GL11.glEnable(GL11.GL_LIGHT1); // Enable Light One*/
 
 		drawMap();
 		textureSerpent.bind();
@@ -416,7 +412,7 @@ public class Game extends Etat {
 		glOrtho(0, SnakeGame.WIDTH, SnakeGame.HEIGHT, 0, 100, -100);
 		glMatrixMode(GL_MODELVIEW);
 		
-		float lDR = 1.0f;
+		/*float lDR = 1.0f;
 
 		float lightAmbient[] = { 5f, 5f, 5f, 1.0f }; // Ambient Light Values
 		float lightDiffuse[] = { 0.3f, lDR, lDR, 1.0f }; // Diffuse Light Values
@@ -432,7 +428,7 @@ public class Game extends Etat {
 															// Light
 		GL11.glLight(GL11.GL_LIGHT1, GL11.GL_POSITION, (FloatBuffer) temp
 				.asFloatBuffer().put(lightPosition).flip()); // Position The
-																// Light
+																// Light*/
 		
 
 	}
@@ -460,6 +456,23 @@ public class Game extends Etat {
 				}
 				if (Keyboard.getEventKey() == Keyboard.KEY_R) {
 					return SnakeGame.RESTART;
+				}
+				
+				//Change the snake color
+				if (Keyboard.getEventKey() == Keyboard.KEY_U) {
+					float nRed = snake.getC().getRed()+10;
+					nRed%=256;
+					snake.setC(new java.awt.Color(nRed/255, snake.getC().getGreen()/255, snake.getC().getBlue()/255));
+				}
+				if (Keyboard.getEventKey() == Keyboard.KEY_I) {
+					float nGreen = snake.getC().getGreen()+10;
+					nGreen%=256;
+					snake.setC(new java.awt.Color(snake.getC().getRed()/255, nGreen/255, snake.getC().getBlue()/255));
+				}
+				if (Keyboard.getEventKey() == Keyboard.KEY_O) {
+					float nBlue = snake.getC().getBlue()+10;
+					nBlue%=256;
+					snake.setC(new java.awt.Color(snake.getC().getRed()/255, snake.getC().getGreen()/255, nBlue/255));
 				}
 
 				if ((Keyboard.getEventKey() == Keyboard.KEY_UP || Keyboard.getEventKey() == Keyboard.KEY_DOWN) 
