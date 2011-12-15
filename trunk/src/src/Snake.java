@@ -181,12 +181,12 @@ public class Snake {
 
 	public void draw() {
 
-		drawSnakeHead(x, y, 0, Game.SNAKE_SIZE + 1);
+		drawSnakeHead(x, y, 0, (float)Game.SNAKE_SIZE+1);
 		// Dessin du serpent
 		glColor3f(1, 1, 1);
 		for (int i = 0; i < positions.size(); i++) {
 			drawBody(positions.get(i).getX(), positions.get(i).getY(), 0,
-					Game.SNAKE_SIZE * 2);
+					(float)Game.SNAKE_SIZE * 2);
 		}
 
 	}
@@ -203,7 +203,7 @@ public class Snake {
 
 	}
 
-	private void drawSnakeHead(float x, float y, float z, int size) {
+	private void drawSnakeHead(float x, float y, float z, float size) {
 
 		glPushMatrix(); // Reset The View
 		// glLoadIdentity();
@@ -228,6 +228,7 @@ public class Snake {
 		}
 
 		glRotatef(rotation, 0, 0, 1.0f);
+		glColor3f(((float)c.getRed())/255, ((float)c.getGreen())/255, ((float)c.getBlue())/255);
 		glBegin(GL_QUADS);
 		// bottom RIGHT
 		glVertex3f(0, size, 0);
@@ -296,7 +297,6 @@ public class Snake {
 		glEnd();
 
 		glBegin(GL_POLYGON);
-		glColor3f(1, 0, 0);
 		glVertex3f(0, size, 1);
 		glVertex3f(size, 0, 1);
 		glVertex3f(size, -size, 1);
@@ -308,7 +308,6 @@ public class Snake {
 
 		glEnd();
 		glBegin(GL_POLYGON);
-		glColor3f(0, 1, 0);
 		glVertex3f(0, size, size);
 		glVertex3f(size, 0, size);
 		glVertex3f(size, -size, size);
@@ -320,15 +319,14 @@ public class Snake {
 
 		glEnd();
 		glBegin(GL_POLYGON);
-		glColor3f(1, 0, 0);
 		glVertex3f(0, size, size);
 		glVertex3f(-size, 0, 1);
 		glVertex3f(size, 0, 1);
-
 		glEnd();
+		
 		// Rajouter deux yeux !
-		glColor3f(0.5f, 0.5f, 0.5f);
-		int eyes = size / 2;
+		/*glColor3f(0.5f, 0.5f, 0.5f);
+		float eyes = size / 2;
 		glBegin(GL_QUADS);
 		glColor3f(1f, 1f, 1f);
 		glVertex3f(0, eyes, size);
@@ -350,7 +348,7 @@ public class Snake {
 		glVertex3f(-eyes * 2, eyes * 2, size);
 		glVertex3f(-eyes * 2, eyes, size);
 		glVertex3f(eyes, eyes, size);
-		glEnd();
+		glEnd();*/
 
 		glPopMatrix();
 	}
