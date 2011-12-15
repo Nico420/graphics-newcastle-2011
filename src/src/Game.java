@@ -21,6 +21,11 @@ import org.newdawn.slick.util.ResourceLoader;
 
 import tools.Fichier;
 
+/**
+ * Game state. In this state, you control the snake, interact with the map,...
+ * @author Nicolas
+ *
+ */
 @SuppressWarnings("deprecation")
 public class Game extends Etat {
 

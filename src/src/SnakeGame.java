@@ -3,12 +3,15 @@ package src;
 import java.io.IOException;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import tools.Position;
 
-
+/**
+ * Main class of the application
+ * @author Nicolas
+ *
+ */
 public class SnakeGame {
 
 	Etat etat;
@@ -45,17 +48,11 @@ public class SnakeGame {
 	public static boolean exit = false;
 	public static boolean switchView = false;
 
-	public int chooseBestDisplay() throws LWJGLException {
-		int res = 3;
-		return res;
-	}
-
 	public void start() throws LWJGLException, InterruptedException,
 			IOException {
 
 		try {
-			int bestDisplay = chooseBestDisplay();
-			DisplayMode dm = Display.getAvailableDisplayModes()[bestDisplay];
+			DisplayMode dm = Display.getAvailableDisplayModes()[3];
 			Display.setDisplayMode(dm);
 			Display.setFullscreen(false);
 			Display.setResizable(true);
@@ -68,10 +65,13 @@ public class SnakeGame {
 			System.exit(0);
 		}
 
+		//Initialize state
 		etat = new Menu();
 		getDelta();
 		lastFPS = getTime();
+		
 		while (!Display.isCloseRequested() && !exit) { // Done Drawing The Quad
+			//If require we change the state
 			if (etatTemp == QUIT) {
 				exit = true;
 			} else if (etatTemp != etatActual) {
@@ -98,8 +98,10 @@ public class SnakeGame {
 			}
 
 			int delta = getDelta();
+			//Update and draw the state.
 			etatTemp = etat.update(delta);
 			etat.renderGL();
+			//Checking if keyboard interaction made the state change
 			int etatT = etat.pollInput();
 			if (etatT != etatActual) {
 				etatTemp = etatT;
@@ -115,28 +117,6 @@ public class SnakeGame {
 			InterruptedException, IOException {
 		SnakeGame game = new SnakeGame();
 		game.start();
-	}
-
-	public void pollInput() throws LWJGLException, IOException {
-		while (Keyboard.next()) {
-			if (Keyboard.getEventKeyState()) {
-				if (Keyboard.getEventKey() == Keyboard.KEY_A) {
-					if (Display.isFullscreen())
-						Display.setFullscreen(false);
-					else
-						Display.setFullscreen(true);
-				}
-				if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
-					exit = true;
-				}
-				if (Keyboard.getEventKey() == Keyboard.KEY_V) {
-					switchView = switchView ? false : true;
-				}
-				if (Keyboard.getEventKey() == Keyboard.KEY_R) {
-					etat = new Game();
-				}
-			}
-		}
 	}
 
 	private int getDelta() {

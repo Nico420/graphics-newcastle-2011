@@ -11,6 +11,11 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 import org.newdawn.slick.Color;
 
+/**
+ * Count down before the game display
+ * @author Nicolas
+ *
+ */
 public class Countdown extends Etat {
 
 	public Countdown() throws IOException {

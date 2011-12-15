@@ -14,6 +14,12 @@ import static org.lwjgl.opengl.GL11.glVertex3f;
 import java.awt.Color;
 import tools.Position;
 
+/**
+ * Implementation of items that you can find on the map.
+ * 
+ * @author Nicolas
+ * 
+ */
 public class Eatable {
 
 	public static final int GROW_UP = 1;
@@ -25,24 +31,41 @@ public class Eatable {
 	protected float bounce;
 	protected boolean direction = false;
 
+	/**
+	 * x position of the item
+	 */
 	public float x;
+	/**
+	 * x position of the item
+	 */
 	public float y;
 
 	public Color color;
+	/**
+	 * Each item as an action(Reduce the snake, multi points,...)
+	 */
 	public int action;
 
 	/**
+	 * During the creation of an item, we have to check for not placing it on a
+	 * wall.
+	 * 
 	 * @param x
+	 *            x position
 	 * @param y
+	 *            y position
 	 * @param color
+	 *            item color
 	 * @param action
+	 *            action
 	 */
 	public Eatable(float x, float y, Color color, int action) {
 		super();
 		this.color = color;
 		this.action = action;
 		while ((new Position(this.x, this.y)).checkCollapse(Game.walls,
-				Game.WALL_SIZE, Game.APPLE_SIZE) || (new Position(this.x, this.y)).checkCollapse(Game.object,
+				Game.WALL_SIZE, Game.APPLE_SIZE)
+				|| (new Position(this.x, this.y)).checkCollapse(Game.object,
 						Game.SNAKE_SIZE * 2, Game.APPLE_SIZE)) {
 			this.x = (float) (-(Game.MAP_SIZE - Game.APPLE_SIZE) + ((Game.MAP_SIZE - Game.APPLE_SIZE) * 2)
 					* Math.random());
@@ -122,6 +145,10 @@ public class Eatable {
 				+ ", action=" + action + "]";
 	}
 
+	/**
+	 * Drawing an item This is the default drawing, making an Apple. If you want
+	 * to create another drawing, just redefine this method in the new item Class.
+	 */
 	public void draw() {
 		float a = Game.APPLE_SIZE / 2;
 		glPushMatrix();

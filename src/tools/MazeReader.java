@@ -4,21 +4,28 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Read positions from a file
+ * 
+ * @author Nicolas
+ * 
+ */
 public class MazeReader {
 
 	private final File fFile;
 
-	public static ArrayList<Position> buildWallList(String s) throws FileNotFoundException{
+	public static ArrayList<Position> buildWallList(String s)
+			throws FileNotFoundException {
 		MazeReader parser = new MazeReader(s);
 		return parser.processLineByLine();
 	}
 
-	
 	public MazeReader(String aFileName) {
 		fFile = new File(aFileName);
 	}
 
-	public final ArrayList<Position> processLineByLine() throws FileNotFoundException {
+	public final ArrayList<Position> processLineByLine()
+			throws FileNotFoundException {
 		// Note that FileReader is used, not File, since File is not Closeable
 		Scanner scanner = new Scanner(new FileReader(fFile));
 		try {
@@ -28,7 +35,7 @@ public class MazeReader {
 				Position e = processLine(scanner.nextLine());
 				wallsFromFile.add(e);
 			}
-			
+
 			return wallsFromFile;
 		} finally {
 			scanner.close();
@@ -46,7 +53,8 @@ public class MazeReader {
 		if (scanner.hasNext()) {
 			String name = scanner.next();
 			String value = scanner.next();
-			p = new Position(Float.parseFloat(name.trim()), Float.parseFloat(value.trim()));
+			p = new Position(Float.parseFloat(name.trim()),
+					Float.parseFloat(value.trim()));
 			log(p);
 		} else {
 			log("Empty or invalid line. Unable to process.");
@@ -54,11 +62,10 @@ public class MazeReader {
 		return p;
 	}
 
-
 	private static void log(Object aObject) {
-		//System.out.println(String.valueOf(aObject));
+		// System.out.println(String.valueOf(aObject));
 	}
-	
+
 	public static void main(String[] aArgs) throws FileNotFoundException {
 		MazeReader parser = new MazeReader("maze.txt");
 		parser.processLineByLine();

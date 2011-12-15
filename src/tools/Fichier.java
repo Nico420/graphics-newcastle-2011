@@ -12,15 +12,25 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Reading and writing in files
+ * @author Nicolas
+ *
+ */
 public class Fichier {
 
 	public static final int MAX_SCORE = 10;
 	static LinkedList<Integer> highScore = new LinkedList<Integer>();
 
+	/**
+	 * Write a string into a file
+	 * @param nomFic File to write in
+	 * @param i String to write
+	 */
 	public static void ecrire(String nomFic, int i) {
 
 		highScore = getScore(nomFic);
-		int position = sort(highScore,i);
+		int position = getInsertionPosition(highScore,i);
 		highScore.add(position,i);
 		if(highScore.size()>MAX_SCORE)
 			highScore = new LinkedList<Integer>(highScore.subList(0, MAX_SCORE));
@@ -37,7 +47,7 @@ public class Fichier {
 
 	}
 
-	private static int sort(List<Integer> highScore2, int a) {
+	private static int getInsertionPosition(List<Integer> highScore2, int a) {
 		int position = 0;
 		Iterator<Integer> ite = highScore2.iterator();
 		while(ite.hasNext()){
@@ -50,10 +60,16 @@ public class Fichier {
 		return position;
 	}
 
+	//Test
 	public static void main(String[] args){
 		ecrire("highScore.txt", 350);
 	}
 
+	/**
+	 * Generate the score list from the high score file
+	 * @param string File to read
+	 * @return high score list
+	 */
 	@SuppressWarnings("unchecked")
 	public static LinkedList<Integer> getScore(String string) {
 		try {
@@ -67,6 +83,11 @@ public class Fichier {
 		return highScore;
 	}
 
+	/**
+	 * Generate a hashmap from a text file
+	 * @param nomFich file to read
+	 * @return hashmap from the file.
+	 */
 	public static HashMap<String, String> lire(String nomFich) {
 		HashMap<String, String> res = new HashMap<String, String>();
 		try{
