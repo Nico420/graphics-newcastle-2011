@@ -3,6 +3,9 @@ package src;
 import static org.lwjgl.opengl.GL11.*;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,8 +26,9 @@ import tools.Fichier;
 
 /**
  * Game state. In this state, you control the snake, interact with the map,...
+ * 
  * @author Nicolas
- *
+ * 
  */
 @SuppressWarnings("deprecation")
 public class Game extends Etat {
@@ -147,16 +151,14 @@ public class Game extends Etat {
 
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		// glEnable(GL_COLOR_MATERIAL);
+		glEnable(GL_COLOR_MATERIAL);
 		// transform for camera
 		setCamera();
 
 		glPushMatrix();
 
-		/*
-		 * GL11.glEnable(GL11.GL_LIGHTING); GL11.glEnable(GL11.GL_LIGHT1); //
-		 * Enable Light One
-		 */
+		glEnable(GL_LIGHTING);
+		glEnable(GL_LIGHT1); // Enable Light One
 
 		drawMap();
 		textureSerpent.bind();
@@ -427,24 +429,27 @@ public class Game extends Etat {
 		glOrtho(0, SnakeGame.WIDTH, SnakeGame.HEIGHT, 0, 100, -100);
 		glMatrixMode(GL_MODELVIEW);
 
-		/*
-		 * float lDR = 1.0f;
-		 * 
-		 * float lightAmbient[] = { 5f, 5f, 5f, 1.0f }; // Ambient Light Values
-		 * float lightDiffuse[] = { 0.3f, lDR, lDR, 1.0f }; // Diffuse Light
-		 * Values float lightPosition[] = { 0.0f, 0.0f, 0.0f, 0.0f }; // Light
-		 * Position
-		 * 
-		 * ByteBuffer temp = ByteBuffer.allocateDirect(16);
-		 * temp.order(ByteOrder.nativeOrder()); GL11.glLight(GL11.GL_LIGHT1,
-		 * GL11.GL_AMBIENT, (FloatBuffer) temp
-		 * .asFloatBuffer().put(lightAmbient).flip()); // Setup The Ambient //
-		 * Light GL11.glLight(GL11.GL_LIGHT1, GL11.GL_DIFFUSE, (FloatBuffer)
-		 * temp .asFloatBuffer().put(lightDiffuse).flip()); // Setup The Diffuse
-		 * // Light GL11.glLight(GL11.GL_LIGHT1, GL11.GL_POSITION, (FloatBuffer)
-		 * temp .asFloatBuffer().put(lightPosition).flip()); // Position The //
-		 * Light
-		 */
+		float lDR = 1.0f;
+
+		float lightAmbient[] = { 5f, 5f, 5f, 1.0f }; // Ambient Light Values
+		float lightDiffuse[] = { 0.3f, lDR, lDR, 1.0f }; // Diffuse LightValues
+		float lightPosition[] = { 0.0f, 0.0f, 0.0f, 0.0f }; // Light Position
+
+		ByteBuffer temp = ByteBuffer.allocateDirect(16);
+		temp.order(ByteOrder.nativeOrder());
+		glLight(GL_LIGHT1, GL_AMBIENT,
+				(FloatBuffer) temp.asFloatBuffer().put(lightAmbient).flip()); // Setup
+																				// The
+																				// Ambient
+																				// //Light
+		glLight(GL_LIGHT1, GL_DIFFUSE,
+				(FloatBuffer) temp.asFloatBuffer().put(lightDiffuse).flip()); // Setup
+																				// The
+																				// Diffuse
+		// Light
+		glLight(GL_LIGHT1, GL_POSITION, (FloatBuffer) temp
+				.asFloatBuffer().put(lightPosition).flip()); // Position The //
+																// Light
 
 	}
 
