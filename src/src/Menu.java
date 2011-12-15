@@ -56,10 +56,7 @@ public class Menu extends Etat {
 		// Title
 
 		// Creating and using texture
-		Texture icone = TextureLoader.getTexture("PNG",
-				ResourceLoader.getResourceAsStream("texture/snake_icone.png"));
-		Texture pomme = TextureLoader.getTexture("PNG",
-				ResourceLoader.getResourceAsStream("texture/pomme_ml.png"));
+		
 		// Selector
 		icone.bind();
 		glColor3f(1, 1, 1);

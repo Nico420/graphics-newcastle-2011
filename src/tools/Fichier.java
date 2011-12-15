@@ -1,9 +1,13 @@
 package tools;
 
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -61,5 +65,25 @@ public class Fichier {
 		} catch (ClassNotFoundException e) {
 		}
 		return highScore;
+	}
+
+	public static HashMap<String, String> lire(String nomFich) {
+		HashMap<String, String> res = new HashMap<String, String>();
+		try{
+			InputStream ips=new FileInputStream(nomFich); 
+			InputStreamReader ipsr=new InputStreamReader(ips);
+			BufferedReader br=new BufferedReader(ipsr);
+			String ligne;
+			while ((ligne=br.readLine())!=null){
+				System.out.println(ligne);
+				String[] tmp = ligne.split("\\s");
+				res.put(tmp[0], tmp[1]);
+			}
+			br.close(); 
+		}		
+		catch (Exception e){
+			System.out.println(e.toString());
+		}
+		return res;
 	}
 }

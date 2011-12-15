@@ -8,6 +8,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import tools.Position;
 
+
 public class SnakeGame {
 
 	Etat etat;
@@ -22,7 +23,7 @@ public class SnakeGame {
 	public static final int PERDU = 5;
 	public static final int RESTART = 6;
 
-	public static final int APPLENUMBER = 5;
+	public static int APPLENUMBER = 5;
 
 	public static final int HEIGHT = 600;
 	public static final int WIDTH = 800;

@@ -86,7 +86,7 @@ public class Snake {
 		this.c = Color.BLUE;
 		this.lenght = 0;
 
-		this.speed = Game.SPEED;
+		this.speed = Game.SPEED * Game.delta;
 	}
 
 	/**
@@ -181,12 +181,12 @@ public class Snake {
 
 	public void draw() {
 
-		drawSnakeHead(x, y, 0, Game.SNAKE_SIZE+1);
+		drawSnakeHead(x, y, 0, Game.SNAKE_SIZE + 1);
 		// Dessin du serpent
 		glColor3f(1, 1, 1);
 		for (int i = 0; i < positions.size(); i++) {
 			drawBody(positions.get(i).getX(), positions.get(i).getY(), 0,
-					Game.SNAKE_SIZE*2);
+					Game.SNAKE_SIZE * 2);
 		}
 
 	}
@@ -195,9 +195,9 @@ public class Snake {
 
 		while ((new Position(x, y).checkCollapse(walls, Game.WALL_SIZE,
 				Game.SNAKE_SIZE))) {
-			x = (float) (-((Game.MAP_SIZE - 10) - Game.SNAKE_SIZE) + ((Game.MAP_SIZE - 10) * 2 - Game.SNAKE_SIZE)
+			x = (float) (-(Game.MAP_SIZE - 10 - Game.SNAKE_SIZE) + ((Game.MAP_SIZE - 10 - Game.SNAKE_SIZE) * 2)
 					* Math.random());
-			y = (float) (-((Game.MAP_SIZE - 10) - Game.SNAKE_SIZE) + ((Game.MAP_SIZE - 10) * 2 - Game.SNAKE_SIZE)
+			y = (float) (-(Game.MAP_SIZE - 10 - Game.SNAKE_SIZE) + ((Game.MAP_SIZE - 10 - Game.SNAKE_SIZE) * 2)
 					* Math.random());
 		}
 
@@ -274,8 +274,7 @@ public class Snake {
 
 		glVertex3f(size, -size, 1);
 		glVertex3f(size, -size, size);
-		glVertex3f(0.5f * size, -1.5f * size,
-				size);
+		glVertex3f(0.5f * size, -1.5f * size, size);
 		glVertex3f(0.5f * size, -1.5f * size, 1);
 
 		// top Left
@@ -291,8 +290,7 @@ public class Snake {
 
 		glVertex3f(-size, -size, 1);
 		glVertex3f(-size, -size, size);
-		glVertex3f(-0.5f * size, -1.5f * size,
-				size);
+		glVertex3f(-0.5f * size, -1.5f * size, size);
 		glVertex3f(-0.5f * size, -1.5f * size, 1);
 
 		glEnd();
@@ -314,10 +312,8 @@ public class Snake {
 		glVertex3f(0, size, size);
 		glVertex3f(size, 0, size);
 		glVertex3f(size, -size, size);
-		glVertex3f(0.5f * size, -1.5f * size,
-				size);
-		glVertex3f(-0.5f * size, -1.5f * size,
-				size);
+		glVertex3f(0.5f * size, -1.5f * size, size);
+		glVertex3f(-0.5f * size, -1.5f * size, size);
 		glVertex3f(-size, -size, size);
 		glVertex3f(-size, 0, size);
 		glVertex3f(0, size, size);
@@ -331,10 +327,10 @@ public class Snake {
 
 		glEnd();
 		// Rajouter deux yeux !
-		glColor3f(0.5f,0.5f,0.5f);
-		int eyes = size/2;
+		glColor3f(0.5f, 0.5f, 0.5f);
+		int eyes = size / 2;
 		glBegin(GL_QUADS);
-		glColor3f(1f,1f,1f);
+		glColor3f(1f, 1f, 1f);
 		glVertex3f(0, eyes, size);
 		glVertex3f(eyes, eyes, size);
 		glVertex3f(eyes, 0, size);
@@ -343,19 +339,19 @@ public class Snake {
 		glVertex3f(-eyes, eyes, size);
 		glVertex3f(-eyes, 0, size);
 		glVertex3f(0, 0, size);
-		
-		eyes/=2;
-		glColor3f(0f,0f,1f);
-		glVertex3f(eyes, eyes*2, size);
-		glVertex3f(eyes*2, eyes*2, size);
-		glVertex3f(eyes*2, eyes, size);
+
+		eyes /= 2;
+		glColor3f(0f, 0f, 1f);
+		glVertex3f(eyes, eyes * 2, size);
+		glVertex3f(eyes * 2, eyes * 2, size);
+		glVertex3f(eyes * 2, eyes, size);
 		glVertex3f(eyes, eyes, size);
-		glVertex3f(eyes, eyes*2, size);
-		glVertex3f(-eyes*2, eyes*2, size);
-		glVertex3f(-eyes*2, eyes, size);
+		glVertex3f(eyes, eyes * 2, size);
+		glVertex3f(-eyes * 2, eyes * 2, size);
+		glVertex3f(-eyes * 2, eyes, size);
 		glVertex3f(eyes, eyes, size);
 		glEnd();
-		
+
 		glPopMatrix();
 	}
 
@@ -439,7 +435,9 @@ public class Snake {
 	@Override
 	public String toString() {
 		return "Snake [name=" + name + ", positions=" + positions + ", x=" + x
-				+ ", y=" + y + ", c=" + c + ", lenght=" + lenght + "]";
+				+ ", y=" + y + ", c=" + c + ", lenght=" + lenght
+				+ ", mouvement=" + mouvement + ", direction=" + direction
+				+ ", score=" + score + ", speed=" + speed + "]";
 	}
 
 	public int addPosition(int appleEat) {
@@ -486,6 +484,8 @@ public class Snake {
 
 	public void update(int delta, boolean b) {
 		if (!b) {
+			if (this.getMouvement() == -1)
+				this.setMouvement(this.getDirection());
 			if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
 				if (!(this.getMouvement() == Game.RIGHT))
 					this.setMouvement(Game.LEFT);
@@ -559,7 +559,7 @@ public class Snake {
 				this.setY(this.getY() + this.speed * delta);
 				break;
 			}
-			this.setMouvement(0);
+			this.setMouvement(-1);
 		}
 
 	}

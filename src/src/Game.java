@@ -7,6 +7,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.lwjgl.LWJGLException;
@@ -32,13 +33,14 @@ public class Game extends Etat {
 	public static final int UP = 2;
 	public static final int DOWN = 4;
 
+	HashMap<String, String> options = new HashMap<String, String>();
 	public static final int SNAKE_SIZE = 3;
 	public static final int MAP_SIZE = 100;
 	public static final int APPLE_SIZE = 2;
 	public static final int WALL_SIZE = 5;
 
-	public static final float SPEED = 0.07f;
-	public static final float SPEED_BULLET = 0.02f;
+	public static float SPEED;
+	public static float SPEED_BULLET = 0.02f;
 
 	Texture textureSerpent;
 	Texture textureSol;
@@ -59,20 +61,14 @@ public class Game extends Etat {
 
 	static int delta;
 
-	float lightPos[] = { 5.0f, 5.0f, 4.0f, 10.0f }; // Light Position
-	float lightAmb[] = { 0.7f, 0.7f, 0.7f, 1.0f }; // Ambient Light Values
-	float lightDif[] = { 0.6f, 0.6f, 0.6f, 1.0f }; // Diffuse Light Values
-	float lightSpc[] = { -0.2f, -0.2f, -0.2f, 1.0f }; // Specular Light Values
-	ByteBuffer byteBuffer;
-	ByteBuffer floatBuffer;
-	float matAmb[] = { 0.4f, 0.4f, 0.4f, 1.0f }; // Material - Ambient Values
-	float matDif[] = { 0.2f, 0.6f, 0.9f, 1.0f }; // Material - Diffuse Values
-	float matSpc[] = { 0.0f, 0.0f, 0.0f, 1.0f }; // Material - Specular Values
-	float matShn[] = { 0.0f, 0.0f, 0.0f, 0.0f }; // Material - Shininess
-
 	public static List<Position> walls = new ArrayList<Position>();
 
 	public Game() throws IOException {
+		options = Fichier.lire("options");
+		SPEED =  options.get("SPEED").equals(null) ? 0.07f : Float.parseFloat(options.get("SPEED"));
+		SPEED_BULLET =  options.get("SPEED_BULLET").equals(null) ? 0.02f : Float.parseFloat(options.get("SPEED_BULLET"));
+		SnakeGame.APPLENUMBER =  options.get("APPLENUMBER") == null ? 5 : Integer.parseInt(options.get("APPLENUMBER"));
+
 		initializeGame();
 		initGL();
 	}
@@ -114,7 +110,6 @@ public class Game extends Etat {
 		} else {
 			Fichier.ecrire("highScore.txt", snake.getScore());
 			SnakeGame.score = snake.getScore();
-			tuerSerpent();
 			if (mortSerpent < 0)
 				return SnakeGame.PERDU;
 			else
@@ -122,16 +117,6 @@ public class Game extends Etat {
 		}
 		updateFPS();
 		return SnakeGame.GAME;
-	}
-
-	private void tuerSerpent() {
-		glColor3f(1, 0, 0);
-		drawMur(snake.getX(), snake.getY(), 0, SNAKE_SIZE * 2);
-		for (int i = 0; i < snake.positions.size(); i++) {
-			drawMur(snake.positions.get(i).getX(), snake.positions.get(i)
-					.getY(), 0, SNAKE_SIZE * 2);
-		}
-
 	}
 
 	@Override
@@ -153,29 +138,12 @@ public class Game extends Etat {
 
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		glEnable(GL_COLOR_MATERIAL);
+		//glEnable(GL_COLOR_MATERIAL);
 		// transform for camera
 		setCamera();
 
 		glPushMatrix();
 
-		float lDR = 1.0f;
-
-		float lightAmbient[] = { 5f, 5f, 5f, 1.0f }; // Ambient Light Values
-		float lightDiffuse[] = { 0.3f, lDR, lDR, 1.0f }; // Diffuse Light Values
-		float lightPosition[] = { 0.0f, 0.0f, 0.0f, 0.0f }; // Light Position
-
-		ByteBuffer temp = ByteBuffer.allocateDirect(16);
-		temp.order(ByteOrder.nativeOrder());
-		GL11.glLight(GL11.GL_LIGHT1, GL11.GL_AMBIENT, (FloatBuffer) temp
-				.asFloatBuffer().put(lightAmbient).flip()); // Setup The Ambient
-															// Light
-		GL11.glLight(GL11.GL_LIGHT1, GL11.GL_DIFFUSE, (FloatBuffer) temp
-				.asFloatBuffer().put(lightDiffuse).flip()); // Setup The Diffuse
-															// Light
-		GL11.glLight(GL11.GL_LIGHT1, GL11.GL_POSITION, (FloatBuffer) temp
-				.asFloatBuffer().put(lightPosition).flip()); // Position The
-																// Light
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_LIGHT1); // Enable Light One
 
@@ -249,7 +217,6 @@ public class Game extends Etat {
 	}
 
 	public static void setCamera() {
-
 		if (SnakeGame.switchView) {
 			float zoom = 40f;
 			float reculCam = 30;
@@ -448,6 +415,25 @@ public class Game extends Etat {
 		glLoadIdentity();
 		glOrtho(0, SnakeGame.WIDTH, SnakeGame.HEIGHT, 0, 100, -100);
 		glMatrixMode(GL_MODELVIEW);
+		
+		float lDR = 1.0f;
+
+		float lightAmbient[] = { 5f, 5f, 5f, 1.0f }; // Ambient Light Values
+		float lightDiffuse[] = { 0.3f, lDR, lDR, 1.0f }; // Diffuse Light Values
+		float lightPosition[] = { 0.0f, 0.0f, 0.0f, 0.0f }; // Light Position
+
+		ByteBuffer temp = ByteBuffer.allocateDirect(16);
+		temp.order(ByteOrder.nativeOrder());
+		GL11.glLight(GL11.GL_LIGHT1, GL11.GL_AMBIENT, (FloatBuffer) temp
+				.asFloatBuffer().put(lightAmbient).flip()); // Setup The Ambient
+															// Light
+		GL11.glLight(GL11.GL_LIGHT1, GL11.GL_DIFFUSE, (FloatBuffer) temp
+				.asFloatBuffer().put(lightDiffuse).flip()); // Setup The Diffuse
+															// Light
+		GL11.glLight(GL11.GL_LIGHT1, GL11.GL_POSITION, (FloatBuffer) temp
+				.asFloatBuffer().put(lightPosition).flip()); // Position The
+																// Light
+		
 
 	}
 
@@ -476,6 +462,11 @@ public class Game extends Etat {
 					return SnakeGame.RESTART;
 				}
 
+				if ((Keyboard.getEventKey() == Keyboard.KEY_UP || Keyboard.getEventKey() == Keyboard.KEY_DOWN) 
+						&& SnakeGame.switchView && snake.getDirection()==0) {
+						snake.setDirection(Game.DOWN);
+				}
+				
 				if (Keyboard.getEventKey() == Keyboard.KEY_LEFT
 						&& SnakeGame.switchView) {
 					snake.setMouvement(Game.RIGHT);
