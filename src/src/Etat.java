@@ -45,7 +45,7 @@ public abstract class Etat {
 	/** last fps time */
 	long lastFPS;
 
-	public Etat() throws IOException {
+	public Etat(){
 		// Font Creation
 		Font awtFont = new Font("Times New Roman", Font.BOLD, 24);
 		font = new TrueTypeFont(awtFont, antiAlias);
@@ -93,9 +93,8 @@ public abstract class Etat {
 
 	/**
 	 * Drawing the state
-	 * @throws IOException
 	 */
-	public abstract void renderGL() throws IOException;
+	public abstract void renderGL();
 
 	public void updateFPS() {
 		if (getTime() - lastFPS > 1000) {
@@ -112,15 +111,13 @@ public abstract class Etat {
 
 	/**
 	 * OpenGL initialisation
-	 * @throws IOException
 	 */
-	protected abstract void initGL() throws IOException;
+	protected abstract void initGL();
 
 	/**
 	 * Keyboard reading
 	 * @return new state to use
-	 * @throws LWJGLException
 	 */
-	public abstract int pollInput() throws LWJGLException;
+	public abstract int pollInput();
 
 }
