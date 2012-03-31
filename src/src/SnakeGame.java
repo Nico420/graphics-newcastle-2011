@@ -8,15 +8,13 @@ import org.lwjgl.opengl.DisplayMode;
 import tools.Position;
 
 /**
- * Main class of the application
+ * Main class of the application.
+ * 
  * @author Nicolas
- *
+ * 
  */
 public class SnakeGame {
 
-	Etat etat;
-	int etatActual = MENU;
-	int etatTemp = MENU;
 	// Constant for States
 	public static final int MENU = 0;
 	public static final int GAME = 4;
@@ -36,17 +34,17 @@ public class SnakeGame {
 	public static final Position MAP_MILIEU = new Position(WIDTH - 400,
 			HEIGHT - 300);
 
-	// float lightPosition1[] = { -MAP_SIZE, -MAP_SIZE, 1f, 1f };
-
-	/** time at last frame */
-	long lastFrame;
-	/** frames per second */
-	int fps;
-	/** last fps time */
-	long lastFPS;
+	private Etat etat;
+	private int etatActual = MENU;
+	private int etatTemp = MENU;
 
 	public static boolean exit = false;
 	public static boolean switchView = false;
+	
+	// float lightPosition1[] = { -MAP_SIZE, -MAP_SIZE, 1f, 1f };
+
+	/** time at last frame */
+	private long lastFrame;
 
 	public void start() throws LWJGLException, InterruptedException,
 			IOException {
@@ -65,13 +63,12 @@ public class SnakeGame {
 			System.exit(0);
 		}
 
-		//Initialize state
+		// Initialize state
 		etat = new Menu();
 		getDelta();
-		lastFPS = getTime();
-		
+
 		while (!Display.isCloseRequested() && !exit) { // Done Drawing The Quad
-			//If require we change the state
+			// If require we change the state
 			if (etatTemp == QUIT) {
 				exit = true;
 			} else if (etatTemp != etatActual) {
@@ -98,10 +95,10 @@ public class SnakeGame {
 			}
 
 			int delta = getDelta();
-			//Update and draw the state.
+			// Update and draw the state.
 			etatTemp = etat.update(delta);
 			etat.renderGL();
-			//Checking if keyboard interaction made the state change
+			// Checking if keyboard interaction made the state change
 			int etatT = etat.pollInput();
 			if (etatT != etatActual) {
 				etatTemp = etatT;
