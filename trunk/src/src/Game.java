@@ -2,7 +2,6 @@ package src;
 
 import static org.lwjgl.opengl.GL11.*;
 
-
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -136,7 +135,7 @@ public class Game extends Etat {
 	}
 
 	@Override
-	public void renderGL() throws IOException {
+	public void renderGL(){
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		// Score Display
 		creationTexte();
@@ -176,7 +175,7 @@ public class Game extends Etat {
 
 	}
 
-	private void creationTexte() throws IOException {
+	private void creationTexte(){
 
 		glMatrixMode(GL_PROJECTION);
 		glDisable(GL_LIGHTING);
@@ -227,7 +226,7 @@ public class Game extends Etat {
 
 	}
 
-	private void afficheScore(Snake s) throws IOException {
+	private void afficheScore(Snake s){
 		fontMenu.drawString(20, 50, "Snake 3D", Color.blue);
 		fontPower.drawString(20, 150, "Score : \n" + s.getScore(), Color.red);
 	}
@@ -388,7 +387,8 @@ public class Game extends Etat {
 	private void initializeGame() throws IOException {
 		bulletTime = BULLET_TIME;
 		mortSerpent = DEATH_TIMING;
-		snake = new Snake("Nico", new ArrayList<Position>(), 0f, 0f, Color.blue, 0);
+		snake = new Snake("Nico", new ArrayList<Position>(), 0f, 0f,
+				Color.blue, 0);
 		walls = MazeReader.buildWallList("maze.txt");
 		if (walls.size() == 0) {
 			float x = (float) (-((Game.MAP_SIZE) - Game.SNAKE_SIZE) + ((Game.MAP_SIZE) * 2 - Game.SNAKE_SIZE)
@@ -414,7 +414,7 @@ public class Game extends Etat {
 	}
 
 	@Override
-	protected void initGL() throws IOException {
+	protected void initGL(){
 
 		glClearDepth(1.0f); // Depth Buffer Setup
 		glEnable(GL_DEPTH_TEST); // Enables Depth Testing
@@ -432,12 +432,14 @@ public class Game extends Etat {
 		glOrtho(0, SnakeGame.WIDTH, SnakeGame.HEIGHT, 0, 100, -100);
 		glMatrixMode(GL_MODELVIEW);
 
-		//Light Creation
+		// Light Creation
 		float lDR = 10.0f;
-		float lightAmbient[] = { 0.5f, 0.5f, 0.5f, 1.0f }; // Ambient Light Values
+		float lightAmbient[] = { 0.5f, 0.5f, 0.5f, 1.0f }; // Ambient Light
+															// Values
 		float lightDiffuse[] = { lDR, lDR, lDR, 1.0f }; // Diffuse LightValues
-		//light Coming from a corner
-		float lightPosition[] = { SnakeGame.MAP_MILIEU.getX(), SnakeGame.MAP_MILIEU.getY(), 10.0f, 10.0f }; // Light Position
+		// light Coming from a corner
+		float lightPosition[] = { SnakeGame.MAP_MILIEU.getX(),
+				SnakeGame.MAP_MILIEU.getY(), 10.0f, 10.0f }; // Light Position
 
 		ByteBuffer temp = ByteBuffer.allocateDirect(16);
 		temp.order(ByteOrder.nativeOrder());
@@ -451,13 +453,15 @@ public class Game extends Etat {
 																				// The
 																				// Diffuse
 		// Light
-		glLight(GL_LIGHT1, GL_POSITION, (FloatBuffer) temp
-				.asFloatBuffer().put(lightPosition).flip()); // Position The //
-																// Light
+		glLight(GL_LIGHT1, GL_POSITION,
+				(FloatBuffer) temp.asFloatBuffer().put(lightPosition).flip()); // Position
+																				// The
+																				// //
+																				// Light
 
 	}
 
-	public int pollInput() throws LWJGLException {
+	public int pollInput() {
 		while (Keyboard.next()) {
 			if (Keyboard.getEventKeyState()) {
 				if ((bulletTime > 0)
@@ -467,10 +471,16 @@ public class Game extends Etat {
 					bulletTimeTimer = 6000;
 				}
 				if (Keyboard.getEventKey() == Keyboard.KEY_A) {
-					if (Display.isFullscreen())
-						Display.setFullscreen(false);
-					else
-						Display.setFullscreen(true);
+					try {
+						if (Display.isFullscreen()) {
+							Display.setFullscreen(false);
+						} else {
+							Display.setFullscreen(true);
+						}
+					} catch (LWJGLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 				if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
 					return SnakeGame.MENU;
@@ -486,8 +496,9 @@ public class Game extends Etat {
 				if (Keyboard.getEventKey() == Keyboard.KEY_U) {
 					float nRed = snake.getC().getRed() + 10;
 					nRed %= 256;
-					snake.setC(new Color(nRed / 255, snake.getC()
-							.getGreen() / 255, snake.getC().getBlue() / 255));
+					snake.setC(new Color(nRed / 255,
+							snake.getC().getGreen() / 255, snake.getC()
+									.getBlue() / 255));
 				}
 				if (Keyboard.getEventKey() == Keyboard.KEY_I) {
 					float nGreen = snake.getC().getGreen() + 10;
@@ -498,8 +509,8 @@ public class Game extends Etat {
 				if (Keyboard.getEventKey() == Keyboard.KEY_O) {
 					float nBlue = snake.getC().getBlue() + 10;
 					nBlue %= 256;
-					snake.setC(new Color(snake.getC().getRed() / 255,
-							snake.getC().getGreen() / 255, nBlue / 255));
+					snake.setC(new Color(snake.getC().getRed() / 255, snake
+							.getC().getGreen() / 255, nBlue / 255));
 				}
 
 				if ((Keyboard.getEventKey() == Keyboard.KEY_UP || Keyboard
