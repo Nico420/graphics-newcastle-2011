@@ -15,19 +15,20 @@ import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
 
 /**
- * Class for displaying and interacting with the Menu
+ * Class for displaying and interacting with the Menu.
+ * 
  * @author Nicolas
- *
+ * 
  */
 @SuppressWarnings("deprecation")
 public class Menu extends Etat {
 
-	int menuChoice = 0;
-	int menuChoiceTemp = 0;
+	private int menuChoice = 0;
+	private int menuChoiceTemp = 0;
 
-	Texture icone;
-	Texture pomme;
-	
+	private Texture icone;
+	private Texture pomme;
+
 	/**
 	 * Boolean flag on whether AntiAliasing is enabled or not
 	 * 
@@ -50,7 +51,7 @@ public class Menu extends Etat {
 	}
 
 	@Override
-	public void renderGL() throws IOException {
+	public void renderGL() {
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glLoadIdentity();
@@ -61,7 +62,7 @@ public class Menu extends Etat {
 		// Title
 
 		// Creating and using texture
-		
+
 		// Selector
 		icone.bind();
 		glColor3f(1, 1, 1);
@@ -99,7 +100,7 @@ public class Menu extends Etat {
 	}
 
 	@Override
-	protected void initGL() throws IOException {
+	protected void initGL() {
 		glShadeModel(GL_SMOOTH); // Enable Smooth Shading
 		glClearDepth(1.0f); // Depth Buffer Setup
 		glEnable(GL_DEPTH_TEST); // Enables Depth Testing
@@ -121,29 +122,37 @@ public class Menu extends Etat {
 		glLoadIdentity();
 	}
 
-	public int pollInput() throws LWJGLException {
+	public int pollInput() {
 		while (Keyboard.next()) {
 			if (Keyboard.getEventKeyState()) {
 
 				if (Keyboard.getEventKey() == Keyboard.KEY_UP) {
 					menuChoiceTemp = (menuChoiceTemp - 1) % 3;
-					if (menuChoiceTemp < 0)
+					if (menuChoiceTemp < 0) {
 						menuChoiceTemp = 2;
+					}
 				}
 				if (Keyboard.getEventKey() == Keyboard.KEY_DOWN) {
 					menuChoiceTemp = (menuChoiceTemp + 1) % 3;
-					if (menuChoiceTemp < 0)
+					if (menuChoiceTemp < 0) {
 						menuChoiceTemp = 2;
+					}
 				}
-				if (Keyboard.getEventKey() == Keyboard.KEY_RETURN || Keyboard.getEventKey() == Keyboard.KEY_NUMPADENTER) {
+				if (Keyboard.getEventKey() == Keyboard.KEY_RETURN
+						|| Keyboard.getEventKey() == Keyboard.KEY_NUMPADENTER) {
 					menuChoice = menuChoiceTemp + 1;
 				}
 
 				if (Keyboard.getEventKey() == Keyboard.KEY_A) {
-					if (Display.isFullscreen())
-						Display.setFullscreen(false);
-					else
-						Display.setFullscreen(true);
+					try {
+						if (Display.isFullscreen()) {
+							Display.setFullscreen(false);
+						} else {
+							Display.setFullscreen(true);
+						}
+					} catch (LWJGLException e) {
+						e.printStackTrace();
+					}
 				}
 				if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
 					return SnakeGame.QUIT;

@@ -2,9 +2,6 @@ package src;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import java.io.IOException;
-
-import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
@@ -12,15 +9,16 @@ import org.lwjgl.util.glu.GLU;
 import org.newdawn.slick.Color;
 
 /**
- * Displaying the Game Over
+ * Displaying the Game Over.
+ * 
  * @author Nicolas
- *
+ * 
  */
 public class Perdu extends Etat {
-	//Get the score from the main application
-	int score;
+	// Get the score from the main application
+	private int score;
 
-	public Perdu(int score) throws IOException {
+	public Perdu(int score) {
 		super();
 		this.score = score;
 		// TODO Auto-generated constructor stub
@@ -42,7 +40,7 @@ public class Perdu extends Etat {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void renderGL() throws IOException {
+	public void renderGL() {
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		fontTitre.drawString(SnakeGame.WIDTH / 2 - 200,
@@ -53,7 +51,7 @@ public class Perdu extends Etat {
 	}
 
 	@Override
-	protected void initGL() throws IOException {
+	protected void initGL() {
 		glShadeModel(GL_SMOOTH); // Enable Smooth Shading
 		glClearColor(0.0f, 0.0f, 0.0f, 0.5f); // Black Background
 		glClearDepth(1.0f); // Depth Buffer Setup
@@ -77,7 +75,7 @@ public class Perdu extends Etat {
 	}
 
 	@Override
-	public int pollInput() throws LWJGLException {
+	public int pollInput() {
 		while (Keyboard.next()) {
 		}
 		return SnakeGame.PERDU;

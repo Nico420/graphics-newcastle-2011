@@ -45,7 +45,7 @@ public abstract class Etat {
 	/** last fps time */
 	long lastFPS;
 
-	public Etat(){
+	public Etat() {
 		// Font Creation
 		Font awtFont = new Font("Times New Roman", Font.BOLD, 24);
 		font = new TrueTypeFont(awtFont, antiAlias);
@@ -69,6 +69,7 @@ public abstract class Etat {
 
 	/**
 	 * Updtaing the state
+	 * 
 	 * @param delta
 	 * @return New state to use
 	 * @throws LWJGLException
@@ -116,8 +117,30 @@ public abstract class Etat {
 
 	/**
 	 * Keyboard reading
+	 * 
 	 * @return new state to use
 	 */
-	public abstract int pollInput();
+	public int pollInput() {
+		while (Keyboard.next()) {
+			if (Keyboard.getEventKeyState()) {
+				if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
+					return SnakeGame.MENU;
+				}
+				if (Keyboard.getEventKey() == Keyboard.KEY_A) {
+					try {
+						if (Display.isFullscreen())
+							Display.setFullscreen(false);
+						else
+							Display.setFullscreen(true);
+					} catch (LWJGLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+
+		}
+		return -1;
+	}
 
 }
