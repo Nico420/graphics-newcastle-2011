@@ -2,6 +2,7 @@ package src;
 
 import static org.lwjgl.opengl.GL11.*;
 
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -14,10 +15,10 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.glu.GLU;
-import org.newdawn.slick.Color;
 import tools.MazeReader;
 import tools.Position;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
@@ -33,6 +34,8 @@ import tools.Fichier;
 @SuppressWarnings("deprecation")
 public class Game extends Etat {
 
+	private static final int DEATH_TIMING = 500;
+	private static final int BULLET_TIME = 5;
 	public static final int LEFT = 3;
 	public static final int RIGHT = 1;
 	public static final int UP = 2;
@@ -104,7 +107,7 @@ public class Game extends Etat {
 						&& snake.getX() + SNAKE_SIZE > item.getX()
 						&& snake.getY() - SNAKE_SIZE < item.getY()
 						&& snake.getY() + SNAKE_SIZE > item.getY()) {
-					snake.setLenght(snake.lenght + 1);
+					snake.setLenght(snake.getLenght() + 1);
 					appleEat = item.getAction();
 					if (appleEat == Eatable.REDUCE) {
 						tailReduce = 1000;
@@ -383,9 +386,9 @@ public class Game extends Etat {
 	}
 
 	private void initializeGame() throws IOException {
-		bulletTime = 5;
-		mortSerpent = 500;
-		snake = new Snake();
+		bulletTime = BULLET_TIME;
+		mortSerpent = DEATH_TIMING;
+		snake = new Snake("Nico", new ArrayList<Position>(), 0f, 0f, Color.blue, 0);
 		walls = MazeReader.buildWallList("maze.txt");
 		if (walls.size() == 0) {
 			float x = (float) (-((Game.MAP_SIZE) - Game.SNAKE_SIZE) + ((Game.MAP_SIZE) * 2 - Game.SNAKE_SIZE)
@@ -400,7 +403,7 @@ public class Game extends Etat {
 			object.add(new Apple());
 		}
 		// Initialize Snake start_position
-		snake.intialize(walls, WALL_SIZE);
+		snake.initialize(walls, WALL_SIZE);
 		SnakeGame.switchView = false;
 		textureSerpent = TextureLoader.getTexture("JPG",
 				ResourceLoader.getResourceAsStream("texture/serpent.jpg"));
@@ -483,19 +486,19 @@ public class Game extends Etat {
 				if (Keyboard.getEventKey() == Keyboard.KEY_U) {
 					float nRed = snake.getC().getRed() + 10;
 					nRed %= 256;
-					snake.setC(new java.awt.Color(nRed / 255, snake.getC()
+					snake.setC(new Color(nRed / 255, snake.getC()
 							.getGreen() / 255, snake.getC().getBlue() / 255));
 				}
 				if (Keyboard.getEventKey() == Keyboard.KEY_I) {
 					float nGreen = snake.getC().getGreen() + 10;
 					nGreen %= 256;
-					snake.setC(new java.awt.Color(snake.getC().getRed() / 255,
+					snake.setC(new Color(snake.getC().getRed() / 255,
 							nGreen / 255, snake.getC().getBlue() / 255));
 				}
 				if (Keyboard.getEventKey() == Keyboard.KEY_O) {
 					float nBlue = snake.getC().getBlue() + 10;
 					nBlue %= 256;
-					snake.setC(new java.awt.Color(snake.getC().getRed() / 255,
+					snake.setC(new Color(snake.getC().getRed() / 255,
 							snake.getC().getGreen() / 255, nBlue / 255));
 				}
 
