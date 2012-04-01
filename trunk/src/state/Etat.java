@@ -45,8 +45,8 @@ import static org.lwjgl.opengl.GL11.GL_LIGHTING;
  */
 @SuppressWarnings("deprecation")
 public abstract class Etat {
-	boolean lighting = false;
-	TextureLoader tl = new TextureLoader();
+	private boolean lighting = false;
+	private TextureLoader tl = new TextureLoader();
 
 	// ----------- Variables added for Lighting Test -----------//
 	protected FloatBuffer matSpecular;

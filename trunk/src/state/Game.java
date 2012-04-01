@@ -121,12 +121,13 @@ public class Game extends Etat {
 						pointMulti = 4000;
 					}
 					// Generate new item
-					if (Math.random() > 0.9)
+					if (Math.random() > 0.9) {
 						getObject().set(i, new BlueApple());
-					else if (Math.random() < 0.1)
+					} else if (Math.random() < 0.1) {
 						getObject().set(i, new GoldApple());
-					else
+					} else {
 						getObject().set(i, new Apple());
+					}
 				}
 			}
 		} else {
@@ -134,15 +135,16 @@ public class Game extends Etat {
 				Fichier.ecrire("highScore.txt", snake.getScore());
 				SnakeGame.score = snake.getScore();
 				return SnakeGame.PERDU;
-			} else
+			} else {
 				mortSerpent -= delta;
+			}
 		}
 		updateFPS();
 		return SnakeGame.GAME;
 	}
 
 	@Override
-	public void renderGL(){
+	public void renderGL() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		// Score Display
 		creationTexte();
@@ -176,13 +178,14 @@ public class Game extends Etat {
 		textureMur.bind();
 		// glColor3f(1, 1, 1);
 
-		for (int i = 0; i < getObject().size(); i++)
+		for (int i = 0; i < getObject().size(); i++) {
 			getObject().get(i).draw();
+		}
 		glPopMatrix();
 
 	}
 
-	private void creationTexte(){
+	private void creationTexte() {
 
 		glMatrixMode(GL_PROJECTION);
 		glDisable(GL_LIGHTING);
@@ -233,7 +236,7 @@ public class Game extends Etat {
 
 	}
 
-	private void afficheScore(Snake s){
+	private void afficheScore(Snake s) {
 		fontMenu.drawString(20, 50, "Snake 3D", Color.blue);
 		fontPower.drawString(20, 150, "Score : \n" + s.getScore(), Color.red);
 	}
@@ -421,7 +424,7 @@ public class Game extends Etat {
 	}
 
 	@Override
-	protected void initGL(){
+	protected void initGL() {
 
 		glClearDepth(1.0f); // Depth Buffer Setup
 		glEnable(GL_DEPTH_TEST); // Enables Depth Testing
@@ -441,11 +444,11 @@ public class Game extends Etat {
 
 		// Light Creation
 		float lDR = 10.0f;
-		float lightAmbient[] = { 0.5f, 0.5f, 0.5f, 1.0f }; // Ambient Light
+		float[] lightAmbient = { 0.5f, 0.5f, 0.5f, 1.0f }; // Ambient Light
 															// Values
-		float lightDiffuse[] = { lDR, lDR, lDR, 1.0f }; // Diffuse LightValues
+		float[] lightDiffuse = { lDR, lDR, lDR, 1.0f }; // Diffuse LightValues
 		// light Coming from a corner
-		float lightPosition[] = { SnakeGame.MAP_MILIEU.getX(),
+		float[] lightPosition = { SnakeGame.MAP_MILIEU.getX(),
 				SnakeGame.MAP_MILIEU.getY(), 10.0f, 10.0f }; // Light Position
 
 		ByteBuffer temp = ByteBuffer.allocateDirect(16);
@@ -493,7 +496,12 @@ public class Game extends Etat {
 					return SnakeGame.MENU;
 				}
 				if (Keyboard.getEventKey() == Keyboard.KEY_V) {
-					SnakeGame.switchView = SnakeGame.switchView ? false : true;
+					if (SnakeGame.switchView) {
+						SnakeGame.switchView = false;
+					} else {
+						SnakeGame.switchView = true;
+					}
+
 				}
 				if (Keyboard.getEventKey() == Keyboard.KEY_R) {
 					return SnakeGame.RESTART;
