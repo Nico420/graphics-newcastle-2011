@@ -33,9 +33,9 @@ public class GoldApple extends Eatable {
 	 * @inheritDoc
 	 */
 	public void draw() {
-		double red = ((float) color.getRed()) / MAX_COLOR;
-		double green = ((float) color.getGreen()) / MAX_COLOR;
-		double blue = ((float) color.getBlue()) / MAX_COLOR;
+		double red = ((float) getColor().getRed()) / MAX_COLOR;
+		double green = ((float) getColor().getGreen()) / MAX_COLOR;
+		double blue = ((float) getColor().getBlue()) / MAX_COLOR;
 		glColor3d(red, green, blue);
 		super.draw();
 	}
