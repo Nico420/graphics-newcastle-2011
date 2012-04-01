@@ -7,35 +7,89 @@ import java.util.List;
 import src.Eatable;
 
 /**
- * Position on the map
+ * Position on the map.
+ * 
  * @author Nicolas
- *
+ * 
  */
 public class Position {
-	public float x;
-	public float y;
-	public float z;
 
-	public Position(float x, float y) {
-		this.x = x;
-		this.y = y;
+	/** X position. */
+	private float x;
+	/** Y position. */
+	private float y;
+	/** Z position. */
+	private float z;
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param pX
+	 *            X position
+	 * @param pY
+	 *            Y position
+	 */
+	public Position(float pX, float pY) {
+		this.x = pX;
+		this.y = pY;
 		this.z = 0;
 	}
 
+	/**
+	 * Get X.
+	 * 
+	 * @return Position X
+	 */
 	public float getX() {
 		return x;
 	}
 
-	public void setX(float x) {
-		this.x = x;
+	/**
+	 * Set a new X.
+	 * 
+	 * @param pX
+	 *            the new X
+	 */
+	public void setX(float pX) {
+		this.x = pX;
 	}
 
+	/**
+	 * Get Y.
+	 * 
+	 * @return Position Y
+	 */
 	public float getY() {
 		return y;
 	}
 
-	public void setY(float y) {
-		this.y = y;
+	/**
+	 * Set a new Y.
+	 * 
+	 * @param pY
+	 *            the new Y
+	 */
+	public void setY(float pY) {
+		this.y = pY;
+	}
+
+	/**
+	 * Get Z.
+	 * 
+	 * @return Position Z
+	 */
+	public float getZ() {
+		return z;
+	}
+
+	/**
+	 * Set a new Z.
+	 * 
+	 * @param pZ
+	 *            the new Z
+	 */
+	public void setZ(float pZ) {
+		this.z = pZ;
 	}
 
 	@Override
@@ -43,6 +97,13 @@ public class Position {
 		return "Position [x=" + x + ", y=" + y + "]";
 	}
 
+	/**
+	 * Test equality.
+	 * 
+	 * @param o
+	 *            Object to compare
+	 * @return True if equal
+	 */
 	public boolean equals(Object o) {
 		if (o instanceof Position) {
 			return (((Position) o).getX() == this.x)
@@ -51,21 +112,44 @@ public class Position {
 		return false;
 	}
 
+	/**
+	 * Check collapsing.
+	 * 
+	 * @param positions
+	 *            Positions list
+	 * @param firstSize
+	 *            Size of the first element
+	 * @param secondSize
+	 *            Size of the second element
+	 * @return True if collapsing
+	 */
 	public boolean checkCollapse(List<Position> positions, int firstSize,
 			int secondSize) {
 		Iterator<Position> ite = positions.iterator();
 		while (ite.hasNext()) {
-				Position t = ite.next();
-				boolean collisionX = Math.abs(t.getX() - this.getX()) < secondSize
-						+ firstSize;
-				boolean collisionY = Math.abs(t.getY() - this.getY()) < secondSize
-						+ firstSize;
-				if (collisionX && collisionY)
-					return true;
+			Position t = ite.next();
+			boolean collisionX = Math.abs(t.getX() - this.getX()) < secondSize
+					+ firstSize;
+			boolean collisionY = Math.abs(t.getY() - this.getY()) < secondSize
+					+ firstSize;
+			if (collisionX && collisionY) {
+				return true;
+			}
 		}
 		return false;
 	}
 
+	/**
+	 * Check collapsing.
+	 * 
+	 * @param object
+	 *            Object list
+	 * @param firstSize
+	 *            Size of the first element
+	 * @param secondSize
+	 *            Size of the second element
+	 * @return True if collapsing
+	 */
 	public boolean checkCollapse(ArrayList<Eatable> object, int firstSize,
 			int secondSize) {
 		Iterator<Eatable> ite = object.iterator();
@@ -76,8 +160,9 @@ public class Position {
 					+ firstSize;
 			boolean collisionY = Math.abs(t.getY() - this.getY()) < secondSize
 					+ firstSize;
-			if (collisionX && collisionY)
+			if (collisionX && collisionY) {
 				return true;
+			}
 		}
 		return false;
 	}

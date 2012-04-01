@@ -20,13 +20,20 @@ import java.util.List;
  * @author Nicolas
  * 
  */
-public class Fichier {
+public final class Fichier {
 
+	/** Max score. */
 	public static final int MAX_SCORE = 10;
-	static LinkedList<Integer> highScore = new LinkedList<Integer>();
+
+	/** Highscore list. */
+	private static LinkedList<Integer> highScore = new LinkedList<Integer>();
+
+	/** Constructor. */
+	private Fichier() {
+	};
 
 	/**
-	 * Write a string into a file
+	 * Write a string into a file.
 	 * 
 	 * @param nomFic
 	 *            File to write in
@@ -38,8 +45,9 @@ public class Fichier {
 		highScore = getScore(nomFic);
 		int position = getInsertionPosition(highScore, i);
 		highScore.add(position, i);
-		if (highScore.size() > MAX_SCORE)
+		if (highScore.size() > MAX_SCORE) {
 			highScore = new LinkedList<Integer>(highScore.subList(0, MAX_SCORE));
+		}
 
 		try {
 			FileOutputStream fichier = new FileOutputStream(nomFic);
@@ -54,10 +62,13 @@ public class Fichier {
 	}
 
 	/**
+	 * Get the insert position.
 	 * 
 	 * @param highScore2
+	 *            High score list
 	 * @param a
-	 * @return
+	 *            number to insert.
+	 * @return The position where to insert.
 	 */
 	private static int getInsertionPosition(List<Integer> highScore2, int a) {
 		int position = 0;
