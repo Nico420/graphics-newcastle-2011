@@ -1,14 +1,22 @@
 package state;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glLoadIdentity;
+import static org.lwjgl.opengl.GL11.glColor3f;
+import static org.lwjgl.opengl.GL11.glVertex3f;
+import static org.lwjgl.opengl.GL11.glTexCoord2d;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glEnd;
+
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_QUADS;
 
 import java.io.IOException;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.glu.GLU;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
@@ -25,25 +33,38 @@ import src.SnakeGame;
 @SuppressWarnings("deprecation")
 public class Menu extends Etat {
 
+	/** Max menu choices. */
+	private static final int MAX_MENU_CHOICE = 3;
+
+	/** Current menu choice. */
 	private int menuChoice = 0;
+	/** Temp menu choice. */
 	private int menuChoiceTemp = 0;
 
+	/** Icon. */
 	private Texture icone;
+	/** Apple texture. */
 	private Texture pomme;
 
 	/**
-	 * Boolean flag on whether AntiAliasing is enabled or not
+	 * Boolean flag on whether AntiAliasing is enabled or not.
 	 * 
 	 * @throws IOException
 	 */
 
-	public Menu() throws IOException {
+	public Menu() {
 		super();
 		initGL();
-		icone = TextureLoader.getTexture("PNG",
-				ResourceLoader.getResourceAsStream("texture/snake_icone.png"));
-		pomme = TextureLoader.getTexture("PNG",
-				ResourceLoader.getResourceAsStream("texture/pomme_ml.png"));
+		try {
+			icone = TextureLoader.getTexture("PNG", ResourceLoader
+					.getResourceAsStream("texture/snake_icone.png"));
+			pomme = TextureLoader.getTexture("PNG",
+					ResourceLoader.getResourceAsStream("texture/pomme_ml.png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
 	@Override
@@ -60,7 +81,6 @@ public class Menu extends Etat {
 
 		Color.white.bind();
 
-		// font2.drawString(10, 10, "NICE LOOKING FONTS!", Color.green);
 		// Title
 
 		// Creating and using texture
@@ -101,41 +121,23 @@ public class Menu extends Etat {
 
 	}
 
-	@Override
-	protected void initGL() {
-		glShadeModel(GL_SMOOTH); // Enable Smooth Shading
-		glClearDepth(1.0f); // Depth Buffer Setup
-		glEnable(GL_DEPTH_TEST); // Enables Depth Testing
-		glDepthFunc(GL_LEQUAL); // The Type Of Depth Testing To Do
-		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST); // Really Nice
-															// Perspective
-															// Calculations
-		glEnable(GL_TEXTURE_2D);
-
-		glDisable(GL_LIGHTING);
-		GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		glViewport(0, 0, Display.getWidth(), Display.getHeight());
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		GLU.gluOrtho2D(0, SnakeGame.WIDTH, SnakeGame.HEIGHT, 0);
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-	}
-
+	/**
+	 * Keyboard reaction.
+	 * 
+	 * @return new State.
+	 */
 	public int pollInput() {
 		while (Keyboard.next()) {
 			if (Keyboard.getEventKeyState()) {
 
 				if (Keyboard.getEventKey() == Keyboard.KEY_UP) {
-					menuChoiceTemp = (menuChoiceTemp - 1) % 3;
+					menuChoiceTemp = (menuChoiceTemp - 1) % MAX_MENU_CHOICE;
 					if (menuChoiceTemp < 0) {
 						menuChoiceTemp = 2;
 					}
 				}
 				if (Keyboard.getEventKey() == Keyboard.KEY_DOWN) {
-					menuChoiceTemp = (menuChoiceTemp + 1) % 3;
+					menuChoiceTemp = (menuChoiceTemp + 1) % MAX_MENU_CHOICE;
 					if (menuChoiceTemp < 0) {
 						menuChoiceTemp = 2;
 					}

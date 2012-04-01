@@ -47,7 +47,7 @@ public class SnakeGame {
 
 	public static boolean exit = false;
 	public static boolean switchView = false;
-	
+
 	// float lightPosition1[] = { -MAP_SIZE, -MAP_SIZE, 1f, 1f };
 
 	/** time at last frame */
@@ -96,7 +96,8 @@ public class SnakeGame {
 				case HIGHSCORE:
 					etat = new HighScore();
 					break;
-
+				default:
+					break;
 				}
 				etatActual = etatTemp;
 			}

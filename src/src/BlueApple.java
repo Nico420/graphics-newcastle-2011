@@ -24,9 +24,9 @@ public class BlueApple extends Eatable {
 
 	@Override
 	public final void draw() {
-		double red = ((float) color.getRed()) / COLOR_MAX;
-		double green = ((float) color.getGreen()) / COLOR_MAX;
-		double blue = ((float) color.getBlue()) / COLOR_MAX;
+		double red = ((float) getColor().getRed()) / COLOR_MAX;
+		double green = ((float) getColor().getGreen()) / COLOR_MAX;
+		double blue = ((float) getColor().getBlue()) / COLOR_MAX;
 		glColor3d(red, green, blue);
 		super.draw();
 	}

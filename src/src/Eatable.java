@@ -24,51 +24,74 @@ import tools.Position;
  */
 public class Eatable {
 
+	/** Blue. */
+	private static final float BLUE = 0f;
+	/** Green. */
+	private static final float GREEN = 0.2f;
+	/** Red. */
+	private static final float RED = 0.5f;
+	/** Rotation limit. */
+	private static final int ROTATION_LIMIT = 360;
+	/** Rotation speed. */
+	private static final double ROTATION_SPEED = 0.3;
+	/** Bounce down limit. */
+	private static final double BOUNCE_DOWN_LIMIT = 1.90;
+	/** Bounce up limit. */
+	private static final double BOUNCE_UP_LIMIT = 0.10;
+	/** Bounce speed. */
+	private static final double BOUNCE_SPEED = 0.001;
+	/** Grow up. */
 	public static final int GROW_UP = 1;
+	/** Reduce. */
 	public static final int REDUCE = 2;
+	/** Slow. */
 	public static final int SLOW = 3;
+	/** Multiply. */
 	public static final int MULTI = 4;
 
-	protected float rotation;
-	protected float bounce;
-	protected boolean direction = false;
+	/** Rotation. */
+	private float rotation;
+	/** Bounce. */
+	private float bounce;
+	/** Direction. */
+	private boolean direction = false;
 
 	/**
-	 * x position of the item
+	 * x position of the item.
 	 */
-	public float x;
+	private float x;
 	/**
-	 * x position of the item
+	 * x position of the item.
 	 */
-	public float y;
+	private float y;
 
-	public Color color;
-	/**
-	 * Each item as an action(Reduce the snake, multi points,...)
-	 */
-	public int action;
+	/** Color. */
+	private Color color;
+
+	/** Each item as an action(Reduce the snake, multi points,...). */
+	private int action;
 
 	/**
 	 * During the creation of an item, we have to check for not placing it on a
 	 * wall.
 	 * 
-	 * @param x
+	 * @param pX
 	 *            x position
-	 * @param y
+	 * @param pY
 	 *            y position
-	 * @param color
+	 * @param pColor
 	 *            item color
-	 * @param action
+	 * @param pAction
 	 *            action
 	 */
-	public Eatable(float x, float y, Color color, int action) {
+	public Eatable(float pX, float pY, Color pColor, int pAction) {
 		super();
-		this.color = color;
-		this.action = action;
+		this.color = pColor;
+		this.action = pAction;
 		while ((new Position(this.x, this.y)).checkCollapse(Game.walls,
 				Game.WALL_SIZE, Game.APPLE_SIZE)
-				|| (new Position(this.x, this.y)).checkCollapse(Game.getObject(),
-						Game.SNAKE_SIZE * 2, Game.APPLE_SIZE)) {
+				|| (new Position(this.x, this.y)).checkCollapse(
+						Game.getObject(), Game.SNAKE_SIZE * 2, Game.APPLE_SIZE)) {
 			this.x = (float) (-(Game.MAP_SIZE - Game.APPLE_SIZE) + ((Game.MAP_SIZE - Game.APPLE_SIZE) * 2)
 					* Math.random());
 			this.y = (float) (-(Game.MAP_SIZE - Game.APPLE_SIZE) + ((Game.MAP_SIZE - Game.APPLE_SIZE) * 2)
@@ -84,11 +107,11 @@ public class Eatable {
 	}
 
 	/**
-	 * @param x
+	 * @param pX
 	 *            the x to set
 	 */
-	public void setX(float x) {
-		this.x = x;
+	public void setX(float pX) {
+		this.x = pX;
 	}
 
 	/**
@@ -99,11 +122,11 @@ public class Eatable {
 	}
 
 	/**
-	 * @param y
+	 * @param pY
 	 *            the y to set
 	 */
-	public void setY(float y) {
-		this.y = y;
+	public void setY(float pY) {
+		this.y = pY;
 	}
 
 	/**
@@ -114,11 +137,11 @@ public class Eatable {
 	}
 
 	/**
-	 * @param color
+	 * @param pColor
 	 *            the color to set
 	 */
-	public void setColor(Color color) {
-		this.color = color;
+	public void setColor(Color pColor) {
+		this.color = pColor;
 	}
 
 	/**
@@ -129,11 +152,11 @@ public class Eatable {
 	}
 
 	/**
-	 * @param action
+	 * @param pAction
 	 *            the action to set
 	 */
-	public void setAction(int action) {
-		this.action = action;
+	public void setAction(int pAction) {
+		this.action = pAction;
 	}
 
 	/*
@@ -149,7 +172,8 @@ public class Eatable {
 
 	/**
 	 * Drawing an item This is the default drawing, making an Apple. If you want
-	 * to create another drawing, just redefine this method in the new item Class.
+	 * to create another drawing, just redefine this method in the new item
+	 * Class.
 	 */
 	public void draw() {
 		float a = Game.APPLE_SIZE / 2;
@@ -159,20 +183,21 @@ public class Eatable {
 		// Make the apple bounce !
 		glTranslatef(x, y, bounce);
 
-		if (!direction)
-			bounce = (float) ((bounce + 0.001) % 2);
-		else
-			bounce = (float) ((bounce - 0.001) % 2);
-		if (bounce < 0.10) {
+		if (!direction) {
+			bounce = (float) ((bounce + BOUNCE_SPEED) % 2);
+		} else {
+			bounce = (float) ((bounce - BOUNCE_SPEED) % 2);
+		}
+		if (bounce < BOUNCE_UP_LIMIT) {
 			direction = false;
-		} else if (bounce > 1.90) {
+		} else if (bounce > BOUNCE_DOWN_LIMIT) {
 			direction = true;
 		}
 
 		// Make the apple turn !
 		glRotatef(rotation, 0, 0, 1);
-		rotation += Game.getDelta() * 0.3;
-		rotation %= 360;
+		rotation += Game.getDelta() * ROTATION_SPEED;
+		rotation %= ROTATION_LIMIT;
 
 		float xTemp = x;
 		float yTemp = y;
@@ -230,7 +255,7 @@ public class Eatable {
 
 		a /= 2;
 		// Apple "snail"
-		glColor3f(0.5f, 0.2f, 0f);
+		glColor3f(RED, GREEN, BLUE);
 		// Bottom
 		glVertex3f(x - a, y - a, Game.APPLE_SIZE * 2);
 		glVertex3f(x + a, y - a, Game.APPLE_SIZE * 2);
