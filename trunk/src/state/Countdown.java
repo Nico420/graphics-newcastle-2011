@@ -1,4 +1,4 @@
-package src;
+package state;
 
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
@@ -33,6 +33,8 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.glu.GLU;
 import org.newdawn.slick.Color;
+
+import src.SnakeGame;
 
 /**
  * Count down before the game display.

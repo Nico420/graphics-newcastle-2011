@@ -12,6 +12,8 @@ import static org.lwjgl.opengl.GL11.glTranslatef;
 import static org.lwjgl.opengl.GL11.glVertex3f;
 
 import java.awt.Color;
+
+import state.Game;
 import tools.Position;
 
 /**
@@ -65,7 +67,7 @@ public class Eatable {
 		this.action = action;
 		while ((new Position(this.x, this.y)).checkCollapse(Game.walls,
 				Game.WALL_SIZE, Game.APPLE_SIZE)
-				|| (new Position(this.x, this.y)).checkCollapse(Game.object,
+				|| (new Position(this.x, this.y)).checkCollapse(Game.getObject(),
 						Game.SNAKE_SIZE * 2, Game.APPLE_SIZE)) {
 			this.x = (float) (-(Game.MAP_SIZE - Game.APPLE_SIZE) + ((Game.MAP_SIZE - Game.APPLE_SIZE) * 2)
 					* Math.random());
@@ -169,7 +171,7 @@ public class Eatable {
 
 		// Make the apple turn !
 		glRotatef(rotation, 0, 0, 1);
-		rotation += Game.delta * 0.3;
+		rotation += Game.getDelta() * 0.3;
 		rotation %= 360;
 
 		float xTemp = x;
