@@ -5,6 +5,13 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
+
+import state.Countdown;
+import state.Etat;
+import state.Game;
+import state.HighScore;
+import state.Menu;
+import state.Perdu;
 import tools.Position;
 
 /**

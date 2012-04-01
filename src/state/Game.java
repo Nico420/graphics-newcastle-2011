@@ -1,4 +1,4 @@
-package src;
+package state;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -14,6 +14,13 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.glu.GLU;
+
+import src.Apple;
+import src.BlueApple;
+import src.Eatable;
+import src.GoldApple;
+import src.Snake;
+import src.SnakeGame;
 import tools.MazeReader;
 import tools.Position;
 
@@ -53,7 +60,7 @@ public class Game extends Etat {
 	Texture textureSol;
 	Texture textureMur;
 
-	public boolean perdu = false;
+	private boolean perdu = false;
 
 	public static int tailReduce = 0;
 	public static int pointMulti = 0;
@@ -62,11 +69,11 @@ public class Game extends Etat {
 	public int appleEat = 0;
 	private static int bulletTimeTimer = 0;;
 
-	static ArrayList<Eatable> object = new ArrayList<Eatable>();
+	private static ArrayList<Eatable> object = new ArrayList<Eatable>();
 	public static float rotation;
 	static Snake snake;
 
-	static int delta;
+	private static int delta;
 
 	public static List<Position> walls = new ArrayList<Position>();
 
@@ -90,7 +97,7 @@ public class Game extends Etat {
 
 	@Override
 	public int update(int delta) {
-		Game.delta = delta;
+		Game.setDelta(delta);
 		if (!perdu) {
 
 			snake.update(delta, SnakeGame.switchView);
@@ -100,8 +107,8 @@ public class Game extends Etat {
 			appleEat = snake.addPosition(appleEat);
 			perdu = snake.checkWallCollision(walls);
 			// Check Apple detection
-			for (int i = 0; i < object.size(); i++) {
-				Eatable item = object.get(i);
+			for (int i = 0; i < getObject().size(); i++) {
+				Eatable item = getObject().get(i);
 				if (snake.getX() - SNAKE_SIZE < item.getX()
 						&& snake.getX() + SNAKE_SIZE > item.getX()
 						&& snake.getY() - SNAKE_SIZE < item.getY()
@@ -115,11 +122,11 @@ public class Game extends Etat {
 					}
 					// Generate new item
 					if (Math.random() > 0.9)
-						object.set(i, new BlueApple());
+						getObject().set(i, new BlueApple());
 					else if (Math.random() < 0.1)
-						object.set(i, new GoldApple());
+						getObject().set(i, new GoldApple());
 					else
-						object.set(i, new Apple());
+						getObject().set(i, new Apple());
 				}
 			}
 		} else {
@@ -169,8 +176,8 @@ public class Game extends Etat {
 		textureMur.bind();
 		// glColor3f(1, 1, 1);
 
-		for (int i = 0; i < object.size(); i++)
-			object.get(i).draw();
+		for (int i = 0; i < getObject().size(); i++)
+			getObject().get(i).draw();
 		glPopMatrix();
 
 	}
@@ -194,20 +201,20 @@ public class Game extends Etat {
 		fontPower.drawString(20, 250, "POWERS UP", Color.yellow);
 		if (tailReduce > 0) {
 			fontPower.drawString(20, 300, "Tail reduction", Color.green);
-			tailReduce -= delta;
+			tailReduce -= getDelta();
 		} else {
 			fontPower.drawString(20, 300, "Tail reduction", Color.red);
 		}
 		if (pointMulti > 0) {
 			fontPower.drawString(20, 340, "Points X5", Color.green);
-			pointMulti -= delta;
+			pointMulti -= getDelta();
 		} else {
 			fontPower.drawString(20, 340, "Points X5", Color.red);
 		}
 		if (bulletTimeTimer > 0) {
 			fontPower.drawString(20, 380, "(B)ullet-time (" + bulletTime + ")",
 					Color.green);
-			bulletTimeTimer -= delta;
+			bulletTimeTimer -= getDelta();
 		} else {
 			fontPower.drawString(20, 380, "(B)ullet-time (" + bulletTime + ")",
 					Color.red);
@@ -397,10 +404,10 @@ public class Game extends Etat {
 					* Math.random());
 			walls.add(new Position(x, y));
 		}
-		object = new ArrayList<Eatable>();
+		setObject(new ArrayList<Eatable>());
 		for (int i = 0; i < SnakeGame.APPLENUMBER; i++) {
 			// Randow other object
-			object.add(new Apple());
+			getObject().add(new Apple());
 		}
 		// Initialize Snake start_position
 		snake.initialize(walls, WALL_SIZE);
@@ -536,5 +543,21 @@ public class Game extends Etat {
 			}
 		}
 		return SnakeGame.GAME;
+	}
+
+	public static int getDelta() {
+		return delta;
+	}
+
+	public static void setDelta(int delta) {
+		Game.delta = delta;
+	}
+
+	public static ArrayList<Eatable> getObject() {
+		return object;
+	}
+
+	public static void setObject(ArrayList<Eatable> object) {
+		Game.object = object;
 	}
 }

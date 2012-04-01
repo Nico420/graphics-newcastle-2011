@@ -19,6 +19,7 @@ import java.util.List;
 import org.lwjgl.input.Keyboard;
 import org.newdawn.slick.Color;
 
+import state.Game;
 import tools.Position;
 
 /**
