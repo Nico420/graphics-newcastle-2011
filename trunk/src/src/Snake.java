@@ -126,6 +126,7 @@ public class Snake {
 		glPopMatrix();
 
 	}
+
 	/** Snake Color */
 	private Color c;
 
@@ -165,16 +166,17 @@ public class Snake {
 	 *            Snake color
 	 * @param pLenght
 	 *            Snake length
+	 * @param pSpeed Snake speed
 	 */
 	public Snake(String pName, ArrayList<Position> pPositions, float pX,
-			float pY, Color blue, int pLenght) {
+			float pY, Color blue, int pLenght, float pSpeed) {
 		this.name = pName;
 		this.positions = pPositions;
 		this.x = pX;
 		this.y = pY;
 		this.c = blue;
 		this.lenght = pLenght;
-		this.speed = Game.SPEED;
+		this.speed = pSpeed;
 	}
 
 	/**
@@ -193,7 +195,7 @@ public class Snake {
 			case Apple.GROW_UP:
 				appleEat = 0;
 				this.score += 100;
-				if (Game.pointMulti > 0) {
+				if (Game.getPointMulti() > 0) {
 					this.score += 500;
 				}
 				break;

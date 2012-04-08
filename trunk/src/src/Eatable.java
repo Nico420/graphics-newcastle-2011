@@ -88,7 +88,7 @@ public class Eatable {
 		super();
 		this.color = pColor;
 		this.action = pAction;
-		while ((new Position(this.x, this.y)).checkCollapse(Game.walls,
+		while ((new Position(this.x, this.y)).checkCollapse(Game.getWalls(),
 				Game.WALL_SIZE, Game.APPLE_SIZE)
 				|| (new Position(this.x, this.y)).checkCollapse(
 						Game.getObject(), Game.SNAKE_SIZE * 2, Game.APPLE_SIZE)) {
@@ -125,7 +125,7 @@ public class Eatable {
 
 		// Make the apple turn !
 		glRotatef(rotation, 0, 0, 1);
-		rotation += Game.getDelta() * ROTATION_SPEED;
+		rotation += ROTATION_SPEED;
 		rotation %= ROTATION_LIMIT;
 
 		float xTemp = x;
