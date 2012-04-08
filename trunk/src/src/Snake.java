@@ -141,7 +141,7 @@ public class Snake {
 	private String name;
 	/** Snake positions */
 	private List<Position> positions;
-	/** Snake Score */
+	/** Snake Fichier */
 	private int score;
 	/** Snake Speed */
 	private float speed;

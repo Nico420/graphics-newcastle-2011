@@ -386,7 +386,7 @@ public class Game extends Etat {
 	 */
 	private void afficheScore(Snake s) {
 		getFontMenu().drawString(20, 50, "Snake 3D", Color.blue);
-		getFontPower().drawString(20, 150, "Score : \n" + s.getScore(),
+		getFontPower().drawString(20, 150, "Fichier : \n" + s.getScore(),
 				Color.red);
 	}
 
@@ -670,7 +670,7 @@ public class Game extends Etat {
 	@Override
 	public void renderGL() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		// Score Display
+		// Fichier Display
 		creationTexte();
 		creationJeu();
 	}
@@ -776,7 +776,7 @@ public class Game extends Etat {
 			}
 		} else {
 			if (mortSerpent < 0) {
-				Fichier.ecrire("highScore.txt", snake.getScore());
+				Fichier.ecrire("highScore", snake.getScore(), snake.getName());
 				this.getSnakeGame().setEtat(
 						new Perdu(this.snake.getScore(), this.getSnakeGame()));
 			} else {
