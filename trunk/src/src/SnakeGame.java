@@ -23,16 +23,16 @@ public class SnakeGame {
 	/** Window height */
 	public static final int HEIGHT = 600;
 
+
+	
+	/** Switch view */
+	private static boolean switchView = false;
 	/** Window Width */
 	public static final int WIDTH = 800;
-	
+
 	/** Middle of the map */
 	public static final Position MAP_MILIEU = new Position(WIDTH - 400,
 			HEIGHT - 300);
-	/** Switch view */
-	private static boolean switchView = false;
-
-	
 
 	/**
 	 * Knowing the actual view
@@ -48,9 +48,6 @@ public class SnakeGame {
 	 * 
 	 * @param argv
 	 *            Launching args
-	 * @throws LWJGLException
-	 * @throws InterruptedException
-	 * @throws IOException
 	 */
 	public static void main(String[] argv) {
 		SnakeGame game = new SnakeGame(5);
