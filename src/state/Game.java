@@ -386,7 +386,7 @@ public class Game extends Etat {
 	 */
 	private void afficheScore(Snake s) {
 		getFontMenu().drawString(20, 50, "Snake 3D", Color.blue);
-		getFontPower().drawString(20, 150, "Fichier : \n" + s.getScore(),
+		getFontPower().drawString(20, 150, "Score : \n" + s.getScore(),
 				Color.red);
 	}
 

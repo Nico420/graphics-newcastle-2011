@@ -57,7 +57,7 @@ public class Perdu extends Etat {
 				SnakeGame.HEIGHT / 2 - TITLE_POSITION_Y, "GAME OVER !",
 				Color.red);
 		getFontMenu().drawString(SnakeGame.WIDTH / 2 - TITLE_POSITION_X,
-				SnakeGame.HEIGHT / 2 + TITLE_POSITION_Y, "Final Fichier : "
+				SnakeGame.HEIGHT / 2 + TITLE_POSITION_Y, "Score : "
 						+ score, Color.yellow);
 	}
 

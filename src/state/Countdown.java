@@ -90,7 +90,7 @@ public class Countdown extends Etat {
 	public void update(int delta) {
 		countDown -= delta * COUNTDOWN_SPEED;
 		updateFPS();
-		if (countDown <= 0) {
+		if (countDown <= 0.9) {
 			this.getSnakeGame().setEtat(new Game(this.getSnakeGame()));
 		}
 
