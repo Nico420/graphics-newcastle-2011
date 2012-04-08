@@ -106,6 +106,51 @@ public abstract class Etat {
 	}
 
 	/**
+	 * Get font
+	 * 
+	 * @return Font
+	 */
+	public UnicodeFont getFont() {
+		return font;
+	}
+
+	/**
+	 * Get font
+	 * 
+	 * @return Font
+	 */
+	public UnicodeFont getFontMenu() {
+		return fontMenu;
+	}
+
+	/**
+	 * Get font
+	 * 
+	 * @return Font
+	 */
+	public UnicodeFont getFontPower() {
+		return fontPower;
+	}
+
+	/**
+	 * Get font
+	 * 
+	 * @return Font
+	 */
+	public UnicodeFont getFontTitre() {
+		return fontTitre;
+	}
+
+	/**
+	 * Get game instance
+	 * 
+	 * @return Game instance
+	 */
+	public SnakeGame getSnakeGame() {
+		return snakeGame;
+	}
+
+	/**
 	 * Get time
 	 * 
 	 * @return time
@@ -171,6 +216,56 @@ public abstract class Etat {
 	public abstract void renderGL();
 
 	/**
+	 * Set a new font
+	 * 
+	 * @param pFont
+	 *            new font to set
+	 */
+	public void setFont(UnicodeFont pFont) {
+		this.font = pFont;
+	}
+
+	/**
+	 * Set a new font
+	 * 
+	 * @param pFontMenu
+	 *            new font to set
+	 */
+	public void setFontMenu(UnicodeFont pFontMenu) {
+		this.fontMenu = pFontMenu;
+	}
+
+	/**
+	 * Set a new font
+	 * 
+	 * @param pFontPower
+	 *            new font to set
+	 */
+	public void setFontPower(UnicodeFont pFontPower) {
+		this.fontPower = pFontPower;
+	}
+
+	/**
+	 * Set a new font
+	 * 
+	 * @param pFontTitre
+	 *            new font to set
+	 */
+	public void setFontTitre(UnicodeFont pFontTitre) {
+		this.fontTitre = pFontTitre;
+	}
+
+	/**
+	 * Set a game
+	 * 
+	 * @param pSnakeGame
+	 *            Game to set.
+	 */
+	public void setSnakeGame(SnakeGame pSnakeGame) {
+		this.snakeGame = pSnakeGame;
+	}
+
+	/**
 	 * Updtaing the state
 	 * 
 	 * @param delta
@@ -203,101 +298,6 @@ public abstract class Etat {
 			lastFPS += 1000;
 		}
 
-	}
-
-	/**
-	 * Get game instance
-	 * 
-	 * @return Game instance
-	 */
-	public SnakeGame getSnakeGame() {
-		return snakeGame;
-	}
-
-	/**
-	 * Set a game
-	 * 
-	 * @param pSnakeGame
-	 *            Game to set.
-	 */
-	public void setSnakeGame(SnakeGame pSnakeGame) {
-		this.snakeGame = pSnakeGame;
-	}
-
-	/**
-	 * Get font
-	 * 
-	 * @return Font
-	 */
-	public UnicodeFont getFontMenu() {
-		return fontMenu;
-	}
-
-	/**
-	 * Set a new font
-	 * 
-	 * @param pFontMenu
-	 *            new font to set
-	 */
-	public void setFontMenu(UnicodeFont pFontMenu) {
-		this.fontMenu = pFontMenu;
-	}
-
-	/**
-	 * Get font
-	 * 
-	 * @return Font
-	 */
-	public UnicodeFont getFontTitre() {
-		return fontTitre;
-	}
-
-	/**
-	 * Set a new font
-	 * 
-	 * @param pFontTitre
-	 *            new font to set
-	 */
-	public void setFontTitre(UnicodeFont pFontTitre) {
-		this.fontTitre = pFontTitre;
-	}
-
-	/**
-	 * Get font
-	 * 
-	 * @return Font
-	 */
-	public UnicodeFont getFont() {
-		return font;
-	}
-
-	/**
-	 * Set a new font
-	 * 
-	 * @param pFont
-	 *            new font to set
-	 */
-	public void setFont(UnicodeFont pFont) {
-		this.font = pFont;
-	}
-
-	/**
-	 * Get font
-	 * 
-	 * @return Font
-	 */
-	public UnicodeFont getFontPower() {
-		return fontPower;
-	}
-
-	/**
-	 * Set a new font
-	 * 
-	 * @param pFontPower
-	 *            new font to set
-	 */
-	public void setFontPower(UnicodeFont pFontPower) {
-		this.fontPower = pFontPower;
 	}
 
 }

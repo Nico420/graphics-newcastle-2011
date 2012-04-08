@@ -94,14 +94,11 @@ public class Game extends Etat {
 	/** Death timing */
 	private static final int DEATH_TIMING = 500;
 
-	/** Delta */
-	private int delta;
-
 	/** Down direction */
 	public static final int DOWN = 4;
+
 	/** Left direction */
 	public static final int LEFT = 3;
-
 	/** Map size */
 	public static final int MAP_SIZE = 100;
 
@@ -123,9 +120,6 @@ public class Game extends Etat {
 	/** Snake size */
 	public static final int SNAKE_SIZE = 3;
 
-	/** Speed */
-	private float speed;
-
 	/** Bullet time speed */
 	private static float speedBullet = 0.02f;
 
@@ -134,29 +128,12 @@ public class Game extends Etat {
 
 	/** Up direction */
 	public static final int UP = 2;
+
 	/** Wall size */
 	public static final int WALL_SIZE = 5;
+
 	/** Wall position list */
 	private static List<Position> walls = new ArrayList<Position>();
-
-	/** Apple eat */
-	private int appleEat = 0;
-
-	/** Lost or not */
-	private boolean perdu = false;
-
-	/** Snake */
-	private Snake snake;
-
-	/** Texture */
-	private Texture textureMur;
-
-	/** Texture */
-	private Texture textureSerpent;
-
-	/** Texture */
-	private Texture textureSol;
-
 	/**
 	 * Draw walls
 	 * 
@@ -232,16 +209,6 @@ public class Game extends Etat {
 		glEnd();
 
 	}
-
-	/**
-	 * Get delta
-	 * 
-	 * @return delta
-	 */
-	public int getDelta() {
-		return delta;
-	};
-
 	/**
 	 * Eatables' list
 	 * 
@@ -252,13 +219,30 @@ public class Game extends Etat {
 	}
 
 	/**
-	 * Set a new delta
+	 * Get multi points
 	 * 
-	 * @param pDelta
-	 *            new delta to set
+	 * @return Multi points
 	 */
-	public void setDelta(int pDelta) {
-		delta = pDelta;
+	public static int getPointMulti() {
+		return pointMulti;
+	}
+
+	/**
+	 * Get rotation
+	 * 
+	 * @return Rotation
+	 */
+	public static float getRotation() {
+		return rotation;
+	}
+
+	/**
+	 * Get the walls' list
+	 * 
+	 * @return List
+	 */
+	public static List<Position> getWalls() {
+		return walls;
 	}
 
 	/**
@@ -272,6 +256,60 @@ public class Game extends Etat {
 	}
 
 	/**
+	 * Set new multi points
+	 * 
+	 * @param pPointMulti
+	 *            New multi points
+	 */
+	public static void setPointMulti(int pPointMulti) {
+		Game.pointMulti = pPointMulti;
+	}
+
+	/**
+	 * Set a new rotation
+	 * 
+	 * @param pRotation
+	 *            New rotation to set
+	 */
+	public static void setRotation(float pRotation) {
+		Game.rotation = pRotation;
+	}
+
+	/**
+	 * Set a new walls' list
+	 * 
+	 * @param pWalls
+	 *            New list
+	 */
+	public static void setWalls(List<Position> pWalls) {
+		Game.walls = pWalls;
+	}
+
+	/** Apple eat */
+	private int appleEat = 0;;
+
+	/** Delta */
+	private int delta;
+
+	/** Lost or not */
+	private boolean perdu = false;
+
+	/** Snake */
+	private Snake snake;
+
+	/** Speed */
+	private float speed;
+
+	/** Texture */
+	private Texture textureMur;
+
+	/** Texture */
+	private Texture textureSerpent;
+
+	/** Texture */
+	private Texture textureSol;
+
+	/**
 	 * Creating the game state
 	 * 
 	 * @param snakeGame
@@ -281,7 +319,7 @@ public class Game extends Etat {
 		super(snakeGame);
 		Properties prop = new Properties();
 		try {
-			prop.load(new FileInputStream("options.txt"));
+			prop.load(new FileInputStream("snake.properties"));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -448,6 +486,15 @@ public class Game extends Etat {
 		glPopMatrix();
 	}
 
+	/**
+	 * Get delta
+	 * 
+	 * @return delta
+	 */
+	public int getDelta() {
+		return delta;
+	}
+
 	@Override
 	protected void initGL() {
 
@@ -499,7 +546,6 @@ public class Game extends Etat {
 	/**
 	 * Initialize the game.
 	 * 
-	 * @throws IOException
 	 */
 	private void initializeGame() {
 		bulletTime = BULLET_TIME;
@@ -683,6 +729,16 @@ public class Game extends Etat {
 
 	}
 
+	/**
+	 * Set a new delta
+	 * 
+	 * @param pDelta
+	 *            new delta to set
+	 */
+	public void setDelta(int pDelta) {
+		delta = pDelta;
+	}
+
 	@Override
 	public void update(int pDelta) {
 		this.setDelta(pDelta);
@@ -728,62 +784,5 @@ public class Game extends Etat {
 			}
 		}
 		updateFPS();
-	}
-
-	/**
-	 * Get rotation
-	 * 
-	 * @return Rotation
-	 */
-	public static float getRotation() {
-		return rotation;
-	}
-
-	/**
-	 * Set a new rotation
-	 * 
-	 * @param pRotation
-	 *            New rotation to set
-	 */
-	public static void setRotation(float pRotation) {
-		Game.rotation = pRotation;
-	}
-
-	/**
-	 * Get the walls' list
-	 * 
-	 * @return List
-	 */
-	public static List<Position> getWalls() {
-		return walls;
-	}
-
-	/**
-	 * Set a new walls' list
-	 * 
-	 * @param pWalls
-	 *            New list
-	 */
-	public static void setWalls(List<Position> pWalls) {
-		Game.walls = pWalls;
-	}
-
-	/**
-	 * Get multi points
-	 * 
-	 * @return Multi points
-	 */
-	public static int getPointMulti() {
-		return pointMulti;
-	}
-
-	/**
-	 * Set new multi points
-	 * 
-	 * @param pPointMulti
-	 *            New multi points
-	 */
-	public static void setPointMulti(int pPointMulti) {
-		Game.pointMulti = pPointMulti;
 	}
 }

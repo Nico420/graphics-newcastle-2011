@@ -49,8 +49,6 @@ public class Menu extends Etat {
 	 * 
 	 * @param snakeGame
 	 *            Associated game.
-	 * 
-	 * @throws IOException
 	 */
 
 	public Menu(SnakeGame snakeGame) {
