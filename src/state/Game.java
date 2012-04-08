@@ -44,13 +44,15 @@ import static org.lwjgl.opengl.GL11.glTranslated;
 import static org.lwjgl.opengl.GL11.glTranslatef;
 import static org.lwjgl.opengl.GL11.glVertex3f;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Properties;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
@@ -84,30 +86,89 @@ public class Game extends Etat {
 	public static final int APPLE_SIZE = 2;
 	/** Bullet time */
 	private static final int BULLET_TIME = 5;
-	public static int bulletTime;
-	private static int bulletTimeTimer = 0;
-	private static final int DEATH_TIMING = 500;
-	private static int delta;
 
+	/** Bullet time */
+	private static int bulletTime;
+	/** Bullet time timer */
+	private static int bulletTimeTimer = 0;
+	/** Death timing */
+	private static final int DEATH_TIMING = 500;
+
+	/** Delta */
+	private int delta;
+
+	/** Down direction */
 	public static final int DOWN = 4;
+	/** Left direction */
 	public static final int LEFT = 3;
+
+	/** Map size */
 	public static final int MAP_SIZE = 100;
-	public static int mortSerpent;
+
+	/** Snake death */
+	private static int mortSerpent;
+
+	/** Eatables' list */
 	private static ArrayList<Eatable> object = new ArrayList<Eatable>();
 
-	public static int pointMulti = 0;
+	/** Multi point */
+	private static int pointMulti = 0;
+
+	/** Right direction */
 	public static final int RIGHT = 1;
 
-	public static float rotation;
+	/** Rotation */
+	private static float rotation;
+
+	/** Snake size */
 	public static final int SNAKE_SIZE = 3;
-	public static float SPEED;
 
-	public static float SPEED_BULLET = 0.02f;
+	/** Speed */
+	private float speed;
 
-	public static int tailReduce = 0;
+	/** Bullet time speed */
+	private static float speedBullet = 0.02f;
+
+	/** Tail reduce */
+	private static int tailReduce = 0;
+
+	/** Up direction */
 	public static final int UP = 2;
+	/** Wall size */
 	public static final int WALL_SIZE = 5;
-	public static List<Position> walls = new ArrayList<Position>();
+	/** Wall position list */
+	private static List<Position> walls = new ArrayList<Position>();
+
+	/** Apple eat */
+	private int appleEat = 0;
+
+	/** Lost or not */
+	private boolean perdu = false;
+
+	/** Snake */
+	private Snake snake;
+
+	/** Texture */
+	private Texture textureMur;
+
+	/** Texture */
+	private Texture textureSerpent;
+
+	/** Texture */
+	private Texture textureSol;
+
+	/**
+	 * Draw walls
+	 * 
+	 * @param x
+	 *            Wall position
+	 * @param y
+	 *            Wall position
+	 * @param z
+	 *            Wall position
+	 * @param size
+	 *            Wall size
+	 */
 	public static void drawMur(float x, float y, float z, float size) {
 		float a = size / 2;
 
@@ -171,53 +232,75 @@ public class Game extends Etat {
 		glEnd();
 
 	}
-	public static int getDelta() {
+
+	/**
+	 * Get delta
+	 * 
+	 * @return delta
+	 */
+	public int getDelta() {
 		return delta;
 	};
 
+	/**
+	 * Eatables' list
+	 * 
+	 * @return List of Object
+	 */
 	public static ArrayList<Eatable> getObject() {
 		return object;
 	}
-	public static void setDelta(int delta) {
-		Game.delta = delta;
+
+	/**
+	 * Set a new delta
+	 * 
+	 * @param pDelta
+	 *            new delta to set
+	 */
+	public void setDelta(int pDelta) {
+		delta = pDelta;
 	}
-	public static void setObject(ArrayList<Eatable> object) {
-		Game.object = object;
+
+	/**
+	 * Set a new list
+	 * 
+	 * @param pObject
+	 *            The new list
+	 */
+	public static void setObject(ArrayList<Eatable> pObject) {
+		Game.object = pObject;
 	}
 
-	public int appleEat = 0;
-
-	HashMap<String, String> options = new HashMap<String, String>();
-
-	private boolean perdu = false;
-
-	Snake snake;
-
-	Texture textureMur;
-
-	Texture textureSerpent;
-
-	Texture textureSol;
-
+	/**
+	 * Creating the game state
+	 * 
+	 * @param snakeGame
+	 *            Game instance
+	 */
 	public Game(SnakeGame snakeGame) {
 		super(snakeGame);
+		Properties prop = new Properties();
 		try {
-			options = Fichier.lire("options.txt");
-			SPEED = options.get("SPEED").equals(null) ? 0.07f : Float
-					.parseFloat(options.get("SPEED"));
-			SPEED_BULLET = options.get("SPEED_BULLET").equals(null) ? 0.02f
-					: Float.parseFloat(options.get("SPEED_BULLET"));
-			snakeGame.setAppleNumber(options.get("APPLENUMBER") == null ? 5
-					: Integer.parseInt(options.get("APPLENUMBER")));
-
-			initializeGame();
-		} catch (Exception e) {
-			System.err.println("Fichier d'options manquant ou incorrect.");
-
+			prop.load(new FileInputStream("options.txt"));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		speed = Float.parseFloat(prop.getProperty("speed"));
+		speedBullet = Float.parseFloat(prop.getProperty("speedBullet"));
+		snakeGame.setAppleNumber(Integer.parseInt(prop
+				.getProperty("APPLENUMBER")));
+
+		initializeGame();
 		initGL();
 	}
 
+	/**
+	 * Display power.
+	 */
 	private void affichePower() {
 		getFontPower().drawString(20, 250, "POWERS UP", Color.yellow);
 		if (tailReduce > 0) {
@@ -226,24 +309,27 @@ public class Game extends Etat {
 		} else {
 			getFontPower().drawString(20, 300, "Tail reduction", Color.red);
 		}
-		if (pointMulti > 0) {
+		if (getPointMulti() > 0) {
 			getFontPower().drawString(20, 340, "Points X5", Color.green);
-			pointMulti -= getDelta();
+			setPointMulti(getPointMulti() - getDelta());
 		} else {
 			getFontPower().drawString(20, 340, "Points X5", Color.red);
 		}
 		if (bulletTimeTimer > 0) {
-			getFontPower().drawString(20, 380, "(B)ullet-time (" + bulletTime + ")",
-					Color.green);
+			getFontPower().drawString(20, 380,
+					"(B)ullet-time (" + bulletTime + ")", Color.green);
 			bulletTimeTimer -= getDelta();
 		} else {
-			getFontPower().drawString(20, 380, "(B)ullet-time (" + bulletTime + ")",
-					Color.red);
-			snake.setSpeed(Game.SPEED);
+			getFontPower().drawString(20, 380,
+					"(B)ullet-time (" + bulletTime + ")", Color.red);
+			snake.setSpeed(speed);
 		}
 
 	}
 
+	/**
+	 * Display shortcuts
+	 */
 	private void afficheRaccourci() {
 
 		getFont().drawString(20, 450, "Shortcuts : ");
@@ -254,11 +340,21 @@ public class Game extends Etat {
 
 	}
 
+	/**
+	 * Display score
+	 * 
+	 * @param s
+	 *            Snake score to display
+	 */
 	private void afficheScore(Snake s) {
 		getFontMenu().drawString(20, 50, "Snake 3D", Color.blue);
-		getFontPower().drawString(20, 150, "Score : \n" + s.getScore(), Color.red);
+		getFontPower().drawString(20, 150, "Score : \n" + s.getScore(),
+				Color.red);
 	}
 
+	/**
+	 * Create the game
+	 */
 	private void creationJeu() {
 		// Dessin de la carte
 		glMatrixMode(GL_PROJECTION);
@@ -293,6 +389,9 @@ public class Game extends Etat {
 
 	}
 
+	/**
+	 * Create the text
+	 */
 	private void creationTexte() {
 
 		glMatrixMode(GL_PROJECTION);
@@ -308,6 +407,9 @@ public class Game extends Etat {
 
 	}
 
+	/**
+	 * Draw the field
+	 */
 	private void drawMap() {
 		glPushMatrix();
 		// Navigable map
@@ -339,9 +441,9 @@ public class Game extends Etat {
 			drawMur(-(MAP_SIZE + WALL_SIZE / 2), i, WALL_SIZE, WALL_SIZE);
 			glPopMatrix();
 		}
-		for (int i = 0; i < walls.size(); i++) {
-			drawMur(walls.get(i).getX(), walls.get(i).getY(), WALL_SIZE,
-					WALL_SIZE * 2);
+		for (int i = 0; i < getWalls().size(); i++) {
+			drawMur(getWalls().get(i).getX(), getWalls().get(i).getY(),
+					WALL_SIZE, WALL_SIZE * 2);
 		}
 		glPopMatrix();
 	}
@@ -394,18 +496,23 @@ public class Game extends Etat {
 
 	}
 
-	private void initializeGame() throws IOException {
+	/**
+	 * Initialize the game.
+	 * 
+	 * @throws IOException
+	 */
+	private void initializeGame() {
 		bulletTime = BULLET_TIME;
 		mortSerpent = DEATH_TIMING;
 		snake = new Snake("Nico", new ArrayList<Position>(), 0f, 0f,
-				Color.blue, 0);
-		walls = MazeReader.buildWallList("maze.txt");
-		if (walls.size() == 0) {
+				Color.blue, 0, this.speed);
+		setWalls(MazeReader.buildWallList("maze.txt"));
+		if (getWalls().size() == 0) {
 			float x = (float) (-((Game.MAP_SIZE) - Game.SNAKE_SIZE) + ((Game.MAP_SIZE) * 2 - Game.SNAKE_SIZE)
 					* Math.random());
 			float y = (float) (-((Game.MAP_SIZE) - Game.SNAKE_SIZE) + ((Game.MAP_SIZE) * 2 - Game.SNAKE_SIZE)
 					* Math.random());
-			walls.add(new Position(x, y));
+			getWalls().add(new Position(x, y));
 		}
 		setObject(new ArrayList<Eatable>());
 		for (int i = 0; i < getSnakeGame().getAppleNumber(); i++) {
@@ -413,22 +520,31 @@ public class Game extends Etat {
 			getObject().add(new Apple());
 		}
 		// Initialize Snake start_position
-		snake.initialize(walls, WALL_SIZE);
+		snake.initialize(getWalls(), WALL_SIZE);
 		SnakeGame.setSwitchView(false);
-		textureSerpent = TextureLoader.getTexture("JPG",
-				ResourceLoader.getResourceAsStream("texture/serpent.jpg"));
-		textureSol = TextureLoader.getTexture("JPG",
-				ResourceLoader.getResourceAsStream("texture/herbe.jpg"));
-		textureMur = TextureLoader.getTexture("JPG",
-				ResourceLoader.getResourceAsStream("texture/metal.jpg"));
+		try {
+			textureSerpent = TextureLoader.getTexture("JPG",
+					ResourceLoader.getResourceAsStream("texture/serpent.jpg"));
+			textureSol = TextureLoader.getTexture("JPG",
+					ResourceLoader.getResourceAsStream("texture/herbe.jpg"));
+			textureMur = TextureLoader.getTexture("JPG",
+					ResourceLoader.getResourceAsStream("texture/metal.jpg"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
+	/**
+	 * Keyboard interaction
+	 */
 	public void pollInput() {
 		while (Keyboard.next()) {
 			if (Keyboard.getEventKeyState()) {
 				if ((bulletTime > 0)
 						&& Keyboard.getEventKey() == Keyboard.KEY_B) {
-					snake.setSpeed(Game.SPEED_BULLET);
+					snake.setSpeed(Game.speedBullet);
 					bulletTime--;
 					bulletTimeTimer = 6000;
 				}
@@ -513,6 +629,9 @@ public class Game extends Etat {
 		creationJeu();
 	}
 
+	/**
+	 * Set camera view
+	 */
 	public void setCamera() {
 		if (SnakeGame.isSwitchView()) {
 			float zoom = 40f;
@@ -565,16 +684,16 @@ public class Game extends Etat {
 	}
 
 	@Override
-	public void update(int delta) {
-		Game.setDelta(delta);
+	public void update(int pDelta) {
+		this.setDelta(pDelta);
 		if (!perdu) {
 
-			snake.update(delta, SnakeGame.isSwitchView());
+			snake.update(pDelta, SnakeGame.isSwitchView());
 			// Adding a new position for snake, and notify snake lenght
 			// if
 			// needed.
 			appleEat = snake.addPosition(appleEat);
-			perdu = snake.checkWallCollision(walls);
+			perdu = snake.checkWallCollision(getWalls());
 			// Check Apple detection
 			for (int i = 0; i < getObject().size(); i++) {
 				Eatable item = getObject().get(i);
@@ -587,7 +706,7 @@ public class Game extends Etat {
 					if (appleEat == Eatable.REDUCE) {
 						tailReduce = 1000;
 					} else if (appleEat == Eatable.MULTI) {
-						pointMulti = 4000;
+						setPointMulti(4000);
 					}
 					// Generate new item
 					if (Math.random() > 0.9) {
@@ -602,12 +721,69 @@ public class Game extends Etat {
 		} else {
 			if (mortSerpent < 0) {
 				Fichier.ecrire("highScore.txt", snake.getScore());
-				this.getSnakeGame().setEtat(new Perdu(this.snake.getScore(),
-						this.getSnakeGame()));
+				this.getSnakeGame().setEtat(
+						new Perdu(this.snake.getScore(), this.getSnakeGame()));
 			} else {
-				mortSerpent -= delta;
+				mortSerpent -= pDelta;
 			}
 		}
 		updateFPS();
+	}
+
+	/**
+	 * Get rotation
+	 * 
+	 * @return Rotation
+	 */
+	public static float getRotation() {
+		return rotation;
+	}
+
+	/**
+	 * Set a new rotation
+	 * 
+	 * @param pRotation
+	 *            New rotation to set
+	 */
+	public static void setRotation(float pRotation) {
+		Game.rotation = pRotation;
+	}
+
+	/**
+	 * Get the walls' list
+	 * 
+	 * @return List
+	 */
+	public static List<Position> getWalls() {
+		return walls;
+	}
+
+	/**
+	 * Set a new walls' list
+	 * 
+	 * @param pWalls
+	 *            New list
+	 */
+	public static void setWalls(List<Position> pWalls) {
+		Game.walls = pWalls;
+	}
+
+	/**
+	 * Get multi points
+	 * 
+	 * @return Multi points
+	 */
+	public static int getPointMulti() {
+		return pointMulti;
+	}
+
+	/**
+	 * Set new multi points
+	 * 
+	 * @param pPointMulti
+	 *            New multi points
+	 */
+	public static void setPointMulti(int pPointMulti) {
+		Game.pointMulti = pPointMulti;
 	}
 }
