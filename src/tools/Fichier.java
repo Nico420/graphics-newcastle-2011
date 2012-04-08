@@ -1,6 +1,7 @@
 package tools;
 
 import java.io.BufferedReader;
+import java.io.EOFException;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -9,10 +10,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Reading and writing in files.
@@ -21,9 +20,6 @@ import java.util.List;
  * 
  */
 public final class Fichier {
-
-	/** Highscore list. */
-	private static LinkedList<Integer> highScore = new LinkedList<Integer>();
 
 	/** Max score. */
 	public static final int MAX_SCORE = 10;
@@ -35,24 +31,27 @@ public final class Fichier {
 	 *            File to write in
 	 * @param i
 	 *            String to write
+	 * @param pName
+	 *            Fichier name
 	 */
-	public static void ecrire(String nomFic, int i) {
+	public static void ecrire(String nomFic, int i, String pName) {
 
-		highScore = getScore(nomFic);
+		ArrayList<String> highScore = getScore(nomFic);
 		int position = getInsertionPosition(highScore, i);
-		highScore.add(position, i);
-		if (highScore.size() > MAX_SCORE) {
-			highScore = new LinkedList<Integer>(highScore.subList(0, MAX_SCORE));
-		}
+		if (position != -1) {
+			highScore.add(position, i + " " + pName);
 
-		try {
-			FileOutputStream fichier = new FileOutputStream(nomFic);
-			ObjectOutputStream oos = new ObjectOutputStream(fichier);
-			oos.writeObject(highScore);
-			oos.flush();
-			oos.close();
-		} catch (java.io.IOException e) {
-			e.printStackTrace();
+			try {
+				FileOutputStream fichier = new FileOutputStream(nomFic);
+				ObjectOutputStream oos = new ObjectOutputStream(fichier);
+				for (int j = 0; j < highScore.size() && j < MAX_SCORE; j++) {
+					oos.writeObject(highScore.get(j));
+				}
+				oos.flush();
+				oos.close();
+			} catch (java.io.IOException e) {
+				e.printStackTrace();
+			}
 		}
 
 	};
@@ -60,23 +59,22 @@ public final class Fichier {
 	/**
 	 * Get the insert position.
 	 * 
-	 * @param highScore2
+	 * @param highScore
 	 *            High score list
 	 * @param a
 	 *            number to insert.
 	 * @return The position where to insert.
 	 */
-	private static int getInsertionPosition(List<Integer> highScore2, int a) {
-		int position = 0;
-		Iterator<Integer> ite = highScore2.iterator();
-		while (ite.hasNext()) {
-			int b = ite.next().intValue();
-			if (a > b) {
-				return position;
+	private static int getInsertionPosition(ArrayList<String> highScore, int a) {
+		if (highScore.size() > 0) {
+			for (int i = 0; i < highScore.size(); i++) {
+				if (a > Integer.parseInt(highScore.get(i).split("\\s")[0])) {
+					return i;
+				}
 			}
-			position++;
+			return -1;
 		}
-		return position;
+		return 0;
 	}
 
 	/**
@@ -86,18 +84,27 @@ public final class Fichier {
 	 *            File to read
 	 * @return high score list
 	 */
-	@SuppressWarnings("unchecked")
-	public static LinkedList<Integer> getScore(final String pString) {
+	public static ArrayList<String> getScore(final String pString) {
+		ArrayList<String> res = new ArrayList<String>();
 		try {
-			FileInputStream fichier = new FileInputStream(pString);
-			ObjectInputStream ois = new ObjectInputStream(fichier);
-			highScore = (LinkedList<Integer>) ois.readObject();
+
+			try {
+				FileInputStream fichier = new FileInputStream(pString);
+				ObjectInputStream ois = new ObjectInputStream(fichier);
+				String line;
+				while ((line = (String) ois.readObject()) != null) {
+					res.add(line);
+				}
+			} catch (EOFException e) {
+				System.out.println("Fin fichier");
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return highScore;
+		return res;
 	}
 
 	/**

@@ -5,15 +5,16 @@ import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 
+import org.lwjgl.input.Keyboard;
 import org.newdawn.slick.Color;
 
 import src.SnakeGame;
 import tools.Fichier;
 
 /**
- * State High Score, displaying the highScore.
+ * State High Fichier, displaying the highScore.
  * 
  * @author Nicolas
  * 
@@ -23,10 +24,10 @@ public class HighScore extends Etat {
 	/** Offset. */
 	private static final int OFFSET = 35;
 
-	/** Score starting postion. */
+	/** Fichier starting postion. */
 	private static final int SCORE_POSITION_X = 250;
 
-	/** Score starting position. */
+	/** Fichier starting position. */
 	private static final int SCORE_STARTING_POSITION_Y = 230;
 
 	/** Title position. */
@@ -41,23 +42,29 @@ public class HighScore extends Etat {
 	/** Title 2 position. */
 	private static final int TITLE2_POSITION_Y = 110;
 
-	/** Score list. */
-	private LinkedList<Integer> score;
+	/** Fichier list. */
+	private ArrayList<String> score;
 
 	/**
 	 * Construct highscore state.
 	 * 
-	 * @param snakeGame Game instance
+	 * @param snakeGame
+	 *            Game instance
 	 */
 	public HighScore(SnakeGame snakeGame) {
 		super(snakeGame);
 		initGL();
-		score = Fichier.getScore("highScore.txt");
+		score = Fichier.getScore("highscore");
 	}
 
 	@Override
 	public void pollInput() {
 		super.pollInput();
+		while (Keyboard.next()) {
+			if (Keyboard.getEventKeyState()) {
+				this.getSnakeGame().setEtat(new Menu(this.getSnakeGame()));
+			}
+		}
 	}
 
 	@Override
