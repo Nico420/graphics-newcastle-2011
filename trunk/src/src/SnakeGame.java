@@ -17,6 +17,66 @@ import tools.Position;
  */
 public class SnakeGame {
 
+	/** Exit the game */
+	private static boolean exit = false;
+
+	/** Window height */
+	public static final int HEIGHT = 600;
+
+	/** Window Width */
+	public static final int WIDTH = 800;
+	
+	/** Middle of the map */
+	public static final Position MAP_MILIEU = new Position(WIDTH - 400,
+			HEIGHT - 300);
+	/** Switch view */
+	private static boolean switchView = false;
+
+	
+
+	/**
+	 * Knowing the actual view
+	 * 
+	 * @return The view
+	 */
+	public static boolean isSwitchView() {
+		return switchView;
+	}
+
+	/**
+	 * Launching the game
+	 * 
+	 * @param argv
+	 *            Launching args
+	 * @throws LWJGLException
+	 * @throws InterruptedException
+	 * @throws IOException
+	 */
+	public static void main(String[] argv) {
+		SnakeGame game = new SnakeGame(5);
+		game.start();
+	}
+	/**
+	 * Change view
+	 * 
+	 * @param pSwitchView
+	 *            The new view to set
+	 */
+	public static void setSwitchView(boolean pSwitchView) {
+		SnakeGame.switchView = pSwitchView;
+	}
+
+	// float lightPosition1[] = { -MAP_SIZE, -MAP_SIZE, 1f, 1f };
+
+	/** Apple number */
+	private int appleNumber;
+
+	/** Game state */
+	private Etat etat;
+
+	/** time at last frame */
+	private long lastFrame;
+
 	/**
 	 * Build a snake Game
 	 * 
@@ -29,30 +89,27 @@ public class SnakeGame {
 		//this.etat = new Menu(this);
 	}
 
-	/** Apple number */
-	private int appleNumber;
+	/**
+	 * Get the apple number
+	 * 
+	 * @return The apple number
+	 */
+	public int getAppleNumber() {
+		return appleNumber;
+	}
 
-	/** Window height */
-	public static final int HEIGHT = 600;
-	/** Window Width */
-	public static final int WIDTH = 800;
+	/**
+	 * Get the Delta
+	 * 
+	 * @return The delta
+	 */
+	private int getDelta() {
+		long time = getTime();
+		int delta = (int) (time - lastFrame);
+		lastFrame = time;
 
-	/** Middle of the map */
-	public static final Position MAP_MILIEU = new Position(WIDTH - 400,
-			HEIGHT - 300);
-
-	/** Game state */
-	private Etat etat;
-
-	/** Exit the game */
-	private static boolean exit = false;
-	/** Switch view */
-	private static boolean switchView = false;
-
-	// float lightPosition1[] = { -MAP_SIZE, -MAP_SIZE, 1f, 1f };
-
-	/** time at last frame */
-	private long lastFrame;
+		return delta;
+	}
 
 	/**
 	 * Get the state
@@ -61,6 +118,25 @@ public class SnakeGame {
 	 */
 	public Etat getEtat() {
 		return etat;
+	}
+
+	/**
+	 * Get Time
+	 * 
+	 * @return Sys time
+	 */
+	private long getTime() {
+		return (Sys.getTime() * 1000) / Sys.getTimerResolution();
+	}
+
+	/**
+	 * Set a new apple number
+	 * 
+	 * @param pAppleNumber
+	 *            The number of apple
+	 */
+	public void setAppleNumber(int pAppleNumber) {
+		appleNumber = pAppleNumber;
 	}
 
 	/**
@@ -111,79 +187,5 @@ public class SnakeGame {
 		}
 
 		Display.destroy();
-	}
-
-	/**
-	 * Get the Delta
-	 * 
-	 * @return The delta
-	 */
-	private int getDelta() {
-		long time = getTime();
-		int delta = (int) (time - lastFrame);
-		lastFrame = time;
-
-		return delta;
-	}
-
-	/**
-	 * Get Time
-	 * 
-	 * @return Sys time
-	 */
-	private long getTime() {
-		return (Sys.getTime() * 1000) / Sys.getTimerResolution();
-	}
-
-	/**
-	 * Launching the game
-	 * 
-	 * @param argv
-	 *            Launching args
-	 * @throws LWJGLException
-	 * @throws InterruptedException
-	 * @throws IOException
-	 */
-	public static void main(String[] argv) {
-		SnakeGame game = new SnakeGame(5);
-		game.start();
-	}
-
-	/**
-	 * Knowing the actual view
-	 * 
-	 * @return The view
-	 */
-	public static boolean isSwitchView() {
-		return switchView;
-	}
-
-	/**
-	 * Change view
-	 * 
-	 * @param pSwitchView
-	 *            The new view to set
-	 */
-	public static void setSwitchView(boolean pSwitchView) {
-		SnakeGame.switchView = pSwitchView;
-	}
-
-	/**
-	 * Get the apple number
-	 * 
-	 * @return The apple number
-	 */
-	public int getAppleNumber() {
-		return appleNumber;
-	}
-
-	/**
-	 * Set a new apple number
-	 * 
-	 * @param pAppleNumber
-	 *            The number of apple
-	 */
-	public void setAppleNumber(int pAppleNumber) {
-		appleNumber = pAppleNumber;
 	}
 }

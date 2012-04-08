@@ -36,78 +36,29 @@ public class Position {
 	}
 
 	/**
-	 * Get X.
+	 * Check collapsing.
 	 * 
-	 * @return Position X
+	 * @param object
+	 *            Object list
+	 * @param firstSize
+	 *            Size of the first element
+	 * @param secondSize
+	 *            Size of the second element
+	 * @return True if collapsing
 	 */
-	public float getX() {
-		return x;
-	}
-
-	/**
-	 * Set a new X.
-	 * 
-	 * @param pX
-	 *            the new X
-	 */
-	public void setX(float pX) {
-		this.x = pX;
-	}
-
-	/**
-	 * Get Y.
-	 * 
-	 * @return Position Y
-	 */
-	public float getY() {
-		return y;
-	}
-
-	/**
-	 * Set a new Y.
-	 * 
-	 * @param pY
-	 *            the new Y
-	 */
-	public void setY(float pY) {
-		this.y = pY;
-	}
-
-	/**
-	 * Get Z.
-	 * 
-	 * @return Position Z
-	 */
-	public float getZ() {
-		return z;
-	}
-
-	/**
-	 * Set a new Z.
-	 * 
-	 * @param pZ
-	 *            the new Z
-	 */
-	public void setZ(float pZ) {
-		this.z = pZ;
-	}
-
-	@Override
-	public String toString() {
-		return "Position [x=" + x + ", y=" + y + "]";
-	}
-
-	/**
-	 * Test equality.
-	 * 
-	 * @param o
-	 *            Object to compare
-	 * @return True if equal
-	 */
-	public boolean equals(Object o) {
-		if (o instanceof Position) {
-			return (((Position) o).getX() == this.x)
-					&& ((Position) o).getY() == this.y;
+	public boolean checkCollapse(ArrayList<Eatable> object, int firstSize,
+			int secondSize) {
+		Iterator<Eatable> ite = object.iterator();
+		while (ite.hasNext()) {
+			Eatable item = ite.next();
+			Position t = new Position(item.getX(), item.getY());
+			boolean collisionX = Math.abs(t.getX() - this.getX()) < secondSize
+					+ firstSize;
+			boolean collisionY = Math.abs(t.getY() - this.getY()) < secondSize
+					+ firstSize;
+			if (collisionX && collisionY) {
+				return true;
+			}
 		}
 		return false;
 	}
@@ -140,30 +91,79 @@ public class Position {
 	}
 
 	/**
-	 * Check collapsing.
+	 * Test equality.
 	 * 
-	 * @param object
-	 *            Object list
-	 * @param firstSize
-	 *            Size of the first element
-	 * @param secondSize
-	 *            Size of the second element
-	 * @return True if collapsing
+	 * @param o
+	 *            Object to compare
+	 * @return True if equal
 	 */
-	public boolean checkCollapse(ArrayList<Eatable> object, int firstSize,
-			int secondSize) {
-		Iterator<Eatable> ite = object.iterator();
-		while (ite.hasNext()) {
-			Eatable item = ite.next();
-			Position t = new Position(item.getX(), item.getY());
-			boolean collisionX = Math.abs(t.getX() - this.getX()) < secondSize
-					+ firstSize;
-			boolean collisionY = Math.abs(t.getY() - this.getY()) < secondSize
-					+ firstSize;
-			if (collisionX && collisionY) {
-				return true;
-			}
+	public boolean equals(Object o) {
+		if (o instanceof Position) {
+			return (((Position) o).getX() == this.x)
+					&& ((Position) o).getY() == this.y;
 		}
 		return false;
+	}
+
+	/**
+	 * Get X.
+	 * 
+	 * @return Position X
+	 */
+	public float getX() {
+		return x;
+	}
+
+	/**
+	 * Get Y.
+	 * 
+	 * @return Position Y
+	 */
+	public float getY() {
+		return y;
+	}
+
+	/**
+	 * Get Z.
+	 * 
+	 * @return Position Z
+	 */
+	public float getZ() {
+		return z;
+	}
+
+	/**
+	 * Set a new X.
+	 * 
+	 * @param pX
+	 *            the new X
+	 */
+	public void setX(float pX) {
+		this.x = pX;
+	}
+
+	/**
+	 * Set a new Y.
+	 * 
+	 * @param pY
+	 *            the new Y
+	 */
+	public void setY(float pY) {
+		this.y = pY;
+	}
+
+	/**
+	 * Set a new Z.
+	 * 
+	 * @param pZ
+	 *            the new Z
+	 */
+	public void setZ(float pZ) {
+		this.z = pZ;
+	}
+
+	@Override
+	public String toString() {
+		return "Position [x=" + x + ", y=" + y + "]";
 	}
 }

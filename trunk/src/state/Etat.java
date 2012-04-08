@@ -1,8 +1,27 @@
 package state;
 
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_LEQUAL;
+import static org.lwjgl.opengl.GL11.GL_LIGHTING;
+import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
+import static org.lwjgl.opengl.GL11.GL_NICEST;
+import static org.lwjgl.opengl.GL11.GL_PERSPECTIVE_CORRECTION_HINT;
+import static org.lwjgl.opengl.GL11.GL_PROJECTION;
+import static org.lwjgl.opengl.GL11.GL_SMOOTH;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.opengl.GL11.glClearDepth;
+import static org.lwjgl.opengl.GL11.glDepthFunc;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glHint;
+import static org.lwjgl.opengl.GL11.glLoadIdentity;
+import static org.lwjgl.opengl.GL11.glMatrixMode;
+import static org.lwjgl.opengl.GL11.glShadeModel;
+import static org.lwjgl.opengl.GL11.glViewport;
+
 import java.awt.Font;
 import java.io.InputStream;
-import java.nio.FloatBuffer;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
@@ -10,125 +29,87 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
-import org.newdawn.slick.TrueTypeFont;
-import org.newdawn.slick.opengl.TextureLoader;
-
+import org.newdawn.slick.UnicodeFont;
+import org.newdawn.slick.font.effects.ColorEffect;
 import org.newdawn.slick.util.ResourceLoader;
 
 import src.SnakeGame;
 
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glMatrixMode;
-import static org.lwjgl.opengl.GL11.glShadeModel;
-import static org.lwjgl.opengl.GL11.glClearDepth;
-import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glDepthFunc;
-import static org.lwjgl.opengl.GL11.glViewport;
-import static org.lwjgl.opengl.GL11.glHint;
-import static org.lwjgl.opengl.GL11.glDisable;
-
-import static org.lwjgl.opengl.GL11.GL_SMOOTH;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL11.GL_LEQUAL;
-import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
-import static org.lwjgl.opengl.GL11.GL_PROJECTION;
-import static org.lwjgl.opengl.GL11.GL_PERSPECTIVE_CORRECTION_HINT;
-import static org.lwjgl.opengl.GL11.GL_NICEST;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.GL_LIGHTING;
 /**
  * Abstract class for states.
  * 
  * @author Nicolas
  * 
  */
-@SuppressWarnings("deprecation")
 public abstract class Etat {
-	private boolean lighting = false;
-	private TextureLoader tl = new TextureLoader();
 
-	// ----------- Variables added for Lighting Test -----------//
-	protected FloatBuffer matSpecular;
-	protected FloatBuffer lightPosition;
-	protected FloatBuffer whiteLight;
-	protected FloatBuffer lModelAmbient;
-	// ----------- END: Variables added for Lighting Test -----------//
+	/** Font */
+	private UnicodeFont font;
 
-	protected TrueTypeFont font;
-	protected TrueTypeFont fontMenu;
-	protected TrueTypeFont fontTitre;
-	protected TrueTypeFont fontPower;
+	/** Font */
+	private UnicodeFont fontMenu;
+	/** Font */
+	private UnicodeFont fontPower;
+	/** Font */
+	private UnicodeFont fontTitre;
 
-	private boolean antiAlias = true;
-	/** time at last frame */
-	long lastFrame;
-	/** frames per second */
-	int fps;
 	/** last fps time */
-	long lastFPS;
+	private long lastFPS;
 
-	public Etat() {
+	/** Game instance */
+	private SnakeGame snakeGame;
+
+	/**
+	 * State constructor
+	 * 
+	 * @param pSnakeGame
+	 *            game instance
+	 */
+	@SuppressWarnings("unchecked")
+	public Etat(SnakeGame pSnakeGame) {
+		setSnakeGame(pSnakeGame);
 		// Font Creation
-		Font awtFont = new Font("Times New Roman", Font.BOLD, 24);
-		font = new TrueTypeFont(awtFont, antiAlias);
 		initGL();
 		// load font from file
 		try {
+			Font awtFont = new Font("Times New Roman", Font.BOLD, 24);
+			setFont(new UnicodeFont(awtFont));
+			getFont().addAsciiGlyphs();
+			getFont().getEffects().add(new ColorEffect(java.awt.Color.WHITE));
+			getFont().loadGlyphs();
+
 			InputStream inputStream = ResourceLoader
 					.getResourceAsStream("texture/FOO.ttf");
 
 			Font awtFont2 = Font.createFont(Font.TRUETYPE_FONT, inputStream);
 			awtFont2 = awtFont2.deriveFont(36f); // set font size
-			fontMenu = new TrueTypeFont(awtFont2, antiAlias);
+			setFontMenu(new UnicodeFont(awtFont2));
+			getFontMenu().addAsciiGlyphs();
+			getFontMenu().getEffects().add(
+					new ColorEffect(java.awt.Color.WHITE));
+			getFontMenu().loadGlyphs();
 			awtFont2 = awtFont2.deriveFont(60f); // set font size
-			fontTitre = new TrueTypeFont(awtFont2, antiAlias);
+			setFontTitre(new UnicodeFont(awtFont2));
+			getFontTitre().addAsciiGlyphs();
+			getFontTitre().getEffects().add(
+					new ColorEffect(java.awt.Color.WHITE));
+			getFontTitre().loadGlyphs();
 			awtFont2 = awtFont2.deriveFont(24f); // set font size
-			fontPower = new TrueTypeFont(awtFont2, antiAlias);
+			setFontPower(new UnicodeFont(awtFont2));
+			getFontPower().addAsciiGlyphs();
+			getFontPower().getEffects().add(
+					new ColorEffect(java.awt.Color.WHITE));
+			getFontPower().loadGlyphs();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	/**
-	 * Updtaing the state
+	 * Get time
 	 * 
-	 * @param delta
-	 * @return New state to use
-	 * @throws LWJGLException
+	 * @return time
 	 */
-	public int update(int delta) throws LWJGLException {
-		while (Keyboard.next()) {
-			if (Keyboard.getEventKeyState()) {
-				if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
-					return SnakeGame.MENU;
-				}
-			}
-			if (Keyboard.getEventKey() == Keyboard.KEY_A) {
-				if (Display.isFullscreen())
-					Display.setFullscreen(false);
-				else
-					Display.setFullscreen(true);
-			}
-		}
-
-		return -1;
-	}
-
-	/**
-	 * Drawing the state
-	 */
-	public abstract void renderGL();
-
-	public void updateFPS() {
-		if (getTime() - lastFPS > 1000) {
-			fps = 0;
-			lastFPS += 1000;
-		}
-		fps++;
-
-	}
-
 	public long getTime() {
 		return (Sys.getTime() * 1000) / Sys.getTimerResolution();
 	}
@@ -136,7 +117,7 @@ public abstract class Etat {
 	/**
 	 * OpenGL initialisation
 	 */
-	protected void initGL(){
+	protected void initGL() {
 		glShadeModel(GL_SMOOTH); // Enable Smooth Shading
 		glClearColor(0.0f, 0.0f, 0.0f, 0.5f); // Black Background
 		glClearDepth(1.0f); // Depth Buffer Setup
@@ -160,21 +141,20 @@ public abstract class Etat {
 
 	/**
 	 * Keyboard reading
-	 * 
-	 * @return new state to use
 	 */
-	public int pollInput() {
+	public void pollInput() {
 		while (Keyboard.next()) {
 			if (Keyboard.getEventKeyState()) {
 				if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
-					return SnakeGame.MENU;
+					this.getSnakeGame().setEtat(new Menu(this.getSnakeGame()));
 				}
 				if (Keyboard.getEventKey() == Keyboard.KEY_A) {
 					try {
-						if (Display.isFullscreen())
+						if (Display.isFullscreen()) {
 							Display.setFullscreen(false);
-						else
+						} else {
 							Display.setFullscreen(true);
+						}
 					} catch (LWJGLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -183,7 +163,141 @@ public abstract class Etat {
 			}
 
 		}
-		return -1;
+	}
+
+	/**
+	 * Drawing the state
+	 */
+	public abstract void renderGL();
+
+	/**
+	 * Updtaing the state
+	 * 
+	 * @param delta
+	 *            Delta
+	 * @throws LWJGLException
+	 *             Exception
+	 */
+	public void update(int delta) throws LWJGLException {
+		while (Keyboard.next()) {
+			if (Keyboard.getEventKeyState()) {
+				if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
+					this.getSnakeGame().setEtat(this);
+				}
+			}
+			if (Keyboard.getEventKey() == Keyboard.KEY_A) {
+				if (Display.isFullscreen()) {
+					Display.setFullscreen(false);
+				} else {
+					Display.setFullscreen(true);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Update fps
+	 */
+	protected void updateFPS() {
+		if (getTime() - lastFPS > 1000) {
+			lastFPS += 1000;
+		}
+
+	}
+
+	/**
+	 * Get game instance
+	 * 
+	 * @return Game instance
+	 */
+	public SnakeGame getSnakeGame() {
+		return snakeGame;
+	}
+
+	/**
+	 * Set a game
+	 * 
+	 * @param pSnakeGame
+	 *            Game to set.
+	 */
+	public void setSnakeGame(SnakeGame pSnakeGame) {
+		this.snakeGame = pSnakeGame;
+	}
+
+	/**
+	 * Get font
+	 * 
+	 * @return Font
+	 */
+	public UnicodeFont getFontMenu() {
+		return fontMenu;
+	}
+
+	/**
+	 * Set a new font
+	 * 
+	 * @param pFontMenu
+	 *            new font to set
+	 */
+	public void setFontMenu(UnicodeFont pFontMenu) {
+		this.fontMenu = pFontMenu;
+	}
+
+	/**
+	 * Get font
+	 * 
+	 * @return Font
+	 */
+	public UnicodeFont getFontTitre() {
+		return fontTitre;
+	}
+
+	/**
+	 * Set a new font
+	 * 
+	 * @param pFontTitre
+	 *            new font to set
+	 */
+	public void setFontTitre(UnicodeFont pFontTitre) {
+		this.fontTitre = pFontTitre;
+	}
+
+	/**
+	 * Get font
+	 * 
+	 * @return Font
+	 */
+	public UnicodeFont getFont() {
+		return font;
+	}
+
+	/**
+	 * Set a new font
+	 * 
+	 * @param pFont
+	 *            new font to set
+	 */
+	public void setFont(UnicodeFont pFont) {
+		this.font = pFont;
+	}
+
+	/**
+	 * Get font
+	 * 
+	 * @return Font
+	 */
+	public UnicodeFont getFontPower() {
+		return fontPower;
+	}
+
+	/**
+	 * Set a new font
+	 * 
+	 * @param pFontPower
+	 *            new font to set
+	 */
+	public void setFontPower(UnicodeFont pFontPower) {
+		this.fontPower = pFontPower;
 	}
 
 }

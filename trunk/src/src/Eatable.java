@@ -26,50 +26,50 @@ public class Eatable {
 
 	/** Blue. */
 	private static final float BLUE = 0f;
+	/** Bounce down limit. */
+	private static final double BOUNCE_DOWN_LIMIT = 1.90;
+	/** Bounce speed. */
+	private static final double BOUNCE_SPEED = 0.001;
+	/** Bounce up limit. */
+	private static final double BOUNCE_UP_LIMIT = 0.10;
 	/** Green. */
 	private static final float GREEN = 0.2f;
+	/** Grow up. */
+	public static final int GROW_UP = 1;
+	/** Multiply. */
+	public static final int MULTI = 4;
 	/** Red. */
 	private static final float RED = 0.5f;
+	/** Reduce. */
+	public static final int REDUCE = 2;
 	/** Rotation limit. */
 	private static final int ROTATION_LIMIT = 360;
 	/** Rotation speed. */
 	private static final double ROTATION_SPEED = 0.3;
-	/** Bounce down limit. */
-	private static final double BOUNCE_DOWN_LIMIT = 1.90;
-	/** Bounce up limit. */
-	private static final double BOUNCE_UP_LIMIT = 0.10;
-	/** Bounce speed. */
-	private static final double BOUNCE_SPEED = 0.001;
-	/** Grow up. */
-	public static final int GROW_UP = 1;
-	/** Reduce. */
-	public static final int REDUCE = 2;
 	/** Slow. */
 	public static final int SLOW = 3;
-	/** Multiply. */
-	public static final int MULTI = 4;
 
-	/** Rotation. */
-	private float rotation;
+	/** Each item as an action(Reduce the snake, multi points,...). */
+	private int action;
 	/** Bounce. */
 	private float bounce;
+	/** Color. */
+	private Color color;
+
 	/** Direction. */
 	private boolean direction = false;
+	/** Rotation. */
+	private float rotation;
 
 	/**
 	 * x position of the item.
 	 */
 	private float x;
+
 	/**
 	 * x position of the item.
 	 */
 	private float y;
-
-	/** Color. */
-	private Color color;
-
-	/** Each item as an action(Reduce the snake, multi points,...). */
-	private int action;
 
 	/**
 	 * During the creation of an item, we have to check for not placing it on a
@@ -97,77 +97,6 @@ public class Eatable {
 			this.y = (float) (-(Game.MAP_SIZE - Game.APPLE_SIZE) + ((Game.MAP_SIZE - Game.APPLE_SIZE) * 2)
 					* Math.random());
 		}
-	}
-
-	/**
-	 * @return the x
-	 */
-	public float getX() {
-		return x;
-	}
-
-	/**
-	 * @param pX
-	 *            the x to set
-	 */
-	public void setX(float pX) {
-		this.x = pX;
-	}
-
-	/**
-	 * @return the y
-	 */
-	public float getY() {
-		return y;
-	}
-
-	/**
-	 * @param pY
-	 *            the y to set
-	 */
-	public void setY(float pY) {
-		this.y = pY;
-	}
-
-	/**
-	 * @return the color
-	 */
-	public Color getColor() {
-		return color;
-	}
-
-	/**
-	 * @param pColor
-	 *            the color to set
-	 */
-	public void setColor(Color pColor) {
-		this.color = pColor;
-	}
-
-	/**
-	 * @return the action
-	 */
-	public int getAction() {
-		return action;
-	}
-
-	/**
-	 * @param pAction
-	 *            the action to set
-	 */
-	public void setAction(int pAction) {
-		this.action = pAction;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "Eatable [x=" + x + ", y=" + y + ", color=" + color
-				+ ", action=" + action + "]";
 	}
 
 	/**
@@ -292,6 +221,77 @@ public class Eatable {
 
 		x = xTemp;
 		y = yTemp;
+	}
+
+	/**
+	 * @return the action
+	 */
+	public int getAction() {
+		return action;
+	}
+
+	/**
+	 * @return the color
+	 */
+	public Color getColor() {
+		return color;
+	}
+
+	/**
+	 * @return the x
+	 */
+	public float getX() {
+		return x;
+	}
+
+	/**
+	 * @return the y
+	 */
+	public float getY() {
+		return y;
+	}
+
+	/**
+	 * @param pAction
+	 *            the action to set
+	 */
+	public void setAction(int pAction) {
+		this.action = pAction;
+	}
+
+	/**
+	 * @param pColor
+	 *            the color to set
+	 */
+	public void setColor(Color pColor) {
+		this.color = pColor;
+	}
+
+	/**
+	 * @param pX
+	 *            the x to set
+	 */
+	public void setX(float pX) {
+		this.x = pX;
+	}
+
+	/**
+	 * @param pY
+	 *            the y to set
+	 */
+	public void setY(float pY) {
+		this.y = pY;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Eatable [x=" + x + ", y=" + y + ", color=" + color
+				+ ", action=" + action + "]";
 	}
 
 }

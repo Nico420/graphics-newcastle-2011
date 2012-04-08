@@ -1,17 +1,17 @@
 package src;
 
+import static org.lwjgl.opengl.GL11.GL_POLYGON;
+import static org.lwjgl.opengl.GL11.GL_QUADS;
+import static org.lwjgl.opengl.GL11.glBegin;
 import static org.lwjgl.opengl.GL11.glColor3f;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glVertex3f;
+import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glTexCoord2d;
 import static org.lwjgl.opengl.GL11.glTranslated;
 import static org.lwjgl.opengl.GL11.glTranslatef;
-import static org.lwjgl.opengl.GL11.glRotatef;
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.GL_POLYGON;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
+import static org.lwjgl.opengl.GL11.glVertex3f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,72 +32,123 @@ public class Snake {
 
 	/** Down rotation */
 	private static final int DOWN_ROTATION = 0;
-	/** Up rotation */
-	private static final int UP_ROTATION = 180;
-	/** Right rotation */
-	private static final int RIGHT_ROTATION = 270;
 	/** Left rotation */
 	private static final int LEFT_ROTATION = 90;
 	/** Map limit */
 	private static final int MAP_LIMIT = 10;
-
-	/** Snake name */
-	private String name;
-	/** Snake positions */
-	private List<Position> positions;
-
-	/** Snake actuel head position */
-	private float x;
-	/** Snake actuel head position */
-	private float y;
+	/** Right rotation */
+	private static final int RIGHT_ROTATION = 270;
+	/** Up rotation */
+	private static final int UP_ROTATION = 180;
 
 	/** Snake temp variable */
 	private static float xTemp = 0;
 	/** Snake temp variable */
 	private static float yTemp = 0;
 
+	/**
+	 * Draw the snake body
+	 * 
+	 * @param x
+	 *            Snake x
+	 * @param y
+	 *            Snake y
+	 * @param z
+	 *            Snake y
+	 * @param size
+	 *            Snake size
+	 */
+	public static void drawBody(float x, float y, float z, float size) {
+		float a = size / 2;
+
+		glPushMatrix();
+		glTranslated(SnakeGame.MAP_MILIEU.getX(), SnakeGame.MAP_MILIEU.getY(),
+				0);
+		glBegin(GL_QUADS);
+
+		// glNormal3f(0, 0, -1);
+		glTexCoord2d(0, 0.5);
+		glVertex3f(x - a, y - a, 0);
+		glTexCoord2d(0.5, 0.5);
+		glVertex3f(x + a, y - a, 0);
+		glTexCoord2d(0.5, 0);
+		glVertex3f(x + a, y + a, 0);
+		glTexCoord2d(0, 0);
+		glVertex3f(x - a, y + a, 0);
+
+		glTexCoord2d(0, 0.5);
+		glVertex3f(x - a, y - a, size);
+		glTexCoord2d(0.5, 0.5);
+		glVertex3f(x + a, y - a, size);
+		glTexCoord2d(0.5, 0);
+		glVertex3f(x + a, y + a, size);
+		glTexCoord2d(0, 0);
+		glVertex3f(x - a, y + a, size);
+
+		glTexCoord2d(0, 0.5);
+		glVertex3f(x - a, y - a, size);
+		glTexCoord2d(0.5, 0.5);
+		glVertex3f(x + a, y - a, size);
+		glTexCoord2d(0, 0.5);
+		glVertex3f(x + a, y - a, 0);
+		glTexCoord2d(0.5, 0);
+		glVertex3f(x - a, y - a, 0);
+
+		glTexCoord2d(0, 0.5);
+		glVertex3f(x + a, y + a, size);
+		glTexCoord2d(0.5, 0.5);
+		glVertex3f(x - a, y + a, size);
+		glTexCoord2d(0.5, 0);
+		glVertex3f(x - a, y + a, 0);
+		glTexCoord2d(0, 0);
+		glVertex3f(x + a, y + a, 0);
+
+		glTexCoord2d(0, 0.5);
+		glVertex3f(x - a, y - a, 0);
+		glTexCoord2d(0.5, 0.5);
+		glVertex3f(x - a, y + a, 0);
+		glTexCoord2d(0.5, 0);
+		glVertex3f(x - a, y + a, size);
+		glTexCoord2d(0, 0);
+		glVertex3f(x - a, y - a, size);
+
+		glTexCoord2d(0.5, 0);
+		glVertex3f(x + a, y + a, 0);
+		glTexCoord2d(0, 0);
+		glVertex3f(x + a, y - a, 0);
+		glTexCoord2d(0, 0.5);
+		glVertex3f(x + a, y - a, size);
+		glTexCoord2d(0.5, 0.5);
+		glVertex3f(x + a, y + a, size);
+
+		glEnd();
+
+		glPopMatrix();
+
+	}
 	/** Snake Color */
 	private Color c;
-	/** Snake lenght */
-	private int lenght;
-	/** Snake mouvement */
-	private int mouvement;
+
 	/** Snake direction */
 	private int direction = Game.DOWN;
+	/** Snake lenght */
+	private int lenght;
+
+	/** Snake mouvement */
+	private int mouvement;
+	/** Snake name */
+	private String name;
+	/** Snake positions */
+	private List<Position> positions;
 	/** Snake Score */
 	private int score;
 	/** Snake Speed */
 	private float speed;
+	/** Snake actuel head position */
+	private float x;
 
-	/**
-	 * @return the speed
-	 */
-	public float getSpeed() {
-		return speed;
-	}
-
-	/**
-	 * @param pSpeed
-	 *            the speed to set
-	 */
-	public void setSpeed(float pSpeed) {
-		this.speed = pSpeed;
-	}
-
-	/**
-	 * @return the mouvement
-	 */
-	public int getMouvement() {
-		return mouvement;
-	}
-
-	/**
-	 * @param pMouvement
-	 *            the mouvement to set
-	 */
-	public void setMouvement(int pMouvement) {
-		this.mouvement = pMouvement;
-	}
+	/** Snake actuel head position */
+	private float y;
 
 	/**
 	 * Construct the snake.
@@ -127,93 +178,84 @@ public class Snake {
 	}
 
 	/**
-	 * @return the name
+	 * Add a position to the snake
+	 * 
+	 * @param appleEat
+	 *            Have an apple been eaten ?
+	 * @return apple eat new state.
 	 */
-	public String getName() {
-		return name;
+	public int addPosition(int appleEat) {
+		if (Math.sqrt(Math.pow(xTemp - this.getX(), 2)
+				+ Math.pow(yTemp - this.getY(), 2)) > (Game.SNAKE_SIZE * 2)) {
+			drawBody(xTemp, yTemp, 0, Game.SNAKE_SIZE * 2);
+			this.positions.add(new Position(xTemp, yTemp));
+			switch (appleEat) {
+			case Apple.GROW_UP:
+				appleEat = 0;
+				this.score += 100;
+				if (Game.pointMulti > 0) {
+					this.score += 500;
+				}
+				break;
+			case Apple.REDUCE:
+				this.positions = this.positions.subList(
+						(int) Math.ceil(lenght / 2), lenght);
+				this.setLenght(this.positions.size());
+				appleEat = 0;
+				this.score += 100;
+				break;
+			case Apple.MULTI:
+				appleEat = 0;
+				this.score += 1000;
+				break;
+			case 0:
+				this.positions = this.positions.subList(1, lenght + 1);
+				break;
+			default:
+				break;
+			}
+			xTemp = this.getX();
+			yTemp = this.getY();
+		}
+		return appleEat;
 	}
 
 	/**
-	 * @param pName
-	 *            the name to set
+	 * Check wall collision
+	 * 
+	 * @param walls
+	 *            Walls positions
+	 * @return True if collision
 	 */
-	public void setName(String pName) {
-		this.name = pName;
-	}
+	public boolean checkWallCollision(List<Position> walls) {
+		Position actual = new Position(this.getX(), this.getY());
 
-	/**
-	 * @return the positions
-	 */
-	public List<Position> getPositions() {
-		return positions;
-	}
+		if (actual.checkCollapse(walls, Game.WALL_SIZE, Game.SNAKE_SIZE)) {
+			return true;
+		}
 
-	/**
-	 * @param pPositions
-	 *            the positions to set
-	 */
-	public void setPositions(ArrayList<Position> pPositions) {
-		this.positions = pPositions;
-	}
+		if (this.getX() < -Game.MAP_SIZE + Game.SNAKE_SIZE) {
+			// this.setY(-Game.MAP_SIZE + Game.SNAKE_SIZE);
+			return true;
+		}
+		if (this.getX() > Game.MAP_SIZE - Game.SNAKE_SIZE) {
+			// this.setY(Game.MAP_SIZE - Game.SNAKE_SIZE);
+			return true;
+		}
+		if (this.getY() < -Game.MAP_SIZE + Game.SNAKE_SIZE) {
+			// this.setY(-Game.MAP_SIZE + Game.SNAKE_SIZE);
+			return true;
+		}
+		if (this.getY() > Game.MAP_SIZE - Game.SNAKE_SIZE) {
+			// this.setY(Game.MAP_SIZE - Game.SNAKE_SIZE);
+			return true;
+		}
 
-	/**
-	 * @return the x
-	 */
-	public float getX() {
-		return x;
-	}
-
-	/**
-	 * @param pX
-	 *            the x to set
-	 */
-	public void setX(float pX) {
-		this.x = pX;
-	}
-
-	/**
-	 * @return the y
-	 */
-	public float getY() {
-		return y;
-	}
-
-	/**
-	 * @param pY
-	 *            the y to set
-	 */
-	public void setY(float pY) {
-		this.y = pY;
-	}
-
-	/**
-	 * @return the c
-	 */
-	public Color getC() {
-		return c;
-	}
-
-	/**
-	 * @param pC
-	 *            the c to set
-	 */
-	public void setC(Color pC) {
-		this.c = pC;
-	}
-
-	/**
-	 * @return the lenght
-	 */
-	public int getLenght() {
-		return lenght;
-	}
-
-	/**
-	 * @param pLenght
-	 *            the lenght to set
-	 */
-	public void setLenght(int pLenght) {
-		this.lenght = pLenght;
+		if (actual.checkCollapse(this.positions, Game.SNAKE_SIZE / 2,
+				Game.SNAKE_SIZE / 2)) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -227,28 +269,6 @@ public class Snake {
 		for (int i = 0; i < positions.size(); i++) {
 			drawBody(positions.get(i).getX(), positions.get(i).getY(), 0,
 					(float) Game.SNAKE_SIZE * 2);
-		}
-
-	}
-
-	/**
-	 * Initialize the snake.
-	 * 
-	 * @param walls
-	 *            Walls position
-	 * @param wallSize
-	 *            Wall size
-	 */
-	public void initialize(List<Position> walls, int wallSize) {
-
-		while ((new Position(x, y).checkCollapse(walls, Game.WALL_SIZE,
-				Game.SNAKE_SIZE))) {
-			x = (float) (-(Game.MAP_SIZE - MAP_LIMIT - Game.SNAKE_SIZE) + ((Game.MAP_SIZE
-					- MAP_LIMIT - Game.SNAKE_SIZE) * 2)
-					* Math.random());
-			y = (float) (-(Game.MAP_SIZE - MAP_LIMIT - Game.SNAKE_SIZE) + ((Game.MAP_SIZE
-					- MAP_LIMIT - Game.SNAKE_SIZE) * 2)
-					* Math.random());
 		}
 
 	}
@@ -406,84 +426,183 @@ public class Snake {
 	}
 
 	/**
-	 * Draw the snake body
-	 * 
-	 * @param x
-	 *            Snake x
-	 * @param y
-	 *            Snake y
-	 * @param z
-	 *            Snake y
-	 * @param size
-	 *            Snake size
+	 * @return the c
 	 */
-	public static void drawBody(float x, float y, float z, float size) {
-		float a = size / 2;
+	public Color getC() {
+		return c;
+	}
 
-		glPushMatrix();
-		glTranslated(SnakeGame.MAP_MILIEU.getX(), SnakeGame.MAP_MILIEU.getY(),
-				0);
-		glBegin(GL_QUADS);
+	/**
+	 * Get direction
+	 * 
+	 * @return The snake Direction
+	 */
+	public int getDirection() {
+		return direction;
+	}
 
-		// glNormal3f(0, 0, -1);
-		glTexCoord2d(0, 0.5);
-		glVertex3f(x - a, y - a, 0);
-		glTexCoord2d(0.5, 0.5);
-		glVertex3f(x + a, y - a, 0);
-		glTexCoord2d(0.5, 0);
-		glVertex3f(x + a, y + a, 0);
-		glTexCoord2d(0, 0);
-		glVertex3f(x - a, y + a, 0);
+	/**
+	 * @return the lenght
+	 */
+	public int getLenght() {
+		return lenght;
+	}
 
-		glTexCoord2d(0, 0.5);
-		glVertex3f(x - a, y - a, size);
-		glTexCoord2d(0.5, 0.5);
-		glVertex3f(x + a, y - a, size);
-		glTexCoord2d(0.5, 0);
-		glVertex3f(x + a, y + a, size);
-		glTexCoord2d(0, 0);
-		glVertex3f(x - a, y + a, size);
+	/**
+	 * @return the mouvement
+	 */
+	public int getMouvement() {
+		return mouvement;
+	}
 
-		glTexCoord2d(0, 0.5);
-		glVertex3f(x - a, y - a, size);
-		glTexCoord2d(0.5, 0.5);
-		glVertex3f(x + a, y - a, size);
-		glTexCoord2d(0, 0.5);
-		glVertex3f(x + a, y - a, 0);
-		glTexCoord2d(0.5, 0);
-		glVertex3f(x - a, y - a, 0);
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
 
-		glTexCoord2d(0, 0.5);
-		glVertex3f(x + a, y + a, size);
-		glTexCoord2d(0.5, 0.5);
-		glVertex3f(x - a, y + a, size);
-		glTexCoord2d(0.5, 0);
-		glVertex3f(x - a, y + a, 0);
-		glTexCoord2d(0, 0);
-		glVertex3f(x + a, y + a, 0);
+	/**
+	 * @return the positions
+	 */
+	public List<Position> getPositions() {
+		return positions;
+	}
 
-		glTexCoord2d(0, 0.5);
-		glVertex3f(x - a, y - a, 0);
-		glTexCoord2d(0.5, 0.5);
-		glVertex3f(x - a, y + a, 0);
-		glTexCoord2d(0.5, 0);
-		glVertex3f(x - a, y + a, size);
-		glTexCoord2d(0, 0);
-		glVertex3f(x - a, y - a, size);
+	/**
+	 * Get the score
+	 * 
+	 * @return the score
+	 */
+	public int getScore() {
+		return score;
+	}
 
-		glTexCoord2d(0.5, 0);
-		glVertex3f(x + a, y + a, 0);
-		glTexCoord2d(0, 0);
-		glVertex3f(x + a, y - a, 0);
-		glTexCoord2d(0, 0.5);
-		glVertex3f(x + a, y - a, size);
-		glTexCoord2d(0.5, 0.5);
-		glVertex3f(x + a, y + a, size);
+	/**
+	 * @return the speed
+	 */
+	public float getSpeed() {
+		return speed;
+	}
 
-		glEnd();
+	/**
+	 * @return the x
+	 */
+	public float getX() {
+		return x;
+	}
 
-		glPopMatrix();
+	/**
+	 * @return the y
+	 */
+	public float getY() {
+		return y;
+	}
 
+	/**
+	 * Initialize the snake.
+	 * 
+	 * @param walls
+	 *            Walls position
+	 * @param wallSize
+	 *            Wall size
+	 */
+	public void initialize(List<Position> walls, int wallSize) {
+
+		while ((new Position(x, y).checkCollapse(walls, Game.WALL_SIZE,
+				Game.SNAKE_SIZE))) {
+			x = (float) (-(Game.MAP_SIZE - MAP_LIMIT - Game.SNAKE_SIZE) + ((Game.MAP_SIZE
+					- MAP_LIMIT - Game.SNAKE_SIZE) * 2)
+					* Math.random());
+			y = (float) (-(Game.MAP_SIZE - MAP_LIMIT - Game.SNAKE_SIZE) + ((Game.MAP_SIZE
+					- MAP_LIMIT - Game.SNAKE_SIZE) * 2)
+					* Math.random());
+		}
+
+	}
+
+	/**
+	 * @param pC
+	 *            the c to set
+	 */
+	public void setC(Color pC) {
+		this.c = pC;
+	}
+
+	/**
+	 * Set a new Direction
+	 * 
+	 * @param dir
+	 *            new direction to set.
+	 */
+	public void setDirection(int dir) {
+		direction = dir;
+	}
+
+	/**
+	 * @param pLenght
+	 *            the lenght to set
+	 */
+	public void setLenght(int pLenght) {
+		this.lenght = pLenght;
+	}
+
+	/**
+	 * @param pMouvement
+	 *            the mouvement to set
+	 */
+	public void setMouvement(int pMouvement) {
+		this.mouvement = pMouvement;
+	}
+
+	/**
+	 * @param pName
+	 *            the name to set
+	 */
+	public void setName(String pName) {
+		this.name = pName;
+	}
+
+	/**
+	 * @param pPositions
+	 *            the positions to set
+	 */
+	public void setPositions(ArrayList<Position> pPositions) {
+		this.positions = pPositions;
+	}
+
+	/**
+	 * Set a new score
+	 * 
+	 * @param pScore
+	 *            The new score to set.
+	 */
+	public void setScore(int pScore) {
+		this.score = pScore;
+	}
+
+	/**
+	 * @param pSpeed
+	 *            the speed to set
+	 */
+	public void setSpeed(float pSpeed) {
+		this.speed = pSpeed;
+	}
+
+	/**
+	 * @param pX
+	 *            the x to set
+	 */
+	public void setX(float pX) {
+		this.x = pX;
+	}
+
+	/**
+	 * @param pY
+	 *            the y to set
+	 */
+	public void setY(float pY) {
+		this.y = pY;
 	}
 
 	/*
@@ -497,68 +616,6 @@ public class Snake {
 				+ ", y=" + y + ", c=" + c + ", lenght=" + lenght
 				+ ", mouvement=" + mouvement + ", direction=" + direction
 				+ ", score=" + score + ", speed=" + speed + "]";
-	}
-
-	/**
-	 * Add a position to the snake
-	 * 
-	 * @param appleEat
-	 *            Have an apple been eaten ?
-	 * @return apple eat new state.
-	 */
-	public int addPosition(int appleEat) {
-		if (Math.sqrt(Math.pow(xTemp - this.getX(), 2)
-				+ Math.pow(yTemp - this.getY(), 2)) > (Game.SNAKE_SIZE * 2)) {
-			drawBody(xTemp, yTemp, 0, Game.SNAKE_SIZE * 2);
-			this.positions.add(new Position(xTemp, yTemp));
-			switch (appleEat) {
-			case Apple.GROW_UP:
-				appleEat = 0;
-				this.score += 100;
-				if (Game.pointMulti > 0) {
-					this.score += 500;
-				}
-				break;
-			case Apple.REDUCE:
-				this.positions = this.positions.subList(
-						(int) Math.ceil(lenght / 2), lenght);
-				this.setLenght(this.positions.size());
-				appleEat = 0;
-				this.score += 100;
-				break;
-			case Apple.MULTI:
-				appleEat = 0;
-				this.score += 1000;
-				break;
-			case 0:
-				this.positions = this.positions.subList(1, lenght + 1);
-				break;
-			default:
-				break;
-			}
-			xTemp = this.getX();
-			yTemp = this.getY();
-		}
-		return appleEat;
-	}
-
-	/**
-	 * Get direction
-	 * 
-	 * @return The snake Direction
-	 */
-	public int getDirection() {
-		return direction;
-	}
-
-	/**
-	 * Set a new Direction
-	 * 
-	 * @param dir
-	 *            new direction to set.
-	 */
-	public void setDirection(int dir) {
-		direction = dir;
 	}
 
 	/**
@@ -674,63 +731,6 @@ public class Snake {
 			this.setMouvement(-1);
 		}
 
-	}
-
-	/**
-	 * Check wall collision
-	 * 
-	 * @param walls
-	 *            Walls positions
-	 * @return True if collision
-	 */
-	public boolean checkWallCollision(List<Position> walls) {
-		Position actual = new Position(this.getX(), this.getY());
-
-		if (actual.checkCollapse(walls, Game.WALL_SIZE, Game.SNAKE_SIZE)) {
-			return true;
-		}
-
-		if (this.getX() < -Game.MAP_SIZE + Game.SNAKE_SIZE) {
-			// this.setY(-Game.MAP_SIZE + Game.SNAKE_SIZE);
-			return true;
-		}
-		if (this.getX() > Game.MAP_SIZE - Game.SNAKE_SIZE) {
-			// this.setY(Game.MAP_SIZE - Game.SNAKE_SIZE);
-			return true;
-		}
-		if (this.getY() < -Game.MAP_SIZE + Game.SNAKE_SIZE) {
-			// this.setY(-Game.MAP_SIZE + Game.SNAKE_SIZE);
-			return true;
-		}
-		if (this.getY() > Game.MAP_SIZE - Game.SNAKE_SIZE) {
-			// this.setY(Game.MAP_SIZE - Game.SNAKE_SIZE);
-			return true;
-		}
-
-		if (actual.checkCollapse(this.positions, Game.SNAKE_SIZE / 2,
-				Game.SNAKE_SIZE / 2)) {
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Get the score
-	 * 
-	 * @return the score
-	 */
-	public int getScore() {
-		return score;
-	}
-
-	/**
-	 * Set a new score
-	 * 
-	 * @param pScore
-	 *            The new score to set.
-	 */
-	public void setScore(int pScore) {
-		this.score = pScore;
 	}
 
 }

@@ -14,9 +14,6 @@ import java.util.Scanner;
  */
 public class MazeReader {
 
-	/** File to read. */
-	private final File fFile;
-
 	/**
 	 * Build the wall list.
 	 * 
@@ -29,6 +26,9 @@ public class MazeReader {
 		return parser.processLineByLine();
 	}
 
+	/** File to read. */
+	private final File fFile;
+
 	/**
 	 * Constructor.
 	 * 
@@ -37,6 +37,27 @@ public class MazeReader {
 	 */
 	public MazeReader(String aFileName) {
 		fFile = new File(aFileName);
+	}
+
+	/**
+	 * Read a line, and return a position.
+	 * 
+	 * @param aLine
+	 *            Line to read
+	 * @return Position find
+	 */
+	protected Position processLine(String aLine) {
+		// use a second Scanner to parse the content of each line
+		Position p = new Position(0, 0);
+		Scanner scanner = new Scanner(aLine);
+		scanner.useDelimiter(" ");
+		if (scanner.hasNext()) {
+			String name = scanner.next();
+			String value = scanner.next();
+			p = new Position(Float.parseFloat(name.trim()),
+					Float.parseFloat(value.trim()));
+		}
+		return p;
 	}
 
 	/**
@@ -61,27 +82,6 @@ public class MazeReader {
 			e.printStackTrace();
 		}
 		return new ArrayList<Position>();
-	}
-
-	/**
-	 * Read a line, and return a position.
-	 * 
-	 * @param aLine
-	 *            Line to read
-	 * @return Position find
-	 */
-	protected Position processLine(String aLine) {
-		// use a second Scanner to parse the content of each line
-		Position p = new Position(0, 0);
-		Scanner scanner = new Scanner(aLine);
-		scanner.useDelimiter(" ");
-		if (scanner.hasNext()) {
-			String name = scanner.next();
-			String value = scanner.next();
-			p = new Position(Float.parseFloat(name.trim()),
-					Float.parseFloat(value.trim()));
-		}
-		return p;
 	}
 
 }

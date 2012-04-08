@@ -22,15 +22,11 @@ import java.util.List;
  */
 public final class Fichier {
 
-	/** Max score. */
-	public static final int MAX_SCORE = 10;
-
 	/** Highscore list. */
 	private static LinkedList<Integer> highScore = new LinkedList<Integer>();
 
-	/** Constructor. */
-	private Fichier() {
-	};
+	/** Max score. */
+	public static final int MAX_SCORE = 10;
 
 	/**
 	 * Write a string into a file.
@@ -59,7 +55,7 @@ public final class Fichier {
 			e.printStackTrace();
 		}
 
-	}
+	};
 
 	/**
 	 * Get the insert position.
@@ -133,5 +129,9 @@ public final class Fichier {
 		}
 
 		return res;
+	}
+
+	/** Constructor. */
+	private Fichier() {
 	}
 }
