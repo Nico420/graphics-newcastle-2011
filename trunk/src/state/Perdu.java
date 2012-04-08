@@ -57,15 +57,15 @@ public class Perdu extends Etat {
 				SnakeGame.HEIGHT / 2 - TITLE_POSITION_Y, "GAME OVER !",
 				Color.red);
 		getFontMenu().drawString(SnakeGame.WIDTH / 2 - TITLE_POSITION_X,
-				SnakeGame.HEIGHT / 2 + TITLE_POSITION_Y, "Score : "
-						+ score, Color.yellow);
+				SnakeGame.HEIGHT / 2 + TITLE_POSITION_Y, "Score : " + score,
+				Color.yellow);
 	}
 
 	@Override
 	public void update(int delta) {
 		perdu -= delta * TIMER_SPEED;
 		updateFPS();
-		if (perdu > 0) {
+		if (perdu < 0) {
 			this.getSnakeGame().setEtat(new Menu(this.getSnakeGame()));
 		}
 

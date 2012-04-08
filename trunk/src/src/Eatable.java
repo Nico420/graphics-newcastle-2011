@@ -107,6 +107,7 @@ public class Eatable {
 	public void draw() {
 		float a = Game.APPLE_SIZE / 2;
 		glPushMatrix();
+		glColor3f(color.getRed(), color.getGreen(), color.getBlue());
 		glTranslated(SnakeGame.MAP_MILIEU.getX(), SnakeGame.MAP_MILIEU.getY(),
 				0);
 		// Make the apple bounce !
