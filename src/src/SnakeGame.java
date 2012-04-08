@@ -1,17 +1,12 @@
 package src;
 
-import java.io.IOException;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
-import state.Countdown;
 import state.Etat;
-import state.Game;
-import state.HighScore;
 import state.Menu;
-import state.Perdu;
 import tools.Position;
 
 /**
@@ -22,39 +17,66 @@ import tools.Position;
  */
 public class SnakeGame {
 
-	// Constant for States
-	public static final int MENU = 0;
-	public static final int GAME = 4;
-	public static final int HIGHSCORE = 2;
-	public static final int QUIT = 3;
-	public static final int COUNTDOWN = 1;
-	public static final int PERDU = 5;
-	public static final int RESTART = 6;
+	/**
+	 * Build a snake Game
+	 * 
+	 * @param pAppleNumber
+	 *            The number of apple
+	 */
+	public SnakeGame(int pAppleNumber) {
+		super();
+		this.appleNumber = pAppleNumber;
+		//this.etat = new Menu(this);
+	}
 
-	public static int APPLENUMBER = 5;
+	/** Apple number */
+	private int appleNumber;
 
+	/** Window height */
 	public static final int HEIGHT = 600;
+	/** Window Width */
 	public static final int WIDTH = 800;
 
-	public static int score;
-
+	/** Middle of the map */
 	public static final Position MAP_MILIEU = new Position(WIDTH - 400,
 			HEIGHT - 300);
 
+	/** Game state */
 	private Etat etat;
-	private int etatActual = MENU;
-	private int etatTemp = MENU;
 
-	public static boolean exit = false;
-	public static boolean switchView = false;
+	/** Exit the game */
+	private static boolean exit = false;
+	/** Switch view */
+	private static boolean switchView = false;
 
 	// float lightPosition1[] = { -MAP_SIZE, -MAP_SIZE, 1f, 1f };
 
 	/** time at last frame */
 	private long lastFrame;
 
-	public void start() throws LWJGLException, InterruptedException,
-			IOException {
+	/**
+	 * Get the state
+	 * 
+	 * @return The current state
+	 */
+	public Etat getEtat() {
+		return etat;
+	}
+
+	/**
+	 * Change the state
+	 * 
+	 * @param pEtat
+	 *            The new state to set.
+	 */
+	public void setEtat(Etat pEtat) {
+		this.etat = pEtat;
+	}
+
+	/**
+	 * Start the game
+	 */
+	public void start() {
 
 		try {
 			DisplayMode dm = Display.getAvailableDisplayModes()[3];
@@ -69,48 +91,21 @@ public class SnakeGame {
 			e.printStackTrace();
 			System.exit(0);
 		}
-
-		// Initialize state
-		etat = new Menu();
+		etat = new Menu(this);
 		getDelta();
 
 		while (!Display.isCloseRequested() && !exit) { // Done Drawing The Quad
-			// If require we change the state
-			if (etatTemp == QUIT) {
-				exit = true;
-			} else if (etatTemp != etatActual) {
-				switch (etatTemp) {
-				case MENU:
-					etat = new Menu();
-					break;
-				case GAME:
-				case RESTART:
-					etat = new Game();
-					break;
-				case COUNTDOWN:
-					etat = new Countdown();
-					break;
-				case PERDU:
-					etat = new Perdu(score);
-					break;
-				case HIGHSCORE:
-					etat = new HighScore();
-					break;
-				default:
-					break;
-				}
-				etatActual = etatTemp;
-			}
 
 			int delta = getDelta();
 			// Update and draw the state.
-			etatTemp = etat.update(delta);
+			try {
+				etat.update(delta);
+			} catch (LWJGLException e) {
+				e.printStackTrace();
+			}
 			etat.renderGL();
 			// Checking if keyboard interaction made the state change
-			int etatT = etat.pollInput();
-			if (etatT != etatActual) {
-				etatTemp = etatT;
-			}
+			etat.pollInput();
 			Display.update(); // flushes OpenGL pipeline and swaps back and
 								// front buffers. perhaps waits for v-sync.
 		}
@@ -118,12 +113,11 @@ public class SnakeGame {
 		Display.destroy();
 	}
 
-	public static void main(String[] argv) throws LWJGLException,
-			InterruptedException, IOException {
-		SnakeGame game = new SnakeGame();
-		game.start();
-	}
-
+	/**
+	 * Get the Delta
+	 * 
+	 * @return The delta
+	 */
 	private int getDelta() {
 		long time = getTime();
 		int delta = (int) (time - lastFrame);
@@ -132,7 +126,64 @@ public class SnakeGame {
 		return delta;
 	}
 
+	/**
+	 * Get Time
+	 * 
+	 * @return Sys time
+	 */
 	private long getTime() {
 		return (Sys.getTime() * 1000) / Sys.getTimerResolution();
+	}
+
+	/**
+	 * Launching the game
+	 * 
+	 * @param argv
+	 *            Launching args
+	 * @throws LWJGLException
+	 * @throws InterruptedException
+	 * @throws IOException
+	 */
+	public static void main(String[] argv) {
+		SnakeGame game = new SnakeGame(5);
+		game.start();
+	}
+
+	/**
+	 * Knowing the actual view
+	 * 
+	 * @return The view
+	 */
+	public static boolean isSwitchView() {
+		return switchView;
+	}
+
+	/**
+	 * Change view
+	 * 
+	 * @param pSwitchView
+	 *            The new view to set
+	 */
+	public static void setSwitchView(boolean pSwitchView) {
+		SnakeGame.switchView = pSwitchView;
+	}
+
+	/**
+	 * Get the apple number
+	 * 
+	 * @return The apple number
+	 */
+	public int getAppleNumber() {
+		return appleNumber;
+	}
+
+	/**
+	 * Set a new apple number
+	 * 
+	 * @param pAppleNumber
+	 *            The number of apple
+	 */
+	public void setAppleNumber(int pAppleNumber) {
+		appleNumber = pAppleNumber;
 	}
 }

@@ -30,24 +30,43 @@ import tools.Position;
  */
 public class Snake {
 
+	/** Down rotation */
 	private static final int DOWN_ROTATION = 0;
+	/** Up rotation */
 	private static final int UP_ROTATION = 180;
+	/** Right rotation */
 	private static final int RIGHT_ROTATION = 270;
+	/** Left rotation */
 	private static final int LEFT_ROTATION = 90;
+	/** Map limit */
 	private static final int MAP_LIMIT = 10;
-	public static float xTemp = 0;
-	public static float yTemp = 0;
 
+	/** Snake name */
 	private String name;
+	/** Snake positions */
 	private List<Position> positions;
-	private float x;
-	private float y;
-	private Color c;
-	private int lenght;
-	private int mouvement;
-	private int direction = Game.DOWN;
-	private int score;
 
+	/** Snake actuel head position */
+	private float x;
+	/** Snake actuel head position */
+	private float y;
+
+	/** Snake temp variable */
+	private static float xTemp = 0;
+	/** Snake temp variable */
+	private static float yTemp = 0;
+
+	/** Snake Color */
+	private Color c;
+	/** Snake lenght */
+	private int lenght;
+	/** Snake mouvement */
+	private int mouvement;
+	/** Snake direction */
+	private int direction = Game.DOWN;
+	/** Snake Score */
+	private int score;
+	/** Snake Speed */
 	private float speed;
 
 	/**
@@ -386,6 +405,18 @@ public class Snake {
 		glPopMatrix();
 	}
 
+	/**
+	 * Draw the snake body
+	 * 
+	 * @param x
+	 *            Snake x
+	 * @param y
+	 *            Snake y
+	 * @param z
+	 *            Snake y
+	 * @param size
+	 *            Snake size
+	 */
 	public static void drawBody(float x, float y, float z, float size) {
 		float a = size / 2;
 
@@ -468,6 +499,13 @@ public class Snake {
 				+ ", score=" + score + ", speed=" + speed + "]";
 	}
 
+	/**
+	 * Add a position to the snake
+	 * 
+	 * @param appleEat
+	 *            Have an apple been eaten ?
+	 * @return apple eat new state.
+	 */
 	public int addPosition(int appleEat) {
 		if (Math.sqrt(Math.pow(xTemp - this.getX(), 2)
 				+ Math.pow(yTemp - this.getY(), 2)) > (Game.SNAKE_SIZE * 2)) {
@@ -495,6 +533,8 @@ public class Snake {
 			case 0:
 				this.positions = this.positions.subList(1, lenght + 1);
 				break;
+			default:
+				break;
 			}
 			xTemp = this.getX();
 			yTemp = this.getY();
@@ -502,32 +542,60 @@ public class Snake {
 		return appleEat;
 	}
 
+	/**
+	 * Get direction
+	 * 
+	 * @return The snake Direction
+	 */
 	public int getDirection() {
 		return direction;
 	}
 
+	/**
+	 * Set a new Direction
+	 * 
+	 * @param dir
+	 *            new direction to set.
+	 */
 	public void setDirection(int dir) {
 		direction = dir;
 	}
 
-	public void update(int delta, boolean b) {
-		if (!b) {
+	/**
+	 * Snake update
+	 * 
+	 * @param delta
+	 *            Delta update
+	 * @param view
+	 *            View
+	 */
+	public void update(int delta, boolean view) {
+		if (!view) {
 			// Classic view
 
-			if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
-				if (!(this.getMouvement() == Game.RIGHT))
+			if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
+				if (!(this.getMouvement() == Game.RIGHT)) {
 					this.setMouvement(Game.LEFT);
-			if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
-				if (!(this.getMouvement() == Game.LEFT))
+				}
+			}
+			if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
+				if (!(this.getMouvement() == Game.LEFT)) {
 					this.setMouvement(Game.RIGHT);
-			if (Keyboard.isKeyDown(Keyboard.KEY_UP))
-				if (!(this.getMouvement() == Game.DOWN))
+				}
+			}
+			if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
+				if (!(this.getMouvement() == Game.DOWN)) {
 					this.setMouvement(Game.DOWN);
-			if (Keyboard.isKeyDown(Keyboard.KEY_DOWN))
-				if (!(this.getMouvement() == Game.UP))
+				}
+			}
+			if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
+				if (!(this.getMouvement() == Game.UP)) {
 					this.setMouvement(Game.UP);
-			if (this.getMouvement() == -1)
+				}
+			}
+			if (this.getMouvement() == -1) {
 				this.setMouvement(this.getDirection());
+			}
 
 			switch (this.getMouvement()) {
 			case Game.LEFT:
@@ -542,36 +610,48 @@ public class Snake {
 			case Game.DOWN:
 				this.setY(this.getY() + this.speed * delta);
 				break;
+			default:
+				break;
 			}
 			this.setDirection(this.getMouvement());
 		} else {
 			// Tracking view
 			switch (this.getDirection()) {
 			case Game.LEFT:
-				if (this.getMouvement() == Game.RIGHT)
+				if (this.getMouvement() == Game.RIGHT) {
 					this.setDirection(Game.UP);
-				if (this.getMouvement() == Game.LEFT)
+				}
+				if (this.getMouvement() == Game.LEFT) {
 					this.setDirection(Game.DOWN);
+				}
 				break;
 			case Game.RIGHT:
-				if (this.getMouvement() == Game.RIGHT)
+				if (this.getMouvement() == Game.RIGHT) {
 					this.setDirection(Game.DOWN);
-				if (this.getMouvement() == Game.LEFT)
+				}
+				if (this.getMouvement() == Game.LEFT) {
 					this.setDirection(Game.UP);
+				}
 
 				break;
 			case Game.UP:
-				if (this.getMouvement() == Game.RIGHT)
+				if (this.getMouvement() == Game.RIGHT) {
 					this.setDirection(Game.RIGHT);
-				if (this.getMouvement() == Game.LEFT)
+				}
+				if (this.getMouvement() == Game.LEFT) {
 					this.setDirection(Game.LEFT);
+				}
 				break;
 			case Game.DOWN:
-				if (this.getMouvement() == Game.RIGHT)
+				if (this.getMouvement() == Game.RIGHT) {
 					this.setDirection(Game.LEFT);
-				if (this.getMouvement() == Game.LEFT)
+				}
+				if (this.getMouvement() == Game.LEFT) {
 					this.setDirection(Game.RIGHT);
+				}
 
+				break;
+			default:
 				break;
 			}
 
@@ -588,17 +668,27 @@ public class Snake {
 			case Game.DOWN:
 				this.setY(this.getY() + this.speed * delta);
 				break;
+			default:
+				break;
 			}
 			this.setMouvement(-1);
 		}
 
 	}
 
+	/**
+	 * Check wall collision
+	 * 
+	 * @param walls
+	 *            Walls positions
+	 * @return True if collision
+	 */
 	public boolean checkWallCollision(List<Position> walls) {
 		Position actual = new Position(this.getX(), this.getY());
 
-		if (actual.checkCollapse(walls, Game.WALL_SIZE, Game.SNAKE_SIZE))
+		if (actual.checkCollapse(walls, Game.WALL_SIZE, Game.SNAKE_SIZE)) {
 			return true;
+		}
 
 		if (this.getX() < -Game.MAP_SIZE + Game.SNAKE_SIZE) {
 			// this.setY(-Game.MAP_SIZE + Game.SNAKE_SIZE);
@@ -618,17 +708,29 @@ public class Snake {
 		}
 
 		if (actual.checkCollapse(this.positions, Game.SNAKE_SIZE / 2,
-				Game.SNAKE_SIZE / 2))
+				Game.SNAKE_SIZE / 2)) {
 			return true;
+		}
 		return false;
 	}
 
+	/**
+	 * Get the score
+	 * 
+	 * @return the score
+	 */
 	public int getScore() {
 		return score;
 	}
 
-	public void setScore(int score) {
-		this.score = score;
+	/**
+	 * Set a new score
+	 * 
+	 * @param pScore
+	 *            The new score to set.
+	 */
+	public void setScore(int pScore) {
+		this.score = pScore;
 	}
 
 }
