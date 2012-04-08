@@ -18,13 +18,11 @@ import tools.Position;
 public class SnakeGame {
 
 	/** Exit the game */
-	private static boolean exit = false;
+	private boolean exit;
 
 	/** Window height */
 	public static final int HEIGHT = 600;
 
-
-	
 	/** Switch view */
 	private static boolean switchView = false;
 	/** Window Width */
@@ -53,6 +51,7 @@ public class SnakeGame {
 		SnakeGame game = new SnakeGame(5);
 		game.start();
 	}
+
 	/**
 	 * Change view
 	 * 
@@ -82,8 +81,28 @@ public class SnakeGame {
 	 */
 	public SnakeGame(int pAppleNumber) {
 		super();
+		exit = false;
 		this.appleNumber = pAppleNumber;
-		//this.etat = new Menu(this);
+		// this.etat = new Menu(this);
+	}
+
+	/**
+	 * Exit state
+	 * 
+	 * @return True if exit
+	 */
+	public boolean isExit() {
+		return exit;
+	}
+
+	/**
+	 * Set the exit state
+	 * 
+	 * @param pExit
+	 *            Exit state to set
+	 */
+	public void setExit(boolean pExit) {
+		exit = pExit;
 	}
 
 	/**

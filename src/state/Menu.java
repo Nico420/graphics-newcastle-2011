@@ -103,7 +103,7 @@ public class Menu extends Etat {
 					}
 				}
 				if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
-					this.getSnakeGame().setEtat(new Quit(this.getSnakeGame()));
+					this.getSnakeGame().setExit(true);
 				}
 			}
 		}
@@ -168,7 +168,7 @@ public class Menu extends Etat {
 			this.getSnakeGame().setEtat(new HighScore(this.getSnakeGame()));
 			break;
 		case 3:
-			this.getSnakeGame().setEtat(new Quit(this.getSnakeGame()));
+			this.getSnakeGame().setExit(true);
 			break;
 		default:
 			break;
