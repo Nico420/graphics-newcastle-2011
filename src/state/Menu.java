@@ -1,16 +1,15 @@
 package state;
 
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glVertex3f;
-import static org.lwjgl.opengl.GL11.glTexCoord2d;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glEnd;
-
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_QUADS;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glColor3f;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glLoadIdentity;
+import static org.lwjgl.opengl.GL11.glTexCoord2d;
+import static org.lwjgl.opengl.GL11.glVertex3f;
 
 import java.io.IOException;
 
@@ -30,30 +29,32 @@ import src.SnakeGame;
  * @author Nicolas
  * 
  */
-@SuppressWarnings("deprecation")
 public class Menu extends Etat {
 
 	/** Max menu choices. */
 	private static final int MAX_MENU_CHOICE = 3;
 
-	/** Current menu choice. */
-	private int menuChoice = 0;
-	/** Temp menu choice. */
-	private int menuChoiceTemp = 0;
-
 	/** Icon. */
 	private Texture icone;
+	/** Current menu choice. */
+	private int menuChoice = 0;
+
+	/** Temp menu choice. */
+	private int menuChoiceTemp = 0;
 	/** Apple texture. */
 	private Texture pomme;
 
 	/**
 	 * Boolean flag on whether AntiAliasing is enabled or not.
 	 * 
+	 * @param snakeGame
+	 *            Associated game.
+	 * 
 	 * @throws IOException
 	 */
 
-	public Menu() {
-		super();
+	public Menu(SnakeGame snakeGame) {
+		super(snakeGame);
 		initGL();
 		try {
 			icone = TextureLoader.getTexture("PNG", ResourceLoader
@@ -67,10 +68,47 @@ public class Menu extends Etat {
 
 	}
 
-	@Override
-	public int update(int delta) {
-		updateFPS();
-		return menuChoice;
+	/**
+	 * Keyboard reaction.
+	 * 
+	 */
+	public void pollInput() {
+		while (Keyboard.next()) {
+			if (Keyboard.getEventKeyState()) {
+
+				if (Keyboard.getEventKey() == Keyboard.KEY_UP) {
+					menuChoiceTemp = (menuChoiceTemp - 1) % MAX_MENU_CHOICE;
+					if (menuChoiceTemp < 0) {
+						menuChoiceTemp = 2;
+					}
+				}
+				if (Keyboard.getEventKey() == Keyboard.KEY_DOWN) {
+					menuChoiceTemp = (menuChoiceTemp + 1) % MAX_MENU_CHOICE;
+					if (menuChoiceTemp < 0) {
+						menuChoiceTemp = 2;
+					}
+				}
+				if (Keyboard.getEventKey() == Keyboard.KEY_RETURN
+						|| Keyboard.getEventKey() == Keyboard.KEY_NUMPADENTER) {
+					menuChoice = menuChoiceTemp + 1;
+				}
+
+				if (Keyboard.getEventKey() == Keyboard.KEY_A) {
+					try {
+						if (Display.isFullscreen()) {
+							Display.setFullscreen(false);
+						} else {
+							Display.setFullscreen(true);
+						}
+					} catch (LWJGLException e) {
+						e.printStackTrace();
+					}
+				}
+				if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
+					this.getSnakeGame().setEtat(new Quit(this.getSnakeGame()));
+				}
+			}
+		}
 	}
 
 	@Override
@@ -112,58 +150,31 @@ public class Menu extends Etat {
 		glVertex3f(190, 250 + 50 * menuChoiceTemp, 0);
 		glEnd();
 
-		fontTitre.drawString(200, 10, "SNAKE 3D", Color.red);
+		getFontTitre().drawString(200, 10, "SNAKE 3D", Color.red);
 
 		// start.bind();
-		fontMenu.drawString(200, 250, "START NEW GAME", Color.yellow);
-		fontMenu.drawString(200, 300, "HIGH SCORE", Color.yellow);
-		fontMenu.drawString(200, 350, "EXIT", Color.yellow);
+		getFontMenu().drawString(200, 250, "START NEW GAME", Color.yellow);
+		getFontMenu().drawString(200, 300, "HIGH SCORE", Color.yellow);
+		getFontMenu().drawString(200, 350, "EXIT", Color.yellow);
 
 	}
 
-	/**
-	 * Keyboard reaction.
-	 * 
-	 * @return new State.
-	 */
-	public int pollInput() {
-		while (Keyboard.next()) {
-			if (Keyboard.getEventKeyState()) {
-
-				if (Keyboard.getEventKey() == Keyboard.KEY_UP) {
-					menuChoiceTemp = (menuChoiceTemp - 1) % MAX_MENU_CHOICE;
-					if (menuChoiceTemp < 0) {
-						menuChoiceTemp = 2;
-					}
-				}
-				if (Keyboard.getEventKey() == Keyboard.KEY_DOWN) {
-					menuChoiceTemp = (menuChoiceTemp + 1) % MAX_MENU_CHOICE;
-					if (menuChoiceTemp < 0) {
-						menuChoiceTemp = 2;
-					}
-				}
-				if (Keyboard.getEventKey() == Keyboard.KEY_RETURN
-						|| Keyboard.getEventKey() == Keyboard.KEY_NUMPADENTER) {
-					menuChoice = menuChoiceTemp + 1;
-				}
-
-				if (Keyboard.getEventKey() == Keyboard.KEY_A) {
-					try {
-						if (Display.isFullscreen()) {
-							Display.setFullscreen(false);
-						} else {
-							Display.setFullscreen(true);
-						}
-					} catch (LWJGLException e) {
-						e.printStackTrace();
-					}
-				}
-				if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
-					return SnakeGame.QUIT;
-				}
-			}
+	@Override
+	public void update(int delta) {
+		updateFPS();
+		switch (menuChoice) {
+		case 1:
+			this.getSnakeGame().setEtat(new Countdown(this.getSnakeGame()));
+			break;
+		case 2:
+			this.getSnakeGame().setEtat(new HighScore(this.getSnakeGame()));
+			break;
+		case 3:
+			this.getSnakeGame().setEtat(new Quit(this.getSnakeGame()));
+			break;
+		default:
+			break;
 		}
-		return SnakeGame.MENU;
 	}
 
 }
