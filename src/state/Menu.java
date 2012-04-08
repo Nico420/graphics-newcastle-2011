@@ -162,7 +162,7 @@ public class Menu extends Etat {
 		updateFPS();
 		switch (menuChoice) {
 		case 1:
-			this.getSnakeGame().setEtat(new Countdown(this.getSnakeGame()));
+			this.getSnakeGame().setEtat(new EnterName(this.getSnakeGame()));
 			break;
 		case 2:
 			this.getSnakeGame().setEtat(new HighScore(this.getSnakeGame()));
