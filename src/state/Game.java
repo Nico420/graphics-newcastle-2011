@@ -134,6 +134,7 @@ public class Game extends Etat {
 
 	/** Wall position list */
 	private static List<Position> walls = new ArrayList<Position>();
+
 	/**
 	 * Draw walls
 	 * 
@@ -209,6 +210,7 @@ public class Game extends Etat {
 		glEnd();
 
 	}
+
 	/**
 	 * Eatables' list
 	 * 
@@ -295,7 +297,7 @@ public class Game extends Etat {
 	private boolean perdu = false;
 
 	/** Snake */
-	private Snake snake;
+	private Snake[] snakeTable;
 
 	/** Speed */
 	private float speed;
@@ -360,7 +362,9 @@ public class Game extends Etat {
 		} else {
 			getFontPower().drawString(20, 380,
 					"(B)ullet-time (" + bulletTime + ")", Color.red);
-			snake.setSpeed(speed);
+			for (Snake snake : snakeTable) {
+				snake.setSpeed(speed);
+			}
 		}
 
 	}
@@ -384,10 +388,14 @@ public class Game extends Etat {
 	 * @param s
 	 *            Snake score to display
 	 */
-	private void afficheScore(Snake s) {
+	private void afficheScore(Snake[] s) {
+
 		getFontMenu().drawString(20, 50, "Snake 3D", Color.blue);
-		getFontPower().drawString(20, 150, "Score : \n" + s.getScore(),
-				Color.red);
+		getFontPower().drawString(20, 150, "Score : \n", Color.red);
+		for (int i = 0; i < s.length; i++) {
+			getFontPower().drawString(20, 170 + i * 20,
+					s[i].getName() + " : " + s[i].getScore(), Color.red);
+		}
 	}
 
 	/**
@@ -415,7 +423,9 @@ public class Game extends Etat {
 		glEnable(GL_NORMALIZE);
 		drawMap();
 		textureSerpent.bind();
-		snake.draw();
+		for (Snake snake : snakeTable) {
+			snake.draw();
+		}
 		// Draw Walls
 		textureMur.bind();
 		// glColor3f(1, 1, 1);
@@ -439,7 +449,7 @@ public class Game extends Etat {
 
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		afficheScore(snake);
+		afficheScore(snakeTable);
 		afficheRaccourci();
 		affichePower();
 
@@ -550,8 +560,12 @@ public class Game extends Etat {
 	private void initializeGame() {
 		bulletTime = BULLET_TIME;
 		mortSerpent = DEATH_TIMING;
-		snake = new Snake("Nico", new ArrayList<Position>(), 0f, 0f,
-				Color.blue, 0, this.speed);
+		snakeTable = new Snake[this.getSnakeGame().getNomJoueur().length];
+		for (int i = 0; i < snakeTable.length; i++) {
+			snakeTable[i] = new Snake(this.getSnakeGame().getNomJoueur()[i],
+					new ArrayList<Position>(), 0f, 0f, Color.blue, 0,
+					this.speed);
+		}
 		setWalls(MazeReader.buildWallList("maze.txt"));
 		if (getWalls().size() == 0) {
 			float x = (float) (-((Game.MAP_SIZE) - Game.SNAKE_SIZE) + ((Game.MAP_SIZE) * 2 - Game.SNAKE_SIZE)
@@ -566,7 +580,9 @@ public class Game extends Etat {
 			getObject().add(new Apple());
 		}
 		// Initialize Snake start_position
-		snake.initialize(getWalls(), WALL_SIZE);
+		for (Snake snake : snakeTable) {
+			snake.initialize(getWalls(), WALL_SIZE);
+		}
 		SnakeGame.setSwitchView(false);
 		try {
 			textureSerpent = TextureLoader.getTexture("JPG",
@@ -587,6 +603,7 @@ public class Game extends Etat {
 	 */
 	public void pollInput() {
 		while (Keyboard.next()) {
+			Snake snake = this.snakeTable[0];
 			if (Keyboard.getEventKeyState()) {
 				if ((bulletTime > 0)
 						&& Keyboard.getEventKey() == Keyboard.KEY_B) {
@@ -607,7 +624,8 @@ public class Game extends Etat {
 					}
 				}
 				if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
-					this.getSnakeGame().setEtat(new Menu(this.getSnakeGame()));
+					this.getSnakeGame().setEtat(
+							new Perdu(this.getSnakeGame(), snakeTable));
 				}
 				if (Keyboard.getEventKey() == Keyboard.KEY_V) {
 					if (SnakeGame.isSwitchView()) {
@@ -680,6 +698,8 @@ public class Game extends Etat {
 	 */
 	public void setCamera() {
 		if (SnakeGame.isSwitchView()) {
+
+			Snake snake = this.snakeTable[0];
 			float zoom = 40f;
 			float reculCam = 30;
 			switch (snake.getDirection()) {
@@ -742,47 +762,52 @@ public class Game extends Etat {
 	@Override
 	public void update(int pDelta) {
 		this.setDelta(pDelta);
-		if (!perdu) {
+		for (Snake snake : snakeTable) {
+			if (!perdu) {
 
-			snake.update(pDelta, SnakeGame.isSwitchView());
-			// Adding a new position for snake, and notify snake lenght
-			// if
-			// needed.
-			appleEat = snake.addPosition(appleEat);
-			perdu = snake.checkWallCollision(getWalls());
-			// Check Apple detection
-			for (int i = 0; i < getObject().size(); i++) {
-				Eatable item = getObject().get(i);
-				if (snake.getX() - SNAKE_SIZE < item.getX()
-						&& snake.getX() + SNAKE_SIZE > item.getX()
-						&& snake.getY() - SNAKE_SIZE < item.getY()
-						&& snake.getY() + SNAKE_SIZE > item.getY()) {
-					snake.setLenght(snake.getLenght() + 1);
-					appleEat = item.getAction();
-					if (appleEat == Eatable.REDUCE) {
-						tailReduce = 1000;
-					} else if (appleEat == Eatable.MULTI) {
-						setPointMulti(4000);
-					}
-					// Generate new item
-					if (Math.random() > 0.9) {
-						getObject().set(i, new BlueApple());
-					} else if (Math.random() < 0.1) {
-						getObject().set(i, new GoldApple());
-					} else {
-						getObject().set(i, new Apple());
+				snake.update(pDelta, SnakeGame.isSwitchView());
+				// Adding a new position for snake, and notify snake lenght
+				// if
+				// needed.
+				appleEat = snake.addPosition(appleEat);
+				perdu = snake.checkWallCollision(getWalls());
+				// Check Apple detection
+				for (int i = 0; i < getObject().size(); i++) {
+					Eatable item = getObject().get(i);
+					if (snake.getX() - SNAKE_SIZE < item.getX()
+							&& snake.getX() + SNAKE_SIZE > item.getX()
+							&& snake.getY() - SNAKE_SIZE < item.getY()
+							&& snake.getY() + SNAKE_SIZE > item.getY()) {
+						snake.setLenght(snake.getLenght() + 1);
+						appleEat = item.getAction();
+						if (appleEat == Eatable.REDUCE) {
+							tailReduce = 1000;
+						} else if (appleEat == Eatable.MULTI) {
+							setPointMulti(4000);
+						}
+						// Generate new item
+						if (Math.random() > 0.9) {
+							getObject().set(i, new BlueApple());
+						} else if (Math.random() < 0.1) {
+							getObject().set(i, new GoldApple());
+						} else {
+							getObject().set(i, new Apple());
+						}
 					}
 				}
-			}
-		} else {
-			if (mortSerpent < 0) {
-				Fichier.ecrire("highScore", snake.getScore(), snake.getName());
-				this.getSnakeGame().setEtat(
-						new Perdu(this.snake.getScore(), this.getSnakeGame()));
 			} else {
-				mortSerpent -= pDelta;
+				if (mortSerpent < 0) {
+					for (Snake snakeSc : snakeTable) {
+						Fichier.ecrire("highScore", snakeSc.getScore(),
+								snakeSc.getName());
+					}
+					this.getSnakeGame().setEtat(
+							new Perdu(this.getSnakeGame(), snakeTable));
+				} else {
+					mortSerpent -= pDelta;
+				}
 			}
+			updateFPS();
 		}
-		updateFPS();
 	}
 }

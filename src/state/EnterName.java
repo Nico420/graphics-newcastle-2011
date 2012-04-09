@@ -21,28 +21,52 @@ public class EnterName extends Etat {
 	private static final int TAILLE_MAX_PRENOM = 10;
 	/** Text */
 	private String text;
+	/** Actual player */
+	private int actualPlayer;
+	/** Number of player */
+	private int numberOfPlayers;
 	/** String offset. */
 	private static final int OFFSET = 10;
+	/** Error string */
+	private String error = "";
 
 	/**
 	 * Starting the game, Enter snake name
 	 * 
 	 * @param snakeGame
 	 *            Game instace
+	 * @param pNumberOfPlayers
+	 *            Number of player
 	 */
-	public EnterName(SnakeGame snakeGame) {
+	public EnterName(SnakeGame snakeGame, int pNumberOfPlayers) {
 		super(snakeGame);
+		numberOfPlayers = pNumberOfPlayers;
+		actualPlayer = 0;
 		text = "";
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void pollInput() {
+		String[] names = new String[numberOfPlayers];
 		while (Keyboard.next()) {
 			if (Keyboard.getEventKeyState()) {
 				if (Keyboard.getEventKey() == Keyboard.KEY_RETURN
 						|| Keyboard.getEventKey() == Keyboard.KEY_NUMPADENTER) {
-					this.getSnakeGame().setEtat(new Game(this.getSnakeGame()));
+					if (!text.equals("")) {
+						error = "";
+						names[actualPlayer] = text;
+						if ((actualPlayer + 1) == numberOfPlayers) {
+							this.getSnakeGame().setNomJoueur(names);
+							this.getSnakeGame().setEtat(
+									new Countdown(this.getSnakeGame()));
+						} else {
+							text = "";
+							actualPlayer++;
+						}
+					} else {
+						error = "Name can't be empty !";
+					}
 				} else if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
 					this.getSnakeGame().setEtat(new Menu(this.getSnakeGame()));
 				} else if (Keyboard.getEventKey() == Keyboard.KEY_BACK) {
@@ -51,12 +75,14 @@ public class EnterName extends Etat {
 					}
 				} else {
 					if (text.length() <= TAILLE_MAX_PRENOM - 1) {
-						text += Keyboard.getEventCharacter();
+						String add = Keyboard.getEventCharacter() + "";
+						if (add.matches("[A-Za-z0-9]")) {
+							text += add;
+						}
 					}
 
 				}
 			}
-
 		}
 	}
 
@@ -66,9 +92,14 @@ public class EnterName extends Etat {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		Color.green.bind();
 		getFont().drawString(SnakeGame.WIDTH / 2 - OFFSET - 50,
-				SnakeGame.HEIGHT / 2 - OFFSET - 20, "Player : ");
+				SnakeGame.HEIGHT / 2 - OFFSET - 20,
+				"Player " + (actualPlayer + 1) + " : ");
 		getFont().drawString(SnakeGame.WIDTH / 2 - OFFSET - text.length() * 10,
 				SnakeGame.HEIGHT / 2 - OFFSET, text);
+		if (!error.equals("")) {
+			getFont().drawString(SnakeGame.WIDTH / 2 - OFFSET,
+					SnakeGame.HEIGHT / 2 - OFFSET + 40, error);
+		}
 	}
 
 	@Override
