@@ -320,10 +320,8 @@ public class Game extends Etat {
 		try {
 			prop.load(new FileInputStream("snake.properties"));
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		speed = Float.parseFloat(prop.getProperty("speed"));
@@ -589,7 +587,6 @@ public class Game extends Etat {
 			textureMur = TextureLoader.getTexture("JPG",
 					ResourceLoader.getResourceAsStream("texture/metal.jpg"));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -616,7 +613,6 @@ public class Game extends Etat {
 							Display.setFullscreen(true);
 						}
 					} catch (LWJGLException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}

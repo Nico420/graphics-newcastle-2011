@@ -60,7 +60,6 @@ public class Menu extends Etat {
 			pomme = TextureLoader.getTexture("PNG",
 					ResourceLoader.getResourceAsStream("texture/pomme_ml.png"));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

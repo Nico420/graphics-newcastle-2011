@@ -201,7 +201,6 @@ public abstract class Etat {
 							Display.setFullscreen(true);
 						}
 					} catch (LWJGLException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
