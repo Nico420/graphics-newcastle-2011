@@ -151,6 +151,9 @@ public class Snake {
 	/** Snake actuel head position */
 	private float y;
 
+	/** Apple eat */
+	private int appleEat;
+
 	/**
 	 * Construct the snake.
 	 * 
@@ -166,7 +169,8 @@ public class Snake {
 	 *            Snake color
 	 * @param pLenght
 	 *            Snake length
-	 * @param pSpeed Snake speed
+	 * @param pSpeed
+	 *            Snake speed
 	 */
 	public Snake(String pName, ArrayList<Position> pPositions, float pX,
 			float pY, Color blue, int pLenght, float pSpeed) {
@@ -177,23 +181,24 @@ public class Snake {
 		this.c = blue;
 		this.lenght = pLenght;
 		this.speed = pSpeed;
+		this.setAppleEat(0);
 	}
 
 	/**
 	 * Add a position to the snake
 	 * 
-	 * @param appleEat
-	 *            Have an apple been eaten ?
+	 * @param pAppleEat
+	 *            Have an apple been eaten ? which snake
 	 * @return apple eat new state.
 	 */
-	public int addPosition(int appleEat) {
+	public int addPosition(int pAppleEat) {
 		if (Math.sqrt(Math.pow(xTemp - this.getX(), 2)
 				+ Math.pow(yTemp - this.getY(), 2)) > (Game.SNAKE_SIZE * 2)) {
 			drawBody(xTemp, yTemp, 0, Game.SNAKE_SIZE * 2);
 			this.positions.add(new Position(xTemp, yTemp));
-			switch (appleEat) {
+			switch (pAppleEat) {
 			case Apple.GROW_UP:
-				appleEat = 0;
+				pAppleEat = 0;
 				this.score += 100;
 				if (Game.getPointMulti() > 0) {
 					this.score += 500;
@@ -203,11 +208,11 @@ public class Snake {
 				this.positions = this.positions.subList(
 						(int) Math.ceil(lenght / 2), lenght);
 				this.setLenght(this.positions.size());
-				appleEat = 0;
+				pAppleEat = 0;
 				this.score += 100;
 				break;
 			case Apple.MULTI:
-				appleEat = 0;
+				pAppleEat = 0;
 				this.score += 1000;
 				break;
 			case 0:
@@ -219,7 +224,7 @@ public class Snake {
 			xTemp = this.getX();
 			yTemp = this.getY();
 		}
-		return appleEat;
+		return pAppleEat;
 	}
 
 	/**
@@ -733,6 +738,25 @@ public class Snake {
 			this.setMouvement(-1);
 		}
 
+	}
+
+	/**
+	 * Get apple eat
+	 * 
+	 * @return Apple eat
+	 */
+	public int getAppleEat() {
+		return appleEat;
+	}
+
+	/**
+	 * Set a new apple eat
+	 * 
+	 * @param pAppleEat
+	 *            New apple eat to set
+	 */
+	public void setAppleEat(int pAppleEat) {
+		this.appleEat = pAppleEat;
 	}
 
 }
