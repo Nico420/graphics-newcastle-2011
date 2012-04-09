@@ -29,6 +29,8 @@ public class EnterName extends Etat {
 	private static final int OFFSET = 10;
 	/** Error string */
 	private String error = "";
+	/** Names' table */
+	private String[] names;
 
 	/**
 	 * Starting the game, Enter snake name
@@ -41,13 +43,13 @@ public class EnterName extends Etat {
 	public EnterName(SnakeGame snakeGame, int pNumberOfPlayers) {
 		super(snakeGame);
 		numberOfPlayers = pNumberOfPlayers;
+		names = new String[numberOfPlayers];
 		actualPlayer = 0;
 		text = "";
 	}
 
 	@Override
 	public void pollInput() {
-		String[] names = new String[numberOfPlayers];
 		while (Keyboard.next()) {
 			if (Keyboard.getEventKeyState()) {
 				if (Keyboard.getEventKey() == Keyboard.KEY_RETURN
@@ -55,6 +57,7 @@ public class EnterName extends Etat {
 					if (!text.equals("")) {
 						error = "";
 						names[actualPlayer] = text;
+						System.out.println(names[0] + " " + names[1]);
 						if ((actualPlayer + 1) == numberOfPlayers) {
 							this.getSnakeGame().setNomJoueur(names);
 							this.getSnakeGame().setEtat(
@@ -93,7 +96,7 @@ public class EnterName extends Etat {
 		getFont().drawString(SnakeGame.WIDTH / 2 - OFFSET - 50,
 				SnakeGame.HEIGHT / 2 - OFFSET - 20,
 				"Player " + (actualPlayer + 1) + " : ");
-		getFont().drawString(SnakeGame.WIDTH / 2 - OFFSET - text.length() * 10,
+		getFont().drawString(SnakeGame.WIDTH / 2 - OFFSET,
 				SnakeGame.HEIGHT / 2 - OFFSET, text);
 		if (!error.equals("")) {
 			getFont().drawString(SnakeGame.WIDTH / 2 - OFFSET,
