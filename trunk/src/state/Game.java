@@ -287,9 +287,6 @@ public class Game extends Etat {
 		Game.walls = pWalls;
 	}
 
-	/** Apple eat */
-	private int appleEat = 0;;
-
 	/** Delta */
 	private int delta;
 
@@ -769,7 +766,7 @@ public class Game extends Etat {
 				// Adding a new position for snake, and notify snake lenght
 				// if
 				// needed.
-				appleEat = snake.addPosition(appleEat);
+				snake.setAppleEat(snake.addPosition(snake.getAppleEat()));
 				perdu = snake.checkWallCollision(getWalls());
 				// Check Apple detection
 				for (int i = 0; i < getObject().size(); i++) {
@@ -779,10 +776,10 @@ public class Game extends Etat {
 							&& snake.getY() - SNAKE_SIZE < item.getY()
 							&& snake.getY() + SNAKE_SIZE > item.getY()) {
 						snake.setLenght(snake.getLenght() + 1);
-						appleEat = item.getAction();
-						if (appleEat == Eatable.REDUCE) {
+						snake.setAppleEat(item.getAction());
+						if (snake.getAppleEat() == Eatable.REDUCE) {
 							tailReduce = 1000;
-						} else if (appleEat == Eatable.MULTI) {
+						} else if (snake.getAppleEat() == Eatable.MULTI) {
 							setPointMulti(4000);
 						}
 						// Generate new item
