@@ -6,6 +6,7 @@ import static org.lwjgl.opengl.GL11.glClear;
 
 import org.newdawn.slick.Color;
 
+import src.Snake;
 import src.SnakeGame;
 
 /**
@@ -28,19 +29,19 @@ public class Perdu extends Etat {
 	private float perdu;
 
 	/** Get the score from the main application. */
-	private int score;
+	private Snake[] score;
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param pScore
-	 *            Initial score
 	 * @param snakeGame
 	 *            Associated game
+	 * @param snakeTable
+	 *            Snakes
 	 */
-	public Perdu(int pScore, SnakeGame snakeGame) {
+	public Perdu(SnakeGame snakeGame, Snake[] snakeTable) {
 		super(snakeGame);
-		this.score = pScore;
+		this.score = snakeTable;
 		this.perdu = 2;
 		// TODO Auto-generated constructor stub
 	}
@@ -57,8 +58,14 @@ public class Perdu extends Etat {
 				SnakeGame.HEIGHT / 2 - TITLE_POSITION_Y, "GAME OVER !",
 				Color.red);
 		getFontMenu().drawString(SnakeGame.WIDTH / 2 - TITLE_POSITION_X,
-				SnakeGame.HEIGHT / 2 + TITLE_POSITION_Y, "Score : " + score,
+				SnakeGame.HEIGHT / 2 + TITLE_POSITION_Y, "Score : ",
 				Color.yellow);
+		for (int i = 0; i < score.length; i++) {
+			getFontMenu().drawString(SnakeGame.WIDTH / 2 - TITLE_POSITION_X,
+					SnakeGame.HEIGHT / 2 + TITLE_POSITION_Y - i * 20,
+					score[i].getName() + " : " + score[i].getScore(),
+					Color.yellow);
+		}
 	}
 
 	@Override

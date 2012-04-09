@@ -28,6 +28,8 @@ public class SnakeGame {
 	/** Window Width */
 	public static final int WIDTH = 800;
 
+	/** PLayers' names */
+	private String[] nomJoueur;
 	/** Middle of the map */
 	public static final Position MAP_MILIEU = new Position(WIDTH - 400,
 			HEIGHT - 300);
@@ -203,5 +205,23 @@ public class SnakeGame {
 		}
 
 		Display.destroy();
+	}
+
+	/**
+	 * Get players' name
+	 * 
+	 * @return Table
+	 */
+	public String[] getNomJoueur() {
+		return nomJoueur;
+	}
+
+	/**
+	 * Set players' name
+	 * 
+	 * @param pNomJoueur New players' name
+	 */
+	public void setNomJoueur(String[] pNomJoueur) {
+		this.nomJoueur = pNomJoueur;
 	}
 }

@@ -32,7 +32,7 @@ import src.SnakeGame;
 public class Menu extends Etat {
 
 	/** Max menu choices. */
-	private static final int MAX_MENU_CHOICE = 3;
+	private static final int MAX_MENU_CHOICE = 4;
 
 	/** Icon. */
 	private Texture icone;
@@ -151,9 +151,10 @@ public class Menu extends Etat {
 		getFontTitre().drawString(200, 10, "SNAKE 3D", Color.red);
 
 		// start.bind();
-		getFontMenu().drawString(200, 250, "START NEW GAME", Color.yellow);
-		getFontMenu().drawString(200, 300, "HIGH SCORE", Color.yellow);
-		getFontMenu().drawString(200, 350, "EXIT", Color.yellow);
+		getFontMenu().drawString(200, 250, "1 Player", Color.yellow);
+		getFontMenu().drawString(200, 300, "2 Players", Color.yellow);
+		getFontMenu().drawString(200, 350, "HIGH SCORE", Color.yellow);
+		getFontMenu().drawString(200, 400, "EXIT", Color.yellow);
 
 	}
 
@@ -162,12 +163,15 @@ public class Menu extends Etat {
 		updateFPS();
 		switch (menuChoice) {
 		case 1:
-			this.getSnakeGame().setEtat(new EnterName(this.getSnakeGame()));
+			this.getSnakeGame().setEtat(new EnterName(this.getSnakeGame(), 1));
 			break;
 		case 2:
-			this.getSnakeGame().setEtat(new HighScore(this.getSnakeGame()));
+			this.getSnakeGame().setEtat(new EnterName(this.getSnakeGame(), 2));
 			break;
 		case 3:
+			this.getSnakeGame().setEtat(new HighScore(this.getSnakeGame()));
+			break;
+		case 4:
 			this.getSnakeGame().setExit(true);
 			break;
 		default:

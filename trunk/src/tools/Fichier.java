@@ -96,7 +96,8 @@ public final class Fichier {
 					res.add(line);
 				}
 			} catch (EOFException e) {
-				System.out.println("Fin fichier");
+				// Do nothing
+				e.getCause();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
