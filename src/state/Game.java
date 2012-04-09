@@ -560,6 +560,7 @@ public class Game extends Etat {
 			snakeTable[i] = new Snake(this.getSnakeGame().getNomJoueur()[i],
 					new ArrayList<Position>(), 0f, 0f, Color.blue, 0,
 					this.speed);
+			System.out.println(snakeTable[i]);
 		}
 		setWalls(MazeReader.buildWallList("maze.txt"));
 		if (getWalls().size() == 0) {
