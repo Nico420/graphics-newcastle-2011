@@ -41,7 +41,6 @@ public class Countdown extends Etat {
 	public Countdown(SnakeGame snakeGame) {
 		super(snakeGame);
 		countDown = COUNTDOWN_TIME;
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -65,7 +64,6 @@ public class Countdown extends Etat {
 
 			}
 		} catch (LWJGLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

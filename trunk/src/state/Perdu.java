@@ -43,7 +43,6 @@ public class Perdu extends Etat {
 		super(snakeGame);
 		this.score = snakeTable;
 		this.perdu = 2;
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

@@ -43,7 +43,6 @@ public class EnterName extends Etat {
 		numberOfPlayers = pNumberOfPlayers;
 		actualPlayer = 0;
 		text = "";
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
