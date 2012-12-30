@@ -59,10 +59,14 @@ public class HighScore extends Etat {
 
 	@Override
 	public void pollInput() {
-		super.pollInput();
 		while (Keyboard.next()) {
+
 			if (Keyboard.getEventKeyState()) {
-				this.getSnakeGame().setEtat(new Menu(this.getSnakeGame()));
+				if (Keyboard.getEventKey() == Keyboard.KEY_A) {
+					setGameFullScreen();
+				} else {
+					this.getSnakeGame().setEtat(new Menu(this.getSnakeGame()));
+				}
 			}
 		}
 	}

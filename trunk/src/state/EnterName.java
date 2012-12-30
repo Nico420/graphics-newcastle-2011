@@ -10,7 +10,7 @@ import org.newdawn.slick.Color;
 import src.SnakeGame;
 
 /**
- * Count down before the game display.
+ * Enter Name of the player(s) state
  * 
  * @author Nicolas
  * 
@@ -36,7 +36,7 @@ public class EnterName extends Etat {
 	 * Starting the game, Enter snake name
 	 * 
 	 * @param snakeGame
-	 *            Game instace
+	 *            Game instance
 	 * @param pNumberOfPlayers
 	 *            Number of player
 	 */
@@ -57,7 +57,6 @@ public class EnterName extends Etat {
 					if (!text.equals("")) {
 						error = "";
 						names[actualPlayer] = text;
-						System.out.println(names[0] + " " + names[1]);
 						if ((actualPlayer + 1) == numberOfPlayers) {
 							this.getSnakeGame().setNomJoueur(names);
 							this.getSnakeGame().setEtat(

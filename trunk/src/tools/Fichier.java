@@ -34,7 +34,9 @@ public final class Fichier {
 	 * @param pName
 	 *            Fichier name
 	 */
-	public static void ecrire(String nomFic, int i, String pName) {
+	public static void ecrire(final String nomFic, 
+							  final int i, 
+							  final String pName) {
 
 		ArrayList<String> highScore = getScore(nomFic);
 		int position = getInsertionPosition(highScore, i);
@@ -65,7 +67,8 @@ public final class Fichier {
 	 *            number to insert.
 	 * @return The position where to insert.
 	 */
-	private static int getInsertionPosition(ArrayList<String> highScore, int a) {
+	private static int getInsertionPosition(final ArrayList<String> highScore, 
+											final int a) {
 		if (highScore.size() > 0) {
 			for (int i = 0; i < highScore.size(); i++) {
 				if (a > Integer.parseInt(highScore.get(i).split("\\s")[0])) {
@@ -95,6 +98,7 @@ public final class Fichier {
 				while ((line = (String) ois.readObject()) != null) {
 					res.add(line);
 				}
+				ois.close();
 			} catch (EOFException e) {
 				// Do nothing
 				e.getCause();
