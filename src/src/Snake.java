@@ -13,8 +13,12 @@ import static org.lwjgl.opengl.GL11.glTranslated;
 import static org.lwjgl.opengl.GL11.glTranslatef;
 import static org.lwjgl.opengl.GL11.glVertex3f;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import org.lwjgl.input.Keyboard;
 import org.newdawn.slick.Color;
@@ -153,7 +157,12 @@ public class Snake {
 
 	/** Apple eat */
 	private int appleEat;
-
+	
+	/** Key configuration */
+	private int KUp;
+	private int KDown;
+	private int KLeft;
+	private int KRight;
 	/**
 	 * Construct the snake.
 	 * 
@@ -173,7 +182,7 @@ public class Snake {
 	 *            Snake speed
 	 */
 	public Snake(String pName, ArrayList<Position> pPositions, float pX,
-			float pY, Color blue, int pLenght, float pSpeed) {
+			float pY, Color blue, int pLenght, float pSpeed, int snakeNumber) {
 		this.name = pName;
 		this.positions = pPositions;
 		this.x = pX;
@@ -182,6 +191,22 @@ public class Snake {
 		this.lenght = pLenght;
 		this.speed = pSpeed;
 		this.setAppleEat(0);
+		this.setKeys(snakeNumber+1);
+	}
+
+	private void setKeys(int snakeNumber) {
+		Properties prop = new Properties();
+		try {
+			prop.load(new FileInputStream("keys.config"));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		this.setKUp(prop.getProperty(snakeNumber+"Up").toString());
+		this.setKDown(prop.getProperty(snakeNumber+"Down").toString());
+		this.setKLeft(prop.getProperty(snakeNumber+"Left").toString());
+		this.setKRight(prop.getProperty(snakeNumber+"Right").toString());
 	}
 
 	/**
@@ -612,17 +637,17 @@ public class Snake {
 		this.y = pY;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "Snake [name=" + name + ", positions=" + positions + ", x=" + x
-				+ ", y=" + y + ", c=" + c + ", lenght=" + lenght
-				+ ", mouvement=" + mouvement + ", direction=" + direction
-				+ ", score=" + score + ", speed=" + speed + "]";
+		return "Snake [c=" + c + ", direction=" + direction + ", lenght="
+				+ lenght + ", mouvement=" + mouvement + ", name=" + name
+				+ ", positions=" + positions + ", score=" + score + ", speed="
+				+ speed + ", x=" + x + ", y=" + y + ", appleEat=" + appleEat
+				+ ", KUp=" + KUp + ", KDown=" + KDown + ", KLeft=" + KLeft
+				+ ", KRight=" + KRight + "]";
 	}
 
 	/**
@@ -637,22 +662,22 @@ public class Snake {
 		if (!view) {
 			// Classic view
 
-			if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
+			if (Keyboard.isKeyDown(this.getKLeft())) {
 				if (!(this.getMouvement() == Game.RIGHT)) {
 					this.setMouvement(Game.LEFT);
 				}
 			}
-			if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
+			if (Keyboard.isKeyDown(this.getKRight())) {
 				if (!(this.getMouvement() == Game.LEFT)) {
 					this.setMouvement(Game.RIGHT);
 				}
 			}
-			if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
+			if (Keyboard.isKeyDown(this.getKUp())) {
 				if (!(this.getMouvement() == Game.DOWN)) {
 					this.setMouvement(Game.DOWN);
 				}
 			}
-			if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
+			if (Keyboard.isKeyDown(this.getKDown())) {
 				if (!(this.getMouvement() == Game.UP)) {
 					this.setMouvement(Game.UP);
 				}
@@ -757,6 +782,38 @@ public class Snake {
 	 */
 	public void setAppleEat(int pAppleEat) {
 		this.appleEat = pAppleEat;
+	}
+
+	public int getKUp() {
+		return KUp;
+	}
+
+	public void setKUp(String string) {
+		KUp = Keyboard.getKeyIndex(string.toUpperCase());
+	}
+
+	public int getKDown() {
+		return KDown;
+	}
+
+	public void setKDown(String string) {
+		KDown = Keyboard.getKeyIndex(string.toUpperCase());
+	}
+
+	public int getKLeft() {
+		return KLeft;
+	}
+
+	public void setKLeft(String string) {
+		KLeft = Keyboard.getKeyIndex(string.toUpperCase());
+	}
+
+	public int getKRight() {
+		return KRight;
+	}
+
+	public void setKRight(String string) {
+		KRight = Keyboard.getKeyIndex(string.toUpperCase());
 	}
 
 }

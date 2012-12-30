@@ -82,62 +82,61 @@ import tools.Position;
 
 public class Game extends Etat {
 
-	/** Apple size */
+	/** Apple size. */
 	public static final int APPLE_SIZE = 2;
-	/** Bullet time */
+	/** Bullet time. */
 	private static final int BULLET_TIME = 5;
 
-	/** Bullet time */
+	/** Bullet time. */
 	private static int bulletTime;
-	/** Bullet time timer */
+	/** Bullet time timer. */
 	private static int bulletTimeTimer = 0;
-	/** Death timing */
+	/** Death timing. */
 	private static final int DEATH_TIMING = 500;
 
-	/** Down direction */
+	/** Down direction. */
 	public static final int DOWN = 4;
 
-	/** Left direction */
+	/** Left direction. */
 	public static final int LEFT = 3;
-	/** Map size */
+	/** Map size. */
 	public static final int MAP_SIZE = 100;
 
-	/** Snake death */
+	/** Snake death. */
 	private static int mortSerpent;
 
-	/** Eatables' list */
+	/** Eatables' list. */
 	private static ArrayList<Eatable> object = new ArrayList<Eatable>();
 
-	/** Multi point */
+	/** Multi point. */
 	private static int pointMulti = 0;
 
-	/** Right direction */
+	/** Right direction. */
 	public static final int RIGHT = 1;
 
-	/** Rotation */
+	/** Rotation. */
 	private static float rotation;
 
-	/** Snake size */
+	/** Snake size. */
 	public static final int SNAKE_SIZE = 3;
 
-	/** Bullet time speed */
-	private static float speedBullet = 0.02f;
+	/** Bullet time speed. */
+	private float speedBullet;
 
-	/** Tail reduce */
+	/** Tail reduce. */
 	private static int tailReduce = 0;
 
-	/** Up direction */
+	/** Up direction. */
 	public static final int UP = 2;
 
-	/** Wall size */
+	/** Wall size. */
 	public static final int WALL_SIZE = 5;
 
-	/** Wall position list */
+	/** Wall position list. */
 	private static List<Position> walls = new ArrayList<Position>();
 
-	/**
-	 * Draw walls
-	 * 
+	/** Draw walls.
+	 *
 	 * @param x
 	 *            Wall position
 	 * @param y
@@ -559,7 +558,7 @@ public class Game extends Etat {
 		for (int i = 0; i < snakeTable.length; i++) {
 			snakeTable[i] = new Snake(this.getSnakeGame().getNomJoueur()[i],
 					new ArrayList<Position>(), 0f, 0f, Color.blue, 0,
-					this.speed);
+					this.speed,i);
 			System.out.println(snakeTable[i]);
 		}
 		setWalls(MazeReader.buildWallList("maze.txt"));
@@ -602,7 +601,7 @@ public class Game extends Etat {
 			if (Keyboard.getEventKeyState()) {
 				if ((bulletTime > 0)
 						&& Keyboard.getEventKey() == Keyboard.KEY_B) {
-					snake.setSpeed(Game.speedBullet);
+					snake.setSpeed(speedBullet);
 					bulletTime--;
 					bulletTimeTimer = 6000;
 				}

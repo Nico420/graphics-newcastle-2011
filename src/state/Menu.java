@@ -76,7 +76,7 @@ public class Menu extends Etat {
 				if (Keyboard.getEventKey() == Keyboard.KEY_UP) {
 					menuChoiceTemp = (menuChoiceTemp - 1) % MAX_MENU_CHOICE;
 					if (menuChoiceTemp < 0) {
-						menuChoiceTemp = 2;
+						menuChoiceTemp = 3;
 					}
 				}
 				if (Keyboard.getEventKey() == Keyboard.KEY_DOWN) {

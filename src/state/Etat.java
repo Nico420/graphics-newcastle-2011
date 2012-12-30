@@ -194,18 +194,22 @@ public abstract class Etat {
 					this.getSnakeGame().setEtat(new Menu(this.getSnakeGame()));
 				}
 				if (Keyboard.getEventKey() == Keyboard.KEY_A) {
-					try {
-						if (Display.isFullscreen()) {
-							Display.setFullscreen(false);
-						} else {
-							Display.setFullscreen(true);
-						}
-					} catch (LWJGLException e) {
-						e.printStackTrace();
-					}
+					setGameFullScreen();
 				}
 			}
 
+		}
+	}
+
+	protected void setGameFullScreen() {
+		try {
+			if (Display.isFullscreen()) {
+				Display.setFullscreen(false);
+			} else {
+				Display.setFullscreen(true);
+			}
+		} catch (LWJGLException e) {
+			e.printStackTrace();
 		}
 	}
 
